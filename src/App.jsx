@@ -6,6 +6,7 @@ import Register from './Pages/Register/Register';
 import Home from './Pages/Home/Home';
 import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import ResetCode from './Pages/ResetCode/ResetCode';
+import UpdatePassword from './Pages/UpdatePassword/UpdatePassword';
 
 // routing
 const router = createBrowserRouter([
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
       {path: "login", element:<Login/>},
       {path: "register", element:<Register/>},
       {path: "forgot_password", element: <ForgotPassword/>},
-      {path: "reset_code", element: <ResetCode/>}
+      {path: "reset_code", element: <ResetCode/>},
+      {path: "update_password", element: <UpdatePassword/>},
     ],
   }
 ])

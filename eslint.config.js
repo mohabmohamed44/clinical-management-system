@@ -36,6 +36,15 @@ export default [
       'react/prop-types': 'off',
       'react/jsx-uses-vars': 'error',
       "react/jsx-uses-react": "error",
+      
+      // Allow unused useState and useEffect without warnings
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^(useState|useEffect)$',
+        },
+      ],
     },
   },
 ]
