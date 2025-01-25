@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Eye, EyeOff } from 'lucide-react';
 import heroImage from '../../assets/hero_img_1.png';
+import {Link} from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -101,24 +102,24 @@ export default function Login() {
                 </div>
 
                 <div className="text-right">
-                  <a href="#" className="text-blue-500 hover:text-blue-600 text-sm">
-                    Forget Password?
-                  </a>
+                  <Link to="/forgot_password" className="text-blue-500 hover:text-blue-600 text-lg font-medium">
+                    Forgot Password?
+                  </Link>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="w-full bg-[#11319e] text-white py-3 rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg"
                 >
                   Login
                 </button>
 
-                <div className="text-center text-gray-600">
+                <div className="text-center text-gray-800 text-lg">
                   <p>
-                    Do not have an account?{' '}
-                    <a href="#" className="text-blue-500 hover:text-blue-600">
+                    Do not have an account ?{' '}
+                    <Link to="/register" className="text-blue-500 hover:text-blue-600 font-bold">
                       Signup
-                    </a>
+                    </Link>
                   </p>
                 </div>
 
@@ -141,7 +142,7 @@ export default function Login() {
                       alt="Google"
                       className="w-5 h-5"
                     />
-                    <span>Login with Google</span>
+                    <span className="font-medium">Login with Google</span>
                   </button>
 
                   <button
@@ -153,7 +154,7 @@ export default function Login() {
                       alt="Facebook"
                       className="w-5 h-5"
                     />
-                    <span>Login with Facebook</span>
+                    <span className="font-medium">Login with Facebook</span>
                   </button>
                 </div>
               </Form>
