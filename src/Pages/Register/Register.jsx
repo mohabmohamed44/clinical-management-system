@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Eye, EyeOff } from 'lucide-react';
+import MetaData from '../../Components/MetaData/MetaData';
 
 // Validation schemas for each step
 const personalInfoSchema = Yup.object().shape({
@@ -78,6 +79,13 @@ export default function Register() {
   };
 
   return (
+    <>
+    <MetaData
+      title="Register"
+      description="Register for an account"
+      keywords="register, account, patient, doctor"
+      author="Mohab Mohammed"
+    />
     <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row items-center justify-center p-4">
       {/* Left side - Image (hidden on mobile) */}
       <div className="hidden lg:block lg:w-1/2 lg:pr-8">
@@ -492,5 +500,6 @@ export default function Register() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
 import "./UpdatePassword.module.css";
+import MetaData from "../../Components/MetaData/MetaData";
 
 export default function UpdatePassword() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +25,13 @@ export default function UpdatePassword() {
 
   return (
     <>
+      {/* MetaData for the page */}
+      <MetaData
+        title="Update Password"
+        description="Update password page"
+        keywords="password, update, security"
+        author="Mohab Mohammed"
+      />
       <div className="flex items-center justify-center min-h-screen flex-col">
         <h2 className="text-center text-2xl font-medium mt-6">
           Set Your New Password

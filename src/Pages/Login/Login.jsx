@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Eye, EyeOff } from 'lucide-react';
 import heroImage from '../../assets/hero_img_1.png';
 import {Link} from 'react-router-dom';
+import MetaData from '../../Components/MetaData/MetaData';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -18,6 +19,13 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
+    <>
+    <MetaData
+      title="Login"
+      description="Login to your account"
+      keywords="login, account, signin"
+      author="Mohab Mohammed"
+    />
     <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row items-center justify-center p-4">
       {/* Left side - Image */}
       <div className="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0">
@@ -163,5 +171,6 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -3,12 +3,20 @@ import { Formik, Form, Field } from "formik";
 import { ArrowLeft } from "lucide-react";
 import * as Yup from "yup";
 import {Link} from "react-router-dom";
+import MetaData from "../../Components/MetaData/MetaData";
 export default function ForgotPassword(){
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
   });
 
   return (
+    <>
+    <MetaData
+      title="Forgot Password"
+      description="Forgot password page"
+      keywords="forgot, password, email"
+      author="Mohab Mohammed"
+    />
     <div className="flex items-center justify-center min-h-screen">
       <Formik
         initialValues={{ email: "" }}
@@ -60,6 +68,7 @@ export default function ForgotPassword(){
         )}
       </Formik>
     </div>
+    </>
   );
 };
 

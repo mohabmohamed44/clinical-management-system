@@ -1,9 +1,16 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Style from "./Home.module.css";
+import MetaData from "../../Components/MetaData/MetaData";
 export default function Home() {
   return (
     <>
-     <h2>Template Name</h2>
+      <MetaData
+        title="Home"
+        description="This is the home page"
+        keywords="home, page, welcome"
+        author="Mohab Mohammed" 
+      />
+      <h2 className="text-center text-2xl font-medium mt-6">Home</h2>
     </>
   );
 }

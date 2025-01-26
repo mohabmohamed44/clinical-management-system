@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { CircleArrowLeft, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import MetaData from '../../Components/MetaData/MetaData';
 
 export default function ResetCode() {
   const validationSchema = Yup.object().shape({
@@ -22,6 +23,12 @@ export default function ResetCode() {
 
   return (
     <>
+    <MetaData 
+      title="Reset Code" 
+      description="Reset code page"
+      keywords="code, reset, password"
+      author="Mohab Mohammed"
+    />
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md bg-white rounded-lg p-6">
         <Link className="flex items-center mr-4 text-blue-700 dark:text-blue-500 mb-4 cursor-pointer" to="/forgot_password">
