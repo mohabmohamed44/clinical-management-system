@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Eye, EyeOff } from 'lucide-react';
 import MetaData from '../../Components/MetaData/MetaData';
+import Doctor from '../../assets/doctor.png'
 
 // Validation schemas for each step
 const personalInfoSchema = Yup.object().shape({
@@ -86,13 +87,13 @@ export default function Register() {
       keywords="register, account, patient, doctor"
       author="Mohab Mohammed"
     />
-    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row items-center justify-center p-10">
       {/* Left side - Image (hidden on mobile) */}
-      <div className="hidden lg:block lg:w-1/2 lg:pr-8">
+      <div className="hidden lg:block lg:w-1/2 lg:pr-5">
         <img
-          src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=2000"
+          src={Doctor}
           alt="Doctor"
-          className="rounded-2xl shadow-xl max-w-full h-auto"
+          className="rounded-2xl shadow-xl max-w-full w-100 h-auto"
         />
       </div>
 

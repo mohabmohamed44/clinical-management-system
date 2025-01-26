@@ -21,10 +21,10 @@ export default function NotFound() {
         <h1 className="text-3xl font-bold text-gray-800 mt-3">
           Oops! This page is not found
         </h1>
-        <p className="text-gray-600 text-lg mt-2">
+        <p className="text-gray-500 text-lg font-medium mt-2">
           Sorry, the page you are looking for does not exist.
         </p>
-        <Link to="/" className="text-white bg-[#11319e] px-4 py-2 rounded-md shadow-md mt-4">
+        <Link to="/" className="text-white bg-[#11319e] px-4 py-3 rounded-md shadow-md mt-4">
           Go back to home
         </Link>
       </div>
