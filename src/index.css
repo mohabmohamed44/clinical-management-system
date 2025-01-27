@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@import '@fontsource/cairo/400.css'; /* Regular */
+@import '@fontsource/cairo/700.css'; /* Bold */
+@import '@fontsource/poppins/400.css'; /* Regular */
+@import '@fontsource/poppins/700.css'; /* Bold */
+
+
+@layer base {
+  /* Extend Tailwind's font-family utility */
+  body {
+    font-family: 'Cairo', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Custom font utility classes */
+  .font-cairo {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
