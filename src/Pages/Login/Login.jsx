@@ -26,19 +26,19 @@ export default function Login() {
         keywords="login, account, signin"
         author="Mohab Mohammed"
       />
-      <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center p-4">
         {/* Left side - Image */}
-        <div className="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0">
+        <div className="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0 h-full">
           <img
             src={heroImage}
             alt="Medical professionals"
-            className="rounded-2xl shadow-xl max-w-full h-auto hidden lg:block"
+            className="rounded-xl w-full h-full object-cover hidden lg:block"
           />
         </div>
 
         {/* Right side - Form */}
         <div className="lg:w-1/2 w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-white rounded-2xl p-8">
             <h1 className="text-3xl font-bold text-center mb-2">Hello!</h1>
             <p className="text-gray-600 text-center mb-8">
               We are really happy to see you again!
