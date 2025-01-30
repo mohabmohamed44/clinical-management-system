@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, MapPin, User, UserCircle } from "lucide-react";
 import MetaData from "../../Components/MetaData/MetaData";
-import Doctor from "../../assets/doctor.png";
+import Doctor from "../../assets/doctor-register.png";
 import { Link } from "react-router-dom";
 
 // Validation schemas for each step
@@ -55,6 +55,12 @@ export default function Register() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
 
+  const steps = [
+    { number: 1, icon: UserCircle, label: "Personal Info" },
+    { number: 2, icon: User, label: "Patient Info" },
+    { number: 3, icon: MapPin, label: "Address Info" },
+  ];
+
   const handleNext = (values, actions) => {
     let schema;
     if (currentStep === 1) {
@@ -97,11 +103,11 @@ export default function Register() {
       />
       <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
         {/* Left side - Image (hidden on mobile) */}
-        <div className="hidden lg:block lg:w-1/2 lg:pr-5">
+        <div className="hidden lg:block lg:w-full lg:pr-5">
           <img
             src={Doctor}
             alt="Doctor"
-            className="rounded-xl max-w-full w-100 h-auto"
+            className="rounded-xl w-full h-auto max-w-[600px] max-h-[700px] object-cover"
           />
         </div>
 
@@ -111,21 +117,21 @@ export default function Register() {
             {/* Progress indicator */}
             <div className="flex justify-center mb-6">
               <div className="flex items-center">
-                {[1, 2, 3].map((step) => (
-                  <div key={step} className="flex items-center">
+                {steps.map((step, index) => (
+                  <div key={step.number} className="flex items-center">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        currentStep >= step
+                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                        currentStep >= step.number
                           ? "bg-blue-600 text-white"
-                          : "bg-gray-200"
+                          : "bg-gray-200 text-gray-400"
                       }`}
                     >
-                      {step}
+                      <step.icon size={24} />
                     </div>
-                    {step < 3 && (
+                    {index < steps.length - 1 && (
                       <div
-                        className={`w-16 h-1 ${
-                          currentStep > step ? "bg-blue-600" : "bg-gray-200"
+                        className={`w-16 h-1 transition-colors duration-200 ${
+                          currentStep > step.number ? "bg-blue-600" : "bg-gray-200"
                         }`}
                       />
                     )}
@@ -253,9 +259,9 @@ export default function Register() {
                           className="absolute right-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                         >
                           {showPassword ? (
-                            <EyeOff size={20} />
+                            <EyeOff size={24} />
                           ) : (
-                            <Eye size={20} />
+                            <Eye size={24} />
                           )}
                         </button>
                         {errors.password && touched.password && (
