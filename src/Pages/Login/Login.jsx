@@ -32,7 +32,7 @@ export default function Login() {
           <img
             src={heroImage}
             alt="Medical professionals"
-            className="rounded-xl w-full h-full object-cover hidden lg:block"
+            className="rounded-xl max-w-[600px] max-h-[700px] object-cover hidden lg:block"
           />
         </div>
 
@@ -151,7 +151,7 @@ export default function Login() {
                   <div className="space-y-3">
                     <button
                       type="button"
-                      className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <img
                         src="https://www.google.com/favicon.ico"
@@ -163,7 +163,7 @@ export default function Login() {
 
                     <button
                       type="button"
-                      className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <img
                         src="https://www.facebook.com/favicon.ico"
