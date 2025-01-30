@@ -47,7 +47,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-6">
           <NavLink to="/login" className="text-gray-600 hover:text-blue-700">
             Login
           </NavLink>

@@ -38,7 +38,7 @@ export default function Login() {
 
         {/* Right side - Form */}
         <div className="lg:w-1/2 w-full max-w-md">
-          <div className="bg-white rounded-2xl p-8">
+          <div className="bg-white rounded-2xl p-8 shadow-sm mb-18">
             <h1 className="text-3xl font-bold text-center mb-2">Hello!</h1>
             <p className="text-gray-600 text-center mb-8">
               We are really happy to see you again!
