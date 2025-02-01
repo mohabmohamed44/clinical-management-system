@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Eye, EyeOff, MapPin, User, UserCircle } from "lucide-react";
+import { Eye, EyeOff, MapPin, UserCircle } from "lucide-react";
 import MetaData from "../../Components/MetaData/MetaData";
 import Doctor from "../../assets/doctor-register.png";
 import { Link } from "react-router-dom";
+import { FaHeartbeat } from "react-icons/fa";
 
 // Validation schemas for each step
 const personalInfoSchema = Yup.object().shape({
@@ -57,7 +58,7 @@ export default function Register() {
 
   const steps = [
     { number: 1, icon: UserCircle, label: "Personal Info" },
-    { number: 2, icon: User, label: "Patient Info" },
+    { number: 2, icon: FaHeartbeat, label: "Patient Info" },
     { number: 3, icon: MapPin, label: "Address Info" },
   ];
 
@@ -112,7 +113,7 @@ export default function Register() {
         </div>
 
         {/* Right side - Form */}
-        <div className="w-full lg:w-full max-w-md">
+        <div className="w-full lg:w-full max-w-xl">
           <div className="bg-white rounded-2xl shadow-sm p-8">
             {/* Progress indicator */}
             <div className="flex justify-center mb-6">

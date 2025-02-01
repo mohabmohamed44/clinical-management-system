@@ -1,11 +1,11 @@
 import React from 'react';
 import { MapPin, Phone, Mail, Shield } from 'lucide-react';
 import { FaFacebook, FaLinkedinIn, FaTwitter } from "react-icons/fa6";
-
+import Logo from '../../assets/logo.svg';
 
 const Footer = () => {
   return (
-    <footer className="relative">
+    <footer className="relative mt-12">
       {/* Wave Shape */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-sky-100 transform -translate-y-full"></div>
       
@@ -22,6 +22,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Logo and Contact Info */}
             <div className="space-y-4">
+              <img src={Logo} className="w-12 h-12" alt="logo-img" />
               <h2 className="text-2xl font-bold text-gray-800">MediCare</h2>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-600">

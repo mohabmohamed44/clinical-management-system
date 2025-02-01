@@ -12,7 +12,7 @@ export default function NotFound() {
         keywords="404, not found, error"
         author="Mohab Mohammed"
       />
-      <div className="container mx-auto flex flex-col items-center justify-center h-screen text-center">
+      <div className="container mx-auto pb-30 flex flex-col items-center justify-center h-screen text-center">
         <img
           src={Error_404}
           alt="Not found"

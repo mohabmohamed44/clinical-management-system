@@ -27,10 +27,10 @@ export default function Navbar() {
               Home
             </NavLink>
             <NavLink
-              to="/about"
+              to="/FindDoctor"
               className="text-gray-600 hover:text-gray-700 font-medium"
             >
-              About
+              Find Doctor
             </NavLink>
             <NavLink
               to="/services"
@@ -122,11 +122,6 @@ export default function Navbar() {
           >
             Register
           </NavLink>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="block w-3/4 p-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-          />
         </div>
       </div>
     </nav>
