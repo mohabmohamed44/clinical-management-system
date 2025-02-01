@@ -15,6 +15,8 @@ const personalInfoSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match"),  
   phone: Yup.string().required("Phone number is required"),
   gender: Yup.string().required("Gender is required"),
 });
@@ -39,6 +41,7 @@ const initialValues = {
   lastName: "",
   email: "",
   password: "",
+  confirmPassword: "",
   phone: "",
   gender: "",
   dateOfBirth: "",
@@ -102,19 +105,19 @@ export default function Register() {
         keywords="register, account, patient, doctor"
         author="Mohab Mohammed"
       />
-      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
+      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
         {/* Left side - Image (hidden on mobile) */}
         <div className="hidden lg:block lg:w-full lg:pr-5">
           <img
             src={Doctor}
             alt="Doctor"
-            className="rounded-xl w-full h-auto max-w-[600px] max-h-[700px] object-cover"
+            className="rounded-xl w-full h-auto max-w-[600px] max-h-[800px] object-cover"
           />
         </div>
 
         {/* Right side - Form */}
         <div className="w-full lg:w-full max-w-xl">
-          <div className="bg-white rounded-2xl shadow-sm p-8">
+          <div className="bg-white rounded-2xl shadow-sm mb-6 p-8">
             {/* Progress indicator */}
             <div className="flex justify-center mb-6">
               <div className="flex items-center">
@@ -268,6 +271,40 @@ export default function Register() {
                         {errors.password && touched.password && (
                           <div className="text-red-500 text-sm mt-1">
                             {errors.password}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative mt-5">
+                        <Field
+                          name="confirmPassword"
+                          type={showPassword ? "text" : "password"}
+                          className={`peer w-full px-4 py-3 rounded-lg border ${
+                            errors.confirmPassword && touched.confirmPassword
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
+                          placeholder="Confirm Password"
+                        />
+                        <label
+                          htmlFor="confirmPassword"
+                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                        >
+                          Confirm Password
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? (
+                            <EyeOff size={24} />
+                          ) : (
+                            <Eye size={24} />
+                          )}
+                        </button>
+                        {errors.confirmPassword && touched.confirmPassword && (
+                          <div className="text-red-500 text-sm mt-1">
+                            {errors.confirmPassword}
                           </div>
                         )}
                       </div>
