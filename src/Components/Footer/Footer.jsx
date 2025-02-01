@@ -23,7 +23,7 @@ const Footer = () => {
             {/* Logo and Contact Info */}
             <div className="space-y-4">
               <img src={Logo} className="w-12 h-12" alt="logo-img" />
-              <h2 className="text-2xl font-bold text-gray-800">MediCare</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Delma</h2>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-gray-600">
                   <MapPin className="w-5 h-5" />

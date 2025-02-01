@@ -14,7 +14,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center space-x-3">
             <img src={Logo} className="h-10" alt="Logo" />
             <span className="self-center text-xl font-semibold text-gray-800">
-              MediCare
+              Delma
             </span>
           </Link>
 

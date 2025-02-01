@@ -8,6 +8,7 @@ import ForgotPassword from './Pages/ForgotPassword/ForgotPassword';
 import ResetCode from './Pages/ResetCode/ResetCode';
 import UpdatePassword from './Pages/UpdatePassword/UpdatePassword';
 import NotFound from './Pages/NotFound/NotFound';
+import AllDone from './Pages/AllDone/AllDone';
 
 // routing
 const router = createBrowserRouter([
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       {path: "forgot_password", element: <ForgotPassword/>},
       {path: "reset_code", element: <ResetCode/>},
       {path: "update_password", element: <UpdatePassword/>},
+      {path: "all_done", element: <AllDone/>},
       {path: "*", element: <NotFound/>}
     ],
   }
