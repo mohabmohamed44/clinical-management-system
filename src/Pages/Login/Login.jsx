@@ -32,7 +32,7 @@ export default function Login() {
           <img
             src={heroImage}
             alt="Medical professionals"
-            className="rounded-xl max-w-[600px] max-h-[700px] object-cover hidden lg:block"
+            className="rounded-xl max-w-[600px] max-h-[700px] object-contain hidden lg:block"
           />
         </div>
 
