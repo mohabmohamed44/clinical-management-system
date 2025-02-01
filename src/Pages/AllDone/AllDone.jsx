@@ -11,9 +11,9 @@ export default function AllDone() {
         <p className="font-semibold text-gray-500 text-xl">
           Your Password has been reset Successfully.
         </p>
-        <button className="w-1/3 text-white bg-[#11319e] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-3 text-center mt-4">
-          <Link to="/login">Go to Login</Link>
-        </button>
+        <Link to="/login" className="w-1/3 text-white bg-[#11319e] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-3 text-center mt-4">
+          Go to Login
+        </Link>
       </div>
     </>
   );
