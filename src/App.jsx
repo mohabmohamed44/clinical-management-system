@@ -9,6 +9,7 @@ import ResetCode from './Pages/ResetCode/ResetCode';
 import UpdatePassword from './Pages/UpdatePassword/UpdatePassword';
 import NotFound from './Pages/NotFound/NotFound';
 import AllDone from './Pages/AllDone/AllDone';
+import { Toaster } from 'react-hot-toast';
 
 // routing
 const router = createBrowserRouter([
@@ -32,6 +33,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <Toaster position="top-center" reverseOrder={false}/>
     </> 
   )
 }
