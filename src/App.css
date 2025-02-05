@@ -1,29 +1,21 @@
 @import "tailwindcss";
 
 /* Import fonts */
-@import "@fontsource/cairo/400.css"; /* Regular */
-@import "@fontsource/cairo/700.css"; /* Bold */
-@import "@fontsource/poppins/400.css"; /* Regular */
-@import "@fontsource/poppins/700.css"; /* Bold' */
+@import "@fontsource/cairo/400.css";
+@import "@fontsource/cairo/700.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/700.css";
 
-html[dir="ltr"] {
-  font-family: "Poppins", sans-serif;
-}
-html[dir="rtl"] {
-  font-family: "Cairo", sans-serif;
-}
 @layer base {
-  /* Apply Cairo font for RTL (Arabic) */
-  html[dir="rtl"] {
-    direction: rtl;
-    text-align: right;
-    font-family: "Cairo", sans-serif;
-  }
-
-  /* Apply Poppins font for LTR (English) */
-  html[dir="ltr"] {
+  /* Fallback base font */
+  html {
+    font-family: 'Poppins', sans-serif;
     direction: ltr;
-    text-align: left;
-    font-family: "Poppins", sans-serif;
+  }
+  
+  /* RTL override */
+  html[dir="rtl"] {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
   }
 }

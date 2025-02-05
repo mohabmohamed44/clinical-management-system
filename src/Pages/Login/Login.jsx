@@ -30,7 +30,7 @@ export default function Login() {
         description="Login to your account"
         keywords="login, account, signin"
         author="Mohab Mohammed"
-        
+
       />
       <div
         className={`min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 bg-gray-50 ${
@@ -42,7 +42,7 @@ export default function Login() {
           <img
             src={heroImage}
             alt="Medical professionals"
-            className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto"
+            className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto md:rtl:pl-6"
           />
         </div>
 
