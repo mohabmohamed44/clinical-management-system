@@ -6,9 +6,13 @@
 @import "@fontsource/poppins/400.css"; /* Regular */
 @import "@fontsource/poppins/700.css"; /* Bold' */
 
+html[dir="ltr"] {
+  font-family: "Poppins", sans-serif;
+}
+html[dir="rtl"] {
+  font-family: "Cairo", sans-serif;
+}
 @layer base {
-  /* Default font for the whole app */
-
   /* Apply Cairo font for RTL (Arabic) */
   html[dir="rtl"] {
     direction: rtl;
