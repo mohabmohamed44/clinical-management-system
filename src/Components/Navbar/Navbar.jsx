@@ -9,7 +9,7 @@ import en from "../../assets/united-states.png";
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -23,20 +23,20 @@ export default function Navbar() {
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center space-x-3">
             <img src={Logo} className="h-10" alt="Logo" />
-            <span className="self-center text-xl font-semibold text-gray-800">Delma</span>
+            <span className="self-center text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
           <div className="hidden md:flex space-x-6">
-            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium">Home</NavLink>
-            <NavLink to="/FindDoctor" className="text-gray-600 hover:text-gray-700 font-medium">Find Doctor</NavLink>
-            <NavLink to="/services" className="text-gray-600 hover:text-gray-700 font-medium">Services</NavLink>
-            <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium">Contact</NavLink>
+            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium">{t("Home")}</NavLink>
+            <NavLink to="/FindDoctor" className="text-gray-600 hover:text-gray-700 font-medium">{t("FindDoctor")}</NavLink>
+            <NavLink to="/services" className="text-gray-600 hover:text-gray-700 font-medium">{t("Appointments")}</NavLink>
+            <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium">{(t("Contact"))}</NavLink>
           </div>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
-          <NavLink to="/login" className="text-gray-600 hover:text-blue-700">Login</NavLink>
-          <NavLink to="/register" className="text-gray-600 hover:text-blue-700">Register</NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700">{t("Login")}</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700">{t("Register")}</NavLink>
           
           {/* Language Dropdown */}
           <div className="relative">

@@ -2,26 +2,128 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
-    en: {
-        translation: {
-            "Welcome to delma": "Welcome to delma",
-            "language": "English (US)"
-        }
+  en: {
+    translation: {
+      "Welcome to delma": "Welcome to delma",
+      // English translations
+      firstName: "First Name",
+      lastName: "Last Name",
+      email: "Email",
+      Delma: "Delma",
+      password: "Password",
+      Home: "Home",
+      Register: "Register",
+      Appointments: "Appointments",
+      FindDoctor: 'Find Doctor',
+      Contact: 'Contact',
+      Email:"Email",
+      Password:"Password",
+      Hello: "Hello",
+      confirmPassword: "Confirm Password",
+      WeAreHappy: "We are really happy to see you again!",
+      phone: "Phone Number",
+      gender: "Gender",
+      dateOfBirth: "Date of Birth",
+      occupation: "Occupation",
+      bloodType: "Blood Type",
+      weight: "Weight (kg)",
+      height: "Height (cm)",
+      city: "City",
+      area: "Area",
+      street: "Street",
+      zipCode: "Zip Code",
+      EmailRequired: "Email Required",
+      personalInfo: "Personal Info",
+      InvalidEmail: "Invalid email address",
+      patientInfo: "Patient Info",
+      addressInfo: "Address Info",
+      registrationComplete: "Registration Complete!",
+      LoginWithGoogle: "Login with Google",
+      LoginWithFacebook: "Login with Facebook",
+      thankYou:
+        "Thank you for registering. You can now log in to your account.",
+      goToLogin: "Go to Log In",
+      back: "Back",
+      next: "Next",
+      completeRegistration: "Complete Registration",
+      ForgotPassword: "Forgot Password?",
+      PasswordMinLength: 'Password must be at least 8 characters long',
+      PasswordRequired: 'Password is required',
+      NoAccount: "Do not have an account ?", 
+      FirstNameRequired: "First name is required",
+      LastNameRequired: "Last name is required",
+      PasswordsMustMatch: "Passwords must match",
+      phoneNumberRequired: "Phone number is required",
+      GenderRequired: "Gender is required",
+      Login: "Login",
+      language: "English (US)",
     },
-    ar: {
-        translation: {
-            "Welcome to delma":"مرحبا بك في دلما",
-            "language": "العربية"
-        }
-    }
+},
+ar: {
+    translation: {
+      "Welcome to delma": "مرحبا بك في دلما",
+      firstName: 'الاسم الأول',
+      lastName: 'الاسم الأخير',
+      email: 'البريد الإلكتروني',
+      password: 'كلمة المرور',
+      confirmPassword: 'تأكيد كلمة المرور',
+      Password: 'كلمة المرور',
+      phone: 'رقم الهاتف',
+      Hello: 'مرحبًا',
+      gender: 'الجنس',
+      dateOfBirth: 'تاريخ الميلاد',
+      female: 'أنثي',
+      Delma: 'دلما',
+      male:'ذكر',
+      EmailRequired: 'البريد الالكتروني مطلوب',
+      InvalidEmail: 'البريد الالكتروني غير صحيح',
+      PasswordMinLength: 'يجب أن تكون كلمة المرور على الأقل 8 حروف',
+      FirstNameRequired: 'الاسم الاول مطلوب',
+      LastNameRequired: 'الاسم الاخير مطلوب',
+      PasswordRequired: 'يجب ادخال كلمة المرور',
+      Register: 'حساب جديد',
+      Email: "البريد الالكتروني",
+      occupation: 'المهنة',
+      bloodType: 'فصيلة الدم',
+      weight: 'الوزن (كجم)',
+      height: 'الطول (سم)',
+      city: 'المدينة',
+      area: 'المنطقة',
+      Login: 'تسجيل الدخول',
+      LoginWithGoogle: "تسجيل الدخول باستخدام جوجل",
+      LoginWithFacebook: "تسجيل الدخول باستخدام فيسبوك",
+      street: 'الشارع',
+      zipCode: 'الرمز البريدي',
+      personalInfo: 'المعلومات الشخصية',
+      Appointments: 'المواعيد',
+      patientInfo: 'معلومات المريض',
+      addressInfo: 'معلومات العنوان',
+      GenderRequired: 'الجنس مطلوب',
+      registrationComplete: 'تم التسجيل بنجاح!',
+      thankYou: 'شكرًا لتسجيلك. يمكنك الآن تسجيل الدخول إلى حسابك.',
+      phoneNumberRequired: 'الرقم الموبايل مطلوب',
+      WeAreHappy: 'نحن سعداء جدا لرؤيتك مرة اخرى!',
+      Home: 'الصفحة الرئيسية',
+      FindDoctor: 'ابحث عن طبيب',
+      Contact: 'اتصل بنا',
+      goToLogin: 'انتقل إلى تسجيل الدخول',
+      back: 'رجوع',
+      ForgotPassword: 'نسيت كلمة المرور؟',
+      next: 'التالي',
+      completeRegistration: 'إكمال التسجيل',
+      Signup: "تسجيل حساب جديد",
+      NoAccount: "ليس لديك حساب؟",
+      language: "العربية",
+    },
+  },
 };
 
 i18n.use(initReactI18next).init({
-    resources,
-    lng: "en", // default language
-    interpolation: {
-        escapeValue: false
-    }
+  resources,
+  lng: "en", // default language
+  interpolation: {
+    escapeValue: false,
+  },
 });
 
 export default i18n;

@@ -2,39 +2,12 @@ import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff, MapPin, UserCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import MetaData from "../../Components/MetaData/MetaData";
 import Doctor from "../../assets/doctor-register.png";
 import { Link } from "react-router-dom";
 import { FaHeartbeat } from "react-icons/fa";
 
-// Validation schemas for each step
-const personalInfoSchema = Yup.object().shape({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match"),  
-  phone: Yup.string().required("Phone number is required"),
-  gender: Yup.string().required("Gender is required"),
-});
-
-const patientInfoSchema = Yup.object().shape({
-  dateOfBirth: Yup.date().required("Date of birth is required"),
-  occupation: Yup.string().required("Occupation is required"),
-  bloodType: Yup.string().required("Blood type is required"),
-  weight: Yup.number().required("Weight is required"),
-  height: Yup.number().required("Height is required"),
-});
-
-const addressInfoSchema = Yup.object().shape({
-  city: Yup.string().required("City is required"),
-  area: Yup.string().required("Area is required"),
-  street: Yup.string().required("Street is required"),
-  zipCode: Yup.string().required("Zip code is required"),
-});
 
 const initialValues = {
   firstName: "",
@@ -56,15 +29,46 @@ const initialValues = {
 };
 
 export default function Register() {
+  const {t} = useTranslation();
+
+  // Validation Schema
+  const personalInfoSchema = Yup.object().shape({
+    firstName: Yup.string().required(t("FirstNameRequired")),
+    lastName: Yup.string().required(t("LastNameRequired")),
+    email: Yup.string().email("Invalid email").required(t("EmailRequired")),
+    password: Yup.string()
+    .min(8, t("PasswordMinLength"))
+      .required(t("PasswordRequired")),
+      confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], (t("PasswordsMustMatch"))),  
+      phone: Yup.string().required(t("phoneNumberRequired")),
+    gender: Yup.string().required(t("GenderRequired")),
+  });
+  
+  const patientInfoSchema = Yup.object().shape({
+    dateOfBirth: Yup.date().required("Date of birth is required"),
+    occupation: Yup.string().required("Occupation is required"),
+    bloodType: Yup.string().required("Blood type is required"),
+    weight: Yup.number().required("Weight is required"),
+    height: Yup.number().required("Height is required"),
+  });
+  
+  const addressInfoSchema = Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    area: Yup.string().required("Area is required"),
+    street: Yup.string().required("Street is required"),
+    zipCode: Yup.string().required("Zip code is required"),
+  });
+
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
-
+  
   const steps = [
-    { number: 1, icon: UserCircle, label: "Personal Info" },
-    { number: 2, icon: FaHeartbeat, label: "Patient Info" },
-    { number: 3, icon: MapPin, label: "Address Info" },
+    { number: 1, icon: UserCircle, label: t("Personal Info") },
+    { number: 2, icon: FaHeartbeat, label: t("Patient Info") },
+    { number: 3, icon: MapPin, label: t("Address Info") },
   ];
-
+  
   const handleNext = (values, actions) => {
     let schema;
     if (currentStep === 1) {
@@ -107,7 +111,7 @@ export default function Register() {
       />
       <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
         {/* Left side - Image (hidden on mobile) */}
-        <div className="hidden lg:block lg:w-full lg:pr-5">
+        <div className="hidden lg:block lg:w-full lg:pr-5 rtl:lg:pl-5">
           <img
             src={Doctor}
             alt="Doctor"
@@ -117,7 +121,7 @@ export default function Register() {
 
         {/* Right side - Form */}
         <div className="w-full lg:w-full max-w-xl">
-          <div className="bg-white rounded-2xl shadow-sm mb-6 p-8">
+          <div className="bg-white rounded-2xl shadow-sm mb-6 p-8 mt-14">
             {/* Progress indicator */}
             <div className="flex justify-center mb-6">
               <div className="flex items-center">
@@ -126,8 +130,8 @@ export default function Register() {
                     <div
                       className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
                         currentStep >= step.number
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-400"
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-200 text-gray-400'
                       }`}
                     >
                       <step.icon size={24} />
@@ -135,7 +139,7 @@ export default function Register() {
                     {index < steps.length - 1 && (
                       <div
                         className={`w-16 h-1 transition-colors duration-200 ${
-                          currentStep > step.number ? "bg-blue-600" : "bg-gray-200"
+                          currentStep > step.number ? 'bg-blue-600' : 'bg-gray-200'
                         }`}
                       />
                     )}
@@ -146,17 +150,16 @@ export default function Register() {
 
             <h1 className="text-3xl font-bold text-center mb-6">
               {currentStep === 1
-                ? "Personal Info"
+                ? t('personalInfo')
                 : currentStep === 2
-                ? "Patient Info"
+                ? t('patientInfo')
                 : currentStep === 3
-                ? "Address Info"
-                : "Registration Complete"}
+                ? t('addressInfo')
+                : t('registrationComplete')}
             </h1>
             {currentStep === 2 && (
               <p className="text-gray-600 text-center mb-8">
-                You need to provide some extra info to complete your
-                registration.
+                You need to provide some extra info to complete your registration.
               </p>
             )}
 
@@ -173,19 +176,19 @@ export default function Register() {
                             type="text"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.firstName && touched.firstName
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="First Name"
+                            placeholder={t('firstName')}
                           />
                           <label
                             htmlFor="firstName"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 -top-2.5 bg-white px-1 text-mdg text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            First Name
+                            {t('firstName')}
                           </label>
                           {errors.firstName && touched.firstName && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.firstName}
                             </div>
                           )}
@@ -197,19 +200,19 @@ export default function Register() {
                             type="text"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.lastName && touched.lastName
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="Last Name"
+                            placeholder={t('lastName')}
                           />
                           <label
                             htmlFor="lastName"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            Last Name
+                            {t('lastName')}
                           </label>
                           {errors.lastName && touched.lastName && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.lastName}
                             </div>
                           )}
@@ -222,19 +225,19 @@ export default function Register() {
                           type="email"
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.email && touched.email
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                          placeholder="Email"
+                          placeholder={t('email')}
                         />
                         <label
                           htmlFor="email"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Email
+                          {t('email')}
                         </label>
                         {errors.email && touched.email && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.email}
                           </div>
                         )}
@@ -243,19 +246,19 @@ export default function Register() {
                       <div className="relative mt-5">
                         <Field
                           name="password"
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.password && touched.password
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
-                          placeholder="Password"
+                          placeholder={t('password')}
                         />
                         <label
                           htmlFor="password"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Password
+                          {t('password')}
                         </label>
                         <button
                           type="button"
@@ -269,7 +272,7 @@ export default function Register() {
                           )}
                         </button>
                         {errors.password && touched.password && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.password}
                           </div>
                         )}
@@ -277,19 +280,19 @@ export default function Register() {
                       <div className="relative mt-5">
                         <Field
                           name="confirmPassword"
-                          type={showPassword ? "text" : "password"}
+                          type={showPassword ? 'text' : 'password'}
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.confirmPassword && touched.confirmPassword
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
-                          placeholder="Confirm Password"
+                          placeholder={t('confirmPassword')}
                         />
                         <label
                           htmlFor="confirmPassword"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Confirm Password
+                          {t('confirmPassword')}
                         </label>
                         <button
                           type="button"
@@ -303,7 +306,7 @@ export default function Register() {
                           )}
                         </button>
                         {errors.confirmPassword && touched.confirmPassword && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.confirmPassword}
                           </div>
                         )}
@@ -315,19 +318,19 @@ export default function Register() {
                           type="tel"
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.phone && touched.phone
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                          placeholder="Phone Number"
+                          placeholder={t('phone')}
                         />
                         <label
                           htmlFor="phone"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Phone Number
+                          {t('phone')}
                         </label>
                         {errors.phone && touched.phone && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.phone}
                           </div>
                         )}
@@ -335,7 +338,7 @@ export default function Register() {
 
                       <div className="space-y-2 pt-3 rtl:mr-2">
                         <label className="text-lg text-gray-700 mt-3">
-                          Gender
+                          {t('gender')}
                         </label>
                         <div className="flex items-center mb-4 mt-4">
                           <label className="flex items-center gap-2">
@@ -345,7 +348,7 @@ export default function Register() {
                               value="male"
                               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                             />
-                            <span>Male</span>
+                            <span>{t('male')}</span>
                           </label>
                           <label className="flex items-center gap-2 pl-2">
                             <Field
@@ -354,11 +357,11 @@ export default function Register() {
                               value="female"
                               className="w-4 h-4 text-blue-600"
                             />
-                            <span>Female</span>
+                            <span>{t('female')}</span>
                           </label>
                         </div>
                         {errors.gender && touched.gender && (
-                          <div className="text-red-500 text-sm">
+                          <div className="text-red-500 text-md">
                             {errors.gender}
                           </div>
                         )}
@@ -375,18 +378,18 @@ export default function Register() {
                           type="date"
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.dateOfBirth && touched.dateOfBirth
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500`}
                         />
                         <label
                           htmlFor="dateOfBirth"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600"
                         >
-                          Date of Birth
+                          {t('dateOfBirth')}
                         </label>
                         {errors.dateOfBirth && touched.dateOfBirth && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.dateOfBirth}
                           </div>
                         )}
@@ -399,19 +402,19 @@ export default function Register() {
                             type="text"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.occupation && touched.occupation
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="Occupation"
+                            placeholder={t('occupation')}
                           />
                           <label
                             htmlFor="occupation"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            Occupation
+                            {t('occupation')}
                           </label>
                           {errors.occupation && touched.occupation && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.occupation}
                             </div>
                           )}
@@ -423,11 +426,11 @@ export default function Register() {
                             as="select"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.bloodType && touched.bloodType
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500`}
                           >
-                            <option value="">Select Blood Type</option>
+                            <option value="">{t('selectBloodType')}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -441,7 +444,7 @@ export default function Register() {
                             htmlFor="bloodType"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600"
                           >
-                            Blood Type
+                            {t('bloodType')}
                           </label>
                           {errors.bloodType && touched.bloodType && (
                             <div className="text-red-500 text-sm mt-1">
@@ -458,19 +461,19 @@ export default function Register() {
                             type="number"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.weight && touched.weight
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="Weight"
+                            placeholder={t('weight')}
                           />
                           <label
                             htmlFor="weight"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            Weight (kg)
+                            {t('weight')}
                           </label>
                           {errors.weight && touched.weight && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.weight}
                             </div>
                           )}
@@ -482,19 +485,19 @@ export default function Register() {
                             type="number"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.height && touched.height
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="Height"
+                            placeholder={t('height')}
                           />
                           <label
                             htmlFor="height"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            Height (cm)
+                            {t('height')}
                           </label>
                           {errors.height && touched.height && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.height}
                             </div>
                           )}
@@ -513,19 +516,19 @@ export default function Register() {
                             type="text"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.city && touched.city
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="City"
+                            placeholder={t('city')}
                           />
                           <label
                             htmlFor="city"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            City
+                            {t('city')}
                           </label>
                           {errors.city && touched.city && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.city}
                             </div>
                           )}
@@ -537,19 +540,19 @@ export default function Register() {
                             type="text"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.area && touched.area
-                                ? "border-red-500"
-                                : "border-gray-300"
+                                ? 'border-red-500'
+                                : 'border-gray-300'
                             } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder="Area"
+                            placeholder={t('area')}
                           />
                           <label
                             htmlFor="area"
                             className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                           >
-                            Area
+                            {t('area')}
                           </label>
                           {errors.area && touched.area && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-md mt-1">
                               {errors.area}
                             </div>
                           )}
@@ -562,19 +565,19 @@ export default function Register() {
                           type="text"
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.street && touched.street
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                          placeholder="Street"
+                          placeholder={t('street')}
                         />
                         <label
                           htmlFor="street"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 -top-2.5 bg-white px-1 text-md text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Street
+                          {t('street')}
                         </label>
                         {errors.street && touched.street && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.street}
                           </div>
                         )}
@@ -586,19 +589,19 @@ export default function Register() {
                           type="text"
                           className={`peer w-full px-4 py-3 rounded-lg border ${
                             errors.zipCode && touched.zipCode
-                              ? "border-red-500"
-                              : "border-gray-300"
+                              ? 'border-red-500'
+                              : 'border-gray-300'
                           } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                          placeholder="Zip Code"
+                          placeholder={t('zipCode')}
                         />
                         <label
                           htmlFor="zipCode"
                           className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                         >
-                          Zip Code
+                          {t('zipCode')}
                         </label>
                         {errors.zipCode && touched.zipCode && (
-                          <div className="text-red-500 text-sm mt-1">
+                          <div className="text-red-500 text-md mt-1">
                             {errors.zipCode}
                           </div>
                         )}
@@ -627,18 +630,17 @@ export default function Register() {
                         </div>
                       </div>
                       <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        Registration Complete!
+                        {t('registrationComplete')}
                       </h2>
                       <p className="text-gray-600 mb-6">
-                        Thank you for registering. You can now log in to your
-                        account.
+                        {t('thankYou')}
                       </p>
                       <button
                         type="button"
-                        onClick={() => (window.location.href = "/login")}
+                        onClick={() => (window.location.href = '/login')}
                         className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
-                        <Link to="/login">Go to Log In</Link>
+                        <Link to="/login">{t('goToLogin')}</Link>
                       </button>
                     </div>
                   )}
@@ -652,14 +654,14 @@ export default function Register() {
                           onClick={() => setCurrentStep(currentStep - 1)}
                           className="w-full bg-gray-100 text-gray-800 rounded-lg px-4 py-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                         >
-                          Back
+                          {t('back')}
                         </button>
                       )}
                       <button
                         type="submit"
                         className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
-                        {currentStep === 3 ? "Complete Registration" : "Next"}
+                        {currentStep === 3 ? t('completeRegistration') : t('next')}
                       </button>
                     </div>
                   )}
