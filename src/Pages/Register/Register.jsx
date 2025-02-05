@@ -333,7 +333,7 @@ export default function Register() {
                         )}
                       </div>
 
-                      <div className="space-y-2 pt-3">
+                      <div className="space-y-2 pt-3 rtl:mr-2">
                         <label className="text-lg text-gray-700 mt-3">
                           Gender
                         </label>

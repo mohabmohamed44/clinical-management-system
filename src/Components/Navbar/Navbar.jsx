@@ -1,11 +1,21 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
-// import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import ar from "../../assets/circle.png";
+import en from "../../assets/united-states.png";
 
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    document.documentElement.dir = lng === "ar" ? "rtl" : "ltr";
+    setLanguageOpen(false);
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow">
@@ -13,66 +23,45 @@ export default function Navbar() {
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center space-x-3">
             <img src={Logo} className="h-10" alt="Logo" />
-            <span className="self-center text-xl font-semibold text-gray-800">
-              Delma
-            </span>
+            <span className="self-center text-xl font-semibold text-gray-800">Delma</span>
           </Link>
-
-          {/* Navigation Links - Desktop */}
+          
           <div className="hidden md:flex space-x-6">
-            <NavLink
-              to="/"
-              className="text-gray-600 hover:text-gray-700 font-medium"
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/FindDoctor"
-              className="text-gray-600 hover:text-gray-700 font-medium"
-            >
-              Find Doctor
-            </NavLink>
-            <NavLink
-              to="/services"
-              className="text-gray-600 hover:text-gray-700 font-medium"
-            >
-              Services
-            </NavLink>
-            <NavLink
-              to="/contact"
-              className="text-gray-600 hover:text-gray-700 font-medium"
-            >
-              Contact
-            </NavLink>
+            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium">Home</NavLink>
+            <NavLink to="/FindDoctor" className="text-gray-600 hover:text-gray-700 font-medium">Find Doctor</NavLink>
+            <NavLink to="/services" className="text-gray-600 hover:text-gray-700 font-medium">Services</NavLink>
+            <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium">Contact</NavLink>
           </div>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
-          <NavLink to="/login" className="text-gray-600 hover:text-blue-700">
-            Login
-          </NavLink>
-          <NavLink to="/register" className="text-gray-600 hover:text-blue-700">
-            Register
-          </NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700">Login</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700">Register</NavLink>
+          
+          {/* Language Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setLanguageOpen(!languageOpen)}
+              className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+            >
+              <img src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <ChevronDown className="w-4 h-4" />
+            </button>
+            {languageOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                  <img src={en} alt="English" className="h-5 w-5 mr-2" /> English
+                </button>
+                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                  <img src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Search Input - Desktop */}
-        {/* <div className="hidden md:block relative ml-6">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Search className="w-5 h-5 text-gray-500" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div> */}
-
         {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-gray-600 hover:text-gray-800"
-          onClick={() => setNavbarOpen(!navbarOpen)}
-        >
+        <button className="md:hidden text-gray-600 hover:text-gray-800" onClick={() => setNavbarOpen(!navbarOpen)}>
           {navbarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -80,48 +69,30 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={`md:hidden bg-white ${navbarOpen ? "block" : "hidden"}`}>
         <div className="flex flex-col items-start px-4 py-4 space-y-4">
-          <NavLink
-            to="/"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/about"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="/services"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            Services
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            Contact
-          </NavLink>
-          <NavLink
-            to="/login"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            Login
-          </NavLink>
-          <NavLink
-            to="/register"
-            className="text-gray-600 hover:text-blue-700"
-            onClick={() => setNavbarOpen(false)}
-          >
-            Register
-          </NavLink>
+          <NavLink to="/" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Home</NavLink>
+          <NavLink to="/FindDoctor" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Find Doctor</NavLink>
+          <NavLink to="/services" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Services</NavLink>
+          <NavLink to="/contact" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Contact</NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Login</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Register</NavLink>
+          
+          {/* Language Dropdown Mobile */}
+          <div className="relative w-full">
+            <button onClick={() => setLanguageOpen(!languageOpen)} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+              <img src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <ChevronDown className="ml-auto w-4 h-4" />
+            </button>
+            {languageOpen && (
+              <div className="absolute left-4 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                  <img src={en} alt="English" className="h-5 w-5 mr-2" /> English
+                </button>
+                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                  <img src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

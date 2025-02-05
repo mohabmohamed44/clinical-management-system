@@ -32,3 +32,15 @@ body {
 * {
     box-sizing: border-box;
 }
+
+/* change direction for Language Switch */
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+  font-family: 'Cairo', sans-serif; /* Regular */
+}
+
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
