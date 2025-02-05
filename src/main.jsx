@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./utils/i18.jsx";  // Make sure this path is correct
+import i18n from "./utils/i18.jsx";
 import App from "./App.jsx";
 import "./index.css";
 
