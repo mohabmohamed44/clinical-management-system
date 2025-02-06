@@ -27,16 +27,16 @@ export default function Navbar() {
           </Link>
           
           <div className="hidden md:flex space-x-6">
-            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium">{t("Home")}</NavLink>
-            <NavLink to="/FindDoctor" className="text-gray-600 hover:text-gray-700 font-medium">{t("FindDoctor")}</NavLink>
-            <NavLink to="/services" className="text-gray-600 hover:text-gray-700 font-medium">{t("Appointments")}</NavLink>
-            <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium">{(t("Contact"))}</NavLink>
+            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
+            <NavLink to="/FindDoctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
+            <NavLink to="/services" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Appointments")}</NavLink>
+            <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Contact"))}</NavLink>
           </div>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
-          <NavLink to="/login" className="text-gray-600 hover:text-blue-700">{t("Login")}</NavLink>
-          <NavLink to="/register" className="text-gray-600 hover:text-blue-700">{t("Register")}</NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer">{t("Login")}</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer">{t("Register")}</NavLink>
           
           {/* Language Dropdown */}
           <div className="relative">
@@ -69,12 +69,12 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={`md:hidden bg-white ${navbarOpen ? "block" : "hidden"}`}>
         <div className="flex flex-col items-start px-4 py-4 space-y-4">
-          <NavLink to="/" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Home</NavLink>
-          <NavLink to="/FindDoctor" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Find Doctor</NavLink>
-          <NavLink to="/services" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Services</NavLink>
-          <NavLink to="/contact" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Contact</NavLink>
-          <NavLink to="/login" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Login</NavLink>
-          <NavLink to="/register" className="text-gray-600 hover:text-blue-700" onClick={() => setNavbarOpen(false)}>Register</NavLink>
+          <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Home</NavLink>
+          <NavLink to="/FindDoctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Find Doctor</NavLink>
+          <NavLink to="/services" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Services</NavLink>
+          <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Contact</NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Login</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Register</NavLink>
           
           {/* Language Dropdown Mobile */}
           <div className="relative w-full">
@@ -84,10 +84,10 @@ export default function Navbar() {
             </button>
             {languageOpen && (
               <div className="absolute left-4 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full cursor-pointer">
                   <img src={en} alt="English" className="h-5 w-5 mr-2" /> English
                 </button>
-                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full cursor-pointer">
                   <img src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
                 </button>
               </div>

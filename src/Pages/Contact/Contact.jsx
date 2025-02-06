@@ -22,7 +22,7 @@ export default function Contact() {
 
         {/* Right Side - Doctor Image */}
         <div className="flex justify-end">
-          <img src={DoctorImage} className="max-w-xs md:max-w-xl" alt="Doctor" />
+          <img src={DoctorImage} className="max-w-xs md:max-w-2xl mb-12" alt="Doctor" />
         </div>
       </div>  
 
