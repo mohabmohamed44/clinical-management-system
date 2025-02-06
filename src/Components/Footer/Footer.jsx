@@ -5,9 +5,9 @@ import Logo from '../../assets/logo.svg';
 
 const Footer = () => {
   return (
-    <footer className="relative mt-16">
-      {/* Wave Shape */}
-      <div className="absolute top-0 mt-14 left-0 right-0 h-32 bg-gradient-to-b from-white to-sky-100 transform -translate-y-full"></div>
+    <footer className="bg-gradient-to-b from-sky-100 to-sky-200 pt-20 pb-16">
+      {/* Wave Shape with adjusted positioning */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-sky-100 -translate-y-full"></div>
       
       {/* Shield Logo */}
       <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">

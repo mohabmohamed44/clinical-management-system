@@ -9,6 +9,7 @@ import ResetCode from './Pages/ResetCode/ResetCode';
 import UpdatePassword from './Pages/UpdatePassword/UpdatePassword';
 import NotFound from './Pages/NotFound/NotFound';
 import AllDone from './Pages/AllDone/AllDone';
+import Contact from './Pages/Contact/Contact';
 import { Toaster } from 'react-hot-toast';
 
 // routing
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       {path: "reset_code", element: <ResetCode/>},
       {path: "update_password", element: <UpdatePassword/>},
       {path: "all_done", element: <AllDone/>},
+      {path: "contact", element: <Contact/>},
       {path: "*", element: <NotFound/>}
     ],
   }
