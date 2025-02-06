@@ -3,8 +3,9 @@ import Image from "../../assets/div-1.png";
 import DoctorImage from "../../assets/contact.png";
 import ContactForm from "../../Components/ContactForm/ContactForm";
 import ContactDetails from "../../Components/ContactDetails/ContactDetails";
-
+import { useTranslation } from "react-i18next";
 export default function Contact() {
+  const { t } = useTranslation();
   return (
     <div className="w-full object-cover h-screen mb-[1000px]">
       {/* Background Image */}
@@ -15,8 +16,8 @@ export default function Contact() {
         
         {/* Left Side - Text Section */}
         <div className="text-[#274760] max-w-lg">
-          <h2 className="text-5xl font-bold">Contact Us</h2>
-          <p className="text-xl mt-4">Kindly reach us to get the fastest response and treatment</p>
+          <h2 className="text-5xl font-bold">{t('Contact')}</h2>
+          <p className="text-xl mt-4">{t("ContactReason")}</p>
         </div>
 
         {/* Right Side - Doctor Image */}

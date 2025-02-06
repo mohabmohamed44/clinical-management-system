@@ -1,28 +1,30 @@
 import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function ContactDetails() {
+  const { t } = useTranslation();
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between space-x-4 mb-6">
         <div className="flex items-center space-x-2 bg-[#D2EAEF] p-3 rounded-xl w-full">
           <Phone size={30} className="text-[#274760]" />
           <div>
-            <h3 className="font-semibold">Phone</h3>
+            <h3 className="font-semibold">{t("Phone")}</h3>
             <p className="text-gray-600">123-456-7890</p>
           </div>
         </div>
         <div className="flex items-center space-x-2 bg-[#D2EAEF] p-3 rounded-lg w-full">
           <Mail size={30} className="text-[#274760]" />
           <div>
-            <h3 className="font-semibold">Email</h3>
+            <h3 className="font-semibold">{t("Email")}</h3>
             <p className="text-gray-600">hellocallcenter@gmail.com</p>
           </div>
         </div>
         <div className="flex items-center space-x-2 bg-[#D2EAEF] p-3 rounded-lg w-full">
           <MapPin size={30} className="text-[#274760]" />
           <div>
-            <h3 className="font-semibold">Location</h3>
+            <h3 className="font-semibold">{t("Location")}</h3>
             <p className="text-gray-600">123 Anywhere St., Any City, 12345</p>
           </div>
         </div>
