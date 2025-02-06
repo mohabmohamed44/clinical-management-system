@@ -6,7 +6,7 @@ import ContactDetails from "../../Components/ContactDetails/ContactDetails";
 
 export default function Contact() {
   return (
-    <div className="w-full object-cover h-screen">
+    <div className="w-full object-cover h-screen mb-[1000px]">
       {/* Background Image */}
       <img src={Image} className="w-full h-screen absolute top-0 left-0 right-0" alt="Background" />
 
