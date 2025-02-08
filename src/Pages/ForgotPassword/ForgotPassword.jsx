@@ -6,7 +6,8 @@ import {Link} from "react-router-dom";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
 export default function ForgotPassword(){
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
   const validationSchema = Yup.object().shape({
     email: Yup.string().email(t("InvalidEmail")).required(t("EmailRequired")),
   });
@@ -53,7 +54,7 @@ export default function ForgotPassword(){
               type="submit"
               className="w-full text-white bg-[#11319e] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 text-center"
             >
-              Send instructions
+              {t("SendInstruction")}
             </button>
 
             <div className="mt-4 text-center">
@@ -61,9 +62,9 @@ export default function ForgotPassword(){
                 to="/login"
                 className="text-lg font-medium text-blue-700 hover:underline dark:text-blue-500"
               >
-
+                {isRTL ? t("GoToLogin") : null}
                 <ArrowLeft size={16} className="inline-block mr-1" />
-                Back to Login
+                {isRTL ? null : t("GoToLogin")}
               </Link>
             </div>
           </Form>

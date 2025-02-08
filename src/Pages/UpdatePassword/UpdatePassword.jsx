@@ -67,7 +67,7 @@ export default function UpdatePassword() {
                     htmlFor="newPassword"
                     className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                   >
-                    New Password
+                    {t("newPassword")}
                   </label>
                   <button
                     type="button"
@@ -98,7 +98,7 @@ export default function UpdatePassword() {
                     htmlFor="confirmPassword"
                     className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
                   >
-                    Confirm Password
+                    {t("confirmNewPassword")}
                   </label>
                   <button
                     type="button"
@@ -117,7 +117,7 @@ export default function UpdatePassword() {
                   type="submit"
                   className="w-full text-white bg-[#11319e] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 text-center"
                 >
-                  Update Password
+                  {t("UpdatePassword")}
                 </button>
               </Form>
             )}
