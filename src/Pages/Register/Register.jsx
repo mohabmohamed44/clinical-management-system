@@ -116,6 +116,8 @@ export default function Register() {
             src={Doctor}
             alt="Doctor"
             className="rounded-xl w-full h-auto max-w-[600px] max-h-[800px] object-cover"
+            loading="lazy"
+            role="presentation"
           />
         </div>
 

@@ -22,7 +22,7 @@ export default function Navbar() {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center space-x-3">
-            <img src={Logo} className="h-10" alt="Logo" />
+            <img src={Logo} className="h-10" alt="Logo" loading="lazy"/>
             <span className="self-center text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
@@ -44,16 +44,16 @@ export default function Navbar() {
               onClick={() => setLanguageOpen(!languageOpen)}
               className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
             >
-              <img src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="w-4 h-4" />
             </button>
             {languageOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
                 <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
-                  <img src={en} alt="English" className="h-5 w-5 mr-2" /> English
+                  <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English
                 </button>
                 <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
-                  <img src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
+                  <img loading="lazy" src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
                 </button>
               </div>
             )}
@@ -79,16 +79,16 @@ export default function Navbar() {
           {/* Language Dropdown Mobile */}
           <div className="relative w-full">
             <button onClick={() => setLanguageOpen(!languageOpen)} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
-              <img src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="ml-auto w-4 h-4" />
             </button>
             {languageOpen && (
               <div className="absolute left-4 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
                 <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full cursor-pointer">
-                  <img src={en} alt="English" className="h-5 w-5 mr-2" /> English
+                  <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English
                 </button>
                 <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full cursor-pointer">
-                  <img src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
+                  <img loading="lazy" src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
                 </button>
               </div>
             )}

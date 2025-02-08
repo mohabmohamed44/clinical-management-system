@@ -8,7 +8,7 @@ export default function AllDone() {
   return (
     <>
       <section className="container mx-auto pb-30 flex flex-col items-center justify-center h-screen text-center">
-        <img src={Success} className="w-25 h-25" alt="Success"/>
+        <img loading="lazy" src={Success} className="w-25 h-25" alt="Success"/>
         <h2 className={Style.text_center}>{t("AllDone")}</h2>
         <p className="font-semibold text-gray-500 text-xl">
           {t("ResetPasswordMessage")}

@@ -9,7 +9,7 @@ export default function Contact() {
   return (
     <main className="w-full object-cover h-screen sm:mb-[1100px]">
       {/* Background Image */}
-      <img src={Image} className="w-full h-screen absolute top-0 left-0 right-0" alt="Background" role="presentation"/>
+      <img src={Image} className="w-full h-screen absolute top-0 left-0 right-0" alt="Background" role="presentation" loading="lazy"/>
 
       {/* Content Wrapper */}
       <article className="relative z-10 flex items-center justify-between w-full h-full px-10 max-w-screen-xl mx-auto">
@@ -22,7 +22,7 @@ export default function Contact() {
 
         {/* Right Side - Doctor Image */}
         <figure className="flex justify-end">
-          <img src={DoctorImage} className="max-w-xs md:max-w-2xl md:mb-16" alt="Doctor" />
+          <img src={DoctorImage} className="max-w-xs md:max-w-2xl md:mb-16" alt="Doctor" loading="lazy" />
         </figure>
       </article>  
 

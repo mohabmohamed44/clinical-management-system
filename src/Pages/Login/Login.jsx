@@ -43,6 +43,8 @@ export default function Login() {
             src={heroImage}
             alt="Medical professionals"
             className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto md:rtl:pl-6"
+            loading="lazy"
+            role="presentation"
           />
         </div>
 

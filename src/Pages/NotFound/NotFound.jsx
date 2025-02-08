@@ -19,6 +19,8 @@ export default function NotFound() {
           src={Error_404}
           alt="Not found"
           className="w-1/2 max-w-md lg:max-w-lg"
+          loading="lazy"
+          role="presentation"
         />
         <h1 className="text-3xl font-bold text-gray-800 mt-3">
           {t("NotFound")}
