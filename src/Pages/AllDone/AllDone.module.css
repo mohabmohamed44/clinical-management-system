@@ -3,4 +3,12 @@
     font-size: 2rem;
     font-weight: 600;
     margin-top: 12px;
+    padding-bottom: 10px;
+}
+.text_center:dir(rtl) {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 12px;
+    padding-bottom: 10px;
 }

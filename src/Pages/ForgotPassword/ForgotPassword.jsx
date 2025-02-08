@@ -4,9 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import * as Yup from "yup";
 import {Link} from "react-router-dom";
 import MetaData from "../../Components/MetaData/MetaData";
+import { useTranslation } from "react-i18next";
 export default function ForgotPassword(){
+  const {t} = useTranslation();
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    email: Yup.string().email(t("InvalidEmail")).required(t("EmailRequired")),
   });
 
   return (
@@ -25,7 +27,7 @@ export default function ForgotPassword(){
       >
         {({ errors, touched }) => (
           <Form className="w-full max-w-sm bg-white rounded-lg p-6">
-            <h1 className="text-2xl font-medium text-center mb-10">Reset Your Password</h1>
+            <h1 className="text-2xl font-medium text-center mb-10">{t("ForgotPassword")}</h1>
             <div className="relative z-0 w-full mb-6 group">
               <Field
                 type="email"
@@ -38,7 +40,7 @@ export default function ForgotPassword(){
                 htmlFor="email"
                 className="absolute text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 left-2.5 z-10 origin-[0] peer-focus:left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
               >
-                Email
+                {t("Email")}
               </label>
               {errors.email && touched.email && (
                 <p className="mt-2 text-md font-medium text-red-600 dark:text-red-500">

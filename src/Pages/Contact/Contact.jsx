@@ -7,12 +7,12 @@ import { useTranslation } from "react-i18next";
 export default function Contact() {
   const { t } = useTranslation();
   return (
-    <div className="w-full object-cover h-screen mb-[1000px]">
+    <main className="w-full object-cover h-screen sm:mb-[1100px]">
       {/* Background Image */}
-      <img src={Image} className="w-full h-screen absolute top-0 left-0 right-0" alt="Background" />
+      <img src={Image} className="w-full h-screen absolute top-0 left-0 right-0" alt="Background" role="presentation"/>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 flex items-center justify-between w-full h-full px-10 max-w-screen-xl mx-auto">
+      <article className="relative z-10 flex items-center justify-between w-full h-full px-10 max-w-screen-xl mx-auto">
         
         {/* Left Side - Text Section */}
         <div className="text-[#274760] max-w-lg">
@@ -21,16 +21,16 @@ export default function Contact() {
         </div>
 
         {/* Right Side - Doctor Image */}
-        <div className="flex justify-end">
-          <img src={DoctorImage} className="max-w-xs md:max-w-2xl mb-12" alt="Doctor" />
-        </div>
-      </div>  
+        <figure className="flex justify-end">
+          <img src={DoctorImage} className="max-w-xs md:max-w-2xl md:mb-16" alt="Doctor" />
+        </figure>
+      </article>  
 
       {/* Contact Form & Details Section */}
-      <div className="absolute top-100 left-0 right-0 z-50">
+      <section className="absolute top-100 left-0 right-0 z-50">
         <ContactForm />
         <ContactDetails className="mt-8" />  {/* Added with spacing */}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

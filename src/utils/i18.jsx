@@ -2,10 +2,10 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
+  // English translations
   en: {
     translation: {
       "Welcome to delma": "Welcome to delma",
-      // English translations
       firstName: "First Name",
       NotFound: "Not Found",
       NotFoundDescription: "The page you are looking for does not exist.",
@@ -53,6 +53,10 @@ const resources = {
       patientInfo: "Patient Info",
       addressInfo: "Address Info",
       registrationComplete: "Registration Complete!",
+      ResetPassword :'Reset Your Password',
+      GoToLogin: "Go to Login",
+      ResetPasswordMessage: "Your Password has been reset Successfully.",
+      ConfirmPasswordRequired: "Confirm Password is required",
       LoginWithGoogle: "Login with Google",
       LoginWithFacebook: "Login with Facebook",
       thankYou:
@@ -73,6 +77,10 @@ const resources = {
       PasswordRequired: 'Password is required',
       NoAccount: "Do not have an account ?", 
       FirstNameRequired: "First name is required",
+      newPasswordIsRequired: "New password is required",
+      AllDone: "All Done",
+      UpdatePassword: "Set Your New Password",
+      UpdatePasswordRequired: "Your New Password must be different from your old Password.",
       LastNameRequired: "Last name is required",
       PasswordsMustMatch: "Passwords must match",
       phoneNumberRequired: "Phone number is required",
@@ -96,6 +104,14 @@ ar: {
       Blog: 'المدونات',
       AboutUs: 'معلومات عنا',
       Departments: 'الأقسام',
+      ResetPassword: 'استعادة كلمة المرور',
+      ResetPasswordMessage: 'تم تغير كلمة المرور بنجاح',
+      UpdatePassword: 'تغيير كلمة المرور',
+      UpdatePasswordRequired: 'يجب ان تكون كلمة المرور الجديدة مختلفة من كلمة المرور القديمة',
+      ConfirmPasswordRequired: 'تأكيد كلمة المرور مطلوب',
+      newPasswordIsRequired: 'كلمة المرور الجديدة مطلوبة',
+      AllDone: 'تمت بنجاح',
+      GoToLogin: 'العودة إلى تسجيل الدخول',
       PrivacyPolicy: 'سياسة الخصوصية',
       Testimonials: 'الشهادات والتقييمات',
       Timetable: 'الجداول',

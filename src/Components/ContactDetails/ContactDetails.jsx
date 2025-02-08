@@ -6,7 +6,7 @@ export default function ContactDetails() {
   const { t } = useTranslation();
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between space-x-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="flex items-center space-x-2 bg-[#D2EAEF] p-3 rounded-xl w-full">
           <Phone size={30} className="text-[#274760]" />
           <div>

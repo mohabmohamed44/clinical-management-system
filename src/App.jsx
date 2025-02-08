@@ -10,6 +10,8 @@ import UpdatePassword from './Pages/UpdatePassword/UpdatePassword';
 import NotFound from './Pages/NotFound/NotFound';
 import AllDone from './Pages/AllDone/AllDone';
 import Contact from './Pages/Contact/Contact';
+import Appointments from './Pages/Appointments/Appointments';
+import FindDoctor from './Pages/FindDoctor/FindDoctor';
 import { Toaster } from 'react-hot-toast';
 
 // routing
@@ -26,6 +28,8 @@ const router = createBrowserRouter([
       {path: "update_password", element: <UpdatePassword/>},
       {path: "all_done", element: <AllDone/>},
       {path: "contact", element: <Contact/>},
+      {path: "appointments", element: <Appointments/>},
+      {path: "find_doctor", element: <FindDoctor/>},
       {path: "*", element: <NotFound/>}
     ],
   }

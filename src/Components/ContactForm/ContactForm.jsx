@@ -1,3 +1,4 @@
+import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -71,7 +72,7 @@ export default function ContactForm() {
             />
             <label
               htmlFor="email"
-              className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
+              className="absolute placeholder:rtl:text-start left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
               dir={i18n.dir()} // Add dir attribute to label
             >
               {t('Email')}
@@ -125,9 +126,9 @@ export default function ContactForm() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#113193] text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-[#11319e] focus:ring-offset-2"
+            className="w-full flex items-center justify-center bg-[#113193] text-white py-4 px-4 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#11319e] focus:ring-offset-2"
           >
-            {t('SendMessage')}
+            <span className='mr-3 rtl:ml-3'>{t('SendMessage')}</span> <Send />
           </button>
         </form>
       </div>

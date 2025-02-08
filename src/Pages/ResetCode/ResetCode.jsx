@@ -4,8 +4,11 @@ import * as Yup from 'yup';
 import { CircleArrowLeft, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MetaData from '../../Components/MetaData/MetaData';
+import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 export default function ResetCode() {
+  const {t} = useTranslation();
   const validationSchema = Yup.object().shape({
     code: Yup.array()
       .of(Yup.string().length(1, 'Each field must be 1 character').required('Code Required'))
@@ -18,7 +21,7 @@ export default function ResetCode() {
   };
 
   const handleSubmit = (values) => {
-    alert(`Submitted Code: ${values.code.join("")}`);
+    toast(`Submitted Code: ${values.code.join("")}`);
   };
 
   return (
@@ -33,7 +36,7 @@ export default function ResetCode() {
       <div className="w-full max-w-md bg-white rounded-lg p-6">
         <Link className="flex items-center mr-4 text-blue-700 dark:text-blue-500 mb-4 cursor-pointer" to="/forgot_password">
         <CircleArrowLeft size={24} className='mr-2' />
-          Back
+          {t("Back")}
         </Link>
         <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Password reset</h2>
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-500 mb-6">
