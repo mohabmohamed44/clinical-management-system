@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Style from "./AllDone.module.css";
-import Success from '../../assets/Vector.png';
+import Success from '../../assets/Vector.webp';
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 export default function AllDone() {

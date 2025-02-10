@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
-import heroImage from "../../assets/hero_img_1.png";
+import heroImage from "../../assets/hero_img_1.webp";
 import { Link } from "react-router-dom";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
@@ -109,7 +109,7 @@ export default function Login() {
                       } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12 ${
                         isRTL ? "placeholder:rtl" : "placeholder:ltr"
                       }`}
-                      placeholder={t("Password")}
+                      placeholder={t("password")}
                     />
                     <label
                       htmlFor="password"
@@ -117,7 +117,7 @@ export default function Login() {
                         isRTL ? "right-4" : "left-4"
                       } -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500`}
                     >
-                      {t("Password")}
+                      {t("password")}
                     </label>
                     <button
                       type="button"

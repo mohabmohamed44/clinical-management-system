@@ -28,7 +28,6 @@ const resources = {
       FieldLength: "Each field must be 1 character",
       Contact: 'Contact Us',
       Email:"Email",
-      Password:"Password",
       ContactUs: "Contact Us",
       Name: 'Name',
       Subject:"Subject",

@@ -1,10 +1,10 @@
 import { Menu, X, ChevronDown } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/logo.webp";
 import { useTranslation } from "react-i18next";
-import ar from "../../assets/circle.png";
-import en from "../../assets/united-states.png";
+import ar from "../../assets/circle.webp";
+import en from "../../assets/united-states.webp";
 
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Eye, EyeOff, MapPin, UserCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import MetaData from "../../Components/MetaData/MetaData";
-import Doctor from "../../assets/doctor-register.png";
+import Doctor from "../../assets/doctor-register.webp";
 import { Link } from "react-router-dom";
 import { FaHeartbeat } from "react-icons/fa";
 

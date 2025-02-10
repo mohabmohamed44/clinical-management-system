@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "../../assets/div-1.png";
-import DoctorImage from "../../assets/contact.png";
+import Image from "../../assets/div-1.webp";
+import DoctorImage from "../../assets/contact.webp";
 import ContactForm from "../../Components/ContactForm/ContactForm";
 import ContactDetails from "../../Components/ContactDetails/ContactDetails";
 import { useTranslation } from "react-i18next";

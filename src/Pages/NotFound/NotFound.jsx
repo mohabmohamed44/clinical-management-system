@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./NotFound.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
-import Error_404 from "../../assets/404.png";
+import Error_404 from "../../assets/404.webp";
 import { Link } from "react-router-dom";
 export default function NotFound() {
   const {t} = useTranslation();
