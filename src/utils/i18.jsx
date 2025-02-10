@@ -36,7 +36,7 @@ const resources = {
       Departments: "Departments",
       Testimonials: "Testimonials",
       Hello: "Hello",
-      DidNotReceiveEmail: 'Did not recieve email?',
+      DidNotReceiveEmail: 'Did not receive email?',
       Resend: 'Click here to resend',
       confirmPassword: "Confirm Password",
       WeAreHappy: "We are really happy to see you again!",
