@@ -1,21 +1,29 @@
 import { Menu, X, ChevronDown } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.webp";
 import { useTranslation } from "react-i18next";
 import ar from "../../assets/circle.webp";
 import en from "../../assets/united-states.webp";
+import {useLocalStorage} from "../../hooks/useLocalStorage";
 
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [language, setLanguage] = useLocalStorage("defaultLanguage", "en");
   const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     document.documentElement.dir = lng === "ar" ? "rtl" : "ltr";
+    setLanguage(lng);
     setLanguageOpen(false);
   };
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+  }, [language, i18n]);
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow w-full top-0 z-100 sticky left-0">
