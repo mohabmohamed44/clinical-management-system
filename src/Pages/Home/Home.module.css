@@ -1,1 +1,7 @@
-.Home {}
+.text {
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}

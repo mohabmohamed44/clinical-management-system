@@ -12,7 +12,7 @@ export default function Home() {
         keywords="home, page, welcome"
         author="Mohab Mohammed" 
       />
-      <h2 className="text-center text-2xl font-medium mt-6">{t("Home")}</h2>
+      <h2 className={Style.text}>{t("Home")}</h2>
     </>
   );
 }
