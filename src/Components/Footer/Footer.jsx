@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Phone, Mail, Shield, MoveRight } from "lucide-react";
+import { MapPin, Phone, Mail, Shield, MoveRight, MoveLeft } from "lucide-react";
 import { FaFacebook, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,8 +7,8 @@ import Logo from "../../assets/logo.webp";
 import footerBg from "../../assets/Frame.webp";
 
 const Footer = () => {
-  const { t } = useTranslation();
-
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
   return (
     <footer className="relative mt-16">
       {/* Background Image (Wave Shape for Large Screens) */}
@@ -41,15 +41,15 @@ const Footer = () => {
               />
               <h2 className="text-2xl font-bold text-gray-800">{t("Delma")}</h2>
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-gray-800 hoverlgext-gray-800 transition-colors">
+                <div className="flex items-center gap-2 text-gray-800 :hover:lg:text-gray-800 transition-colors">
                   <MapPin className="w-5 h-5" />
                   <span>123 Anywhere St., Any City 12345</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-800 hoverlgext-gray-800 transition-colors">
+                <div className="flex items-center gap-2 text-gray-800 :hover:lg:text-gray-800 transition-colors">
                   <Phone className="w-5 h-5" />
                   <span>123-456-7890</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-800 hoverlgext-gray-800 transition-colors">
+                <div className="flex items-center gap-2 text-gray-800 :hover:lg:text-gray-800 transition-colors">
                   <Mail className="w-5 h-5" />
                   <span>hellocallcenter@gmail.com</span>
                 </div>
@@ -62,7 +62,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("AboutUs")}
                   </Link>
@@ -70,7 +70,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Departments")}
                   </Link>
@@ -78,7 +78,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Doctors")}
                   </Link>
@@ -86,7 +86,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Timetable")}
                   </Link>
@@ -94,7 +94,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Appointments")}
                   </Link>
@@ -102,7 +102,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Testimonials")}
                   </Link>
@@ -116,7 +116,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Blog")}
                   </Link>
@@ -124,7 +124,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("ContactUs")}
                   </Link>
@@ -132,7 +132,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("FAQ")}
                   </Link>
@@ -140,7 +140,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("PrivacyPolicy")}
                   </Link>
@@ -148,7 +148,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="#"
-                    className="text-gray-800 hoverlgext-gray-800 transition-colors"
+                    className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("TermsAndConditions")}
                   </Link>
@@ -161,7 +161,7 @@ const Footer = () => {
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
                 {t("Subscription")}
               </h3>
-              <p className="text-gray-800 text-lg font-medium mb-4">
+              <p className="text-gray-700 text-lg font-medium mb-4">
                 {t("GetAdviceFromOurExperts")}
               </p>
               <div className="flex gap-2">
@@ -171,7 +171,7 @@ const Footer = () => {
                   className="flex-1 px-4 py-2 rounded-lg bg-white/50 border border-sky-200 focus:outline-none focus:border-sky-400"
                 />
                 <button className="px-6 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  {t("Submit")} <MoveRight className="inline ml-2" />
+                  {t("Submit")} {isRTL ? <MoveLeft className="inline ml-2" /> : <MoveRight className="inline ml-2" />}
                 </button>
               </div>
             </div>
