@@ -161,7 +161,7 @@ export default function Register() {
                 : t("registrationComplete")}
             </h1>
             {currentStep === 2 && (
-              <p className="text-gray-600 text-center mb-8">
+              <p className="text-gray-600 text-center mb-8 rtl:text-right">
                 You need to provide some extra info to complete your
                 registration.
               </p>
@@ -170,7 +170,7 @@ export default function Register() {
             <Formik initialValues={initialValues} onSubmit={handleNext}>
               {({ errors, touched }) => (
                 <Form className="space-y-6">
-                  {/* [Previous Steps 1 and 2 remain the same] */}
+                  {/* Step 1: Personal Info */}
                   {currentStep === 1 && (
                     <div className="animate-fade-in">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -187,12 +187,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="firstName"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-mdg text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-mdg text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("firstName")}
                           </label>
                           {errors.firstName && touched.firstName && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.firstName}
                             </div>
                           )}
@@ -211,12 +211,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="lastName"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("lastName")}
                           </label>
                           {errors.lastName && touched.lastName && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.lastName}
                             </div>
                           )}
@@ -236,12 +236,12 @@ export default function Register() {
                         />
                         <label
                           htmlFor="email"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("email")}
                         </label>
                         {errors.email && touched.email && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.email}
                           </div>
                         )}
@@ -260,14 +260,14 @@ export default function Register() {
                         />
                         <label
                           htmlFor="password"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("password")}
                         </label>
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                          className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                         >
                           {showPassword ? (
                             <EyeOff size={24} />
@@ -276,11 +276,12 @@ export default function Register() {
                           )}
                         </button>
                         {errors.password && touched.password && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.password}
                           </div>
                         )}
                       </div>
+
                       <div className="relative mt-5">
                         <Field
                           name="confirmPassword"
@@ -294,14 +295,14 @@ export default function Register() {
                         />
                         <label
                           htmlFor="confirmPassword"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("confirmPassword")}
                         </label>
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                          className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                         >
                           {showPassword ? (
                             <EyeOff size={24} />
@@ -310,7 +311,7 @@ export default function Register() {
                           )}
                         </button>
                         {errors.confirmPassword && touched.confirmPassword && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.confirmPassword}
                           </div>
                         )}
@@ -329,43 +330,45 @@ export default function Register() {
                         />
                         <label
                           htmlFor="phone"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("phone")}
                         </label>
                         {errors.phone && touched.phone && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.phone}
                           </div>
                         )}
                       </div>
 
                       <div className="space-y-2 pt-3 rtl:mr-2">
-                        <label className="text-lg text-gray-700 mt-3">
+                        <label className="text-lg text-gray-700 mt-3 rtl:text-right">
                           {t("gender")}
                         </label>
-                        <div className="flex items-center mb-4 mt-4">
-                          <label className="flex items-center gap-2">
+                        <div className="flex items-center mb-4 mt-4 rtl:flex-row">
+                          <label className="flex items-center gap-2 ltr:mr-4 rtl:ml-4">
                             <Field
                               type="radio"
                               name="gender"
                               value="male"
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                             />
-                            <span>{t("male")}</span>
+                            <span className="rtl:text-right">{t("male")}</span>
                           </label>
-                          <label className="flex items-center gap-2 pl-2">
+                          <label className="flex items-center gap-2">
                             <Field
                               type="radio"
                               name="gender"
                               value="female"
                               className="w-4 h-4 text-blue-600"
                             />
-                            <span>{t("female")}</span>
+                            <span className="rtl:text-right">
+                              {t("female")}
+                            </span>
                           </label>
                         </div>
                         {errors.gender && touched.gender && (
-                          <div className="text-red-500 text-md">
+                          <div className="text-red-500 text-md rtl:text-right">
                             {errors.gender}
                           </div>
                         )}
@@ -384,16 +387,16 @@ export default function Register() {
                             errors.dateOfBirth && touched.dateOfBirth
                               ? "border-red-500"
                               : "border-gray-300"
-                          } focus:outline-none focus:border-blue-500`}
+                          } focus:outline-none focus:border-blue-500 rtl:text-right`}
                         />
                         <label
                           htmlFor="dateOfBirth"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 rtl:text-right"
                         >
                           {t("dateOfBirth")}
                         </label>
                         {errors.dateOfBirth && touched.dateOfBirth && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.dateOfBirth}
                           </div>
                         )}
@@ -413,12 +416,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="occupation"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("occupation")}
                           </label>
                           {errors.occupation && touched.occupation && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.occupation}
                             </div>
                           )}
@@ -432,9 +435,9 @@ export default function Register() {
                               errors.bloodType && touched.bloodType
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500`}
+                            } focus:outline-none focus:border-blue-500 rtl:text-right`}
                           >
-                            <option value="">{t("selectBloodType")}</option>
+                            <option value="">{t("SelectBloodType")}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -446,12 +449,12 @@ export default function Register() {
                           </Field>
                           <label
                             htmlFor="bloodType"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 rtl:text-right"
                           >
                             {t("bloodType")}
                           </label>
                           {errors.bloodType && touched.bloodType && (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-sm mt-1 rtl:text-right">
                               {errors.bloodType}
                             </div>
                           )}
@@ -472,12 +475,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="weight"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("weight")}
                           </label>
                           {errors.weight && touched.weight && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.weight}
                             </div>
                           )}
@@ -496,12 +499,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="height"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("height")}
                           </label>
                           {errors.height && touched.height && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.height}
                             </div>
                           )}
@@ -527,12 +530,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="city"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("city")}
                           </label>
                           {errors.city && touched.city && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.city}
                             </div>
                           )}
@@ -551,12 +554,12 @@ export default function Register() {
                           />
                           <label
                             htmlFor="area"
-                            className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
                             {t("area")}
                           </label>
                           {errors.area && touched.area && (
-                            <div className="text-red-500 text-md mt-1">
+                            <div className="text-red-500 text-md mt-1 rtl:text-right">
                               {errors.area}
                             </div>
                           )}
@@ -576,12 +579,12 @@ export default function Register() {
                         />
                         <label
                           htmlFor="street"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-md text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-md text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("street")}
                         </label>
                         {errors.street && touched.street && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.street}
                           </div>
                         )}
@@ -600,12 +603,12 @@ export default function Register() {
                         />
                         <label
                           htmlFor="zipCode"
-                          className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500"
+                          className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
                           {t("zipCode")}
                         </label>
                         {errors.zipCode && touched.zipCode && (
-                          <div className="text-red-500 text-md mt-1">
+                          <div className="text-red-500 text-md mt-1 rtl:text-right">
                             {errors.zipCode}
                           </div>
                         )}
@@ -633,10 +636,12 @@ export default function Register() {
                           </svg>
                         </div>
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2 rtl:text-center">
                         {t("registrationComplete")}
                       </h2>
-                      <p className="text-gray-600 mb-6">{t("thankYou")}</p>
+                      <p className="text-gray-600 mb-6 rtl:text-center ">
+                        {t("thankYou")}
+                      </p>
                       <button
                         type="button"
                         onClick={() => (window.location.href = "/login")}
@@ -649,19 +654,19 @@ export default function Register() {
 
                   {/* Navigation Buttons */}
                   {currentStep < 4 && (
-                    <div className="flex justify-between space-x-4">
+                    <div className="flex justify-between space-x-4 rtl:space-x-reverse">
                       {currentStep > 1 && (
                         <button
                           type="button"
                           onClick={() => setCurrentStep(currentStep - 1)}
-                          className="w-full bg-gray-100 text-gray-800 rounded-lg px-4 py-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                          className="w-full bg-gray-100 text-gray-800 rounded-lg ml-3 px-4 py-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 rtl:text-center"
                         >
                           {t("back")}
                         </button>
                       )}
                       <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rtl:text-center"
                       >
                         {currentStep === 3
                           ? t("completeRegistration")
