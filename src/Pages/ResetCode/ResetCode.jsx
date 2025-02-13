@@ -41,7 +41,7 @@ export default function ResetCode() {
             <CircleArrowLeft size={24} className={isRTL ? 'mr-2' : 'mr-2'} />
             {!isRTL ? t("Back") : null}
           </Link>
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Password reset</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">{t("PasswordReset")}</h2>
           <p className="text-lg font-semibold text-gray-600 dark:text-gray-500 mb-6">
             {t("SentCode")} <span className="font-medium text-blue-700">amelie@untitledui.com</span>
           </p>
