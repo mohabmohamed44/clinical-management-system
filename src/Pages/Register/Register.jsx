@@ -437,7 +437,7 @@ export default function Register() {
                                 : "border-gray-300"
                             } focus:outline-none focus:border-blue-500 rtl:text-right`}
                           >
-                            <option value="">{t("SelectBloodType")}</option>
+                            <option value="" selected disabled hidden>{t("SelectBloodType")}</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
