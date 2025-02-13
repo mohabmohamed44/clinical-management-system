@@ -77,12 +77,12 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={`md:hidden bg-white ${navbarOpen ? "block" : "hidden"}`}>
         <div className="flex flex-col items-start px-4 py-4 space-y-4">
-          <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Home</NavLink>
-          <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Find Doctor</NavLink>
-          <NavLink to="/appointments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Services</NavLink>
-          <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Contact</NavLink>
-          <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Login</NavLink>
-          <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>Register</NavLink>
+          <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
+          <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
+          <NavLink to="/appointments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Appointments")}</NavLink>
+          <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>
+          <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Login")}</NavLink>
+          <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Register")}</NavLink>
           
           {/* Language Dropdown Mobile */}
           <div className="relative w-full">
