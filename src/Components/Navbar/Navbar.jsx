@@ -47,7 +47,7 @@ export default function Navbar() {
           <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer">{t("Register")}</NavLink>
           
           {/* Language Dropdown */}
-          <div className="relative">
+          <div className="relative" aria-expanded="true/false">
             <button
               onClick={() => setLanguageOpen(!languageOpen)}
               className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
@@ -57,10 +57,10 @@ export default function Navbar() {
             </button>
             {languageOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" aria-label="english language">
                   <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English
                 </button>
-                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full">
+                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" aria-label="arabic language">
                   <img loading="lazy" src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
                 </button>
               </div>
@@ -70,7 +70,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button className="md:hidden text-gray-600 hover:text-gray-800" onClick={() => setNavbarOpen(!navbarOpen)}>
-          {navbarOpen ? <X size={24} /> : <Menu size={24} />}
+          {navbarOpen ? <X aria-label="close menu" size={24} /> : <Menu size={24} aria-label="menu button" />}
         </button>
       </div>
 
@@ -85,7 +85,7 @@ export default function Navbar() {
           <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Register")}</NavLink>
           
           {/* Language Dropdown Mobile */}
-          <div className="relative w-full">
+          <div className="relative w-fit">
             <button onClick={() => setLanguageOpen(!languageOpen)} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
               <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="ml-auto w-4 h-4" />
