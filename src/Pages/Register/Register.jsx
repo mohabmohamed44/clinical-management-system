@@ -161,9 +161,8 @@ export default function Register() {
                 : t("registrationComplete")}
             </h1>
             {currentStep === 2 && (
-              <p className="text-gray-600 text-center mb-8 rtl:text-right">
-                You need to provide some extra info to complete your
-                registration.
+              <p className="text-gray-600 text-center mb-8 rtl:text-center">
+                {t("extraInfo")}
               </p>
             )}
 
