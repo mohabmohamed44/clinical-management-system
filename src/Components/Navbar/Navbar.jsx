@@ -29,8 +29,8 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 shadow w-full top-0 z-100 sticky left-0">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
         <div className="flex items-center space-x-6">
-          <Link to="/" className="flex items-center space-x-3">
-            <img src={Logo} className="h-10" alt="Logo" loading="lazy"/>
+          <Link to="/" className="flex items-center space-x-3" aria-label="go to home">
+            <img src={Logo} className="h-10 w-10 object-contain" alt="Logo" loading="lazy"/>
             <span className="self-center text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
@@ -47,7 +47,7 @@ export default function Navbar() {
           <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer">{t("Register")}</NavLink>
           
           {/* Language Dropdown */}
-          <div className="relative" aria-expanded="true/false">
+          <div className="relative" aria-label="Language Dropdown" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown">
             <button
               onClick={() => setLanguageOpen(!languageOpen)}
               className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
@@ -85,7 +85,7 @@ export default function Navbar() {
           <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Register")}</NavLink>
           
           {/* Language Dropdown Mobile */}
-          <div className="relative w-fit">
+          <div className="relative w-fit" aria-label="Language Dropdown" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown">
             <button onClick={() => setLanguageOpen(!languageOpen)} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
               <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="ml-auto w-4 h-4" />

@@ -12,13 +12,13 @@ const Footer = () => {
   return (
     <footer className="relative mt-16">
       {/* Background Image (Wave Shape for Large Screens) */}
-      <div className="absolute inset-0 w-full h-full">
+      <picture className="absolute inset-0 w-full h-full">
         <img
           src={footerBg}
           alt="background"
           className="w-full h-full object-cover object-top block"
         />
-      </div>
+      </picture>
 
       {/* Shield Logo with Higher Z-Index */}
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
