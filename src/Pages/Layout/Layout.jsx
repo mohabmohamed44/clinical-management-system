@@ -7,7 +7,7 @@ export default function Layout() {
     <div className="flex flex-col min-h-screen relative overflow-x-hidden"> {/* Add relative */}
       <Navbar />
       <main className="flex-grow">
-        <div className="container mx-auto px-4 sm:px-6 py-10 max-w-screen-xl overflow-x-hidden">
+        <div className="container mx-auto px-4 sm:px-6 py-10 max-w-screen-xl">
           <Outlet />
         </div>
       </main>
