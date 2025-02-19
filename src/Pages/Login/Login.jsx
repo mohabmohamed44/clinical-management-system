@@ -20,39 +20,49 @@ export default function Login() {
       .required(t("PasswordRequired")),
   });
 
-  // Determine the current language direction
   const isRTL = i18n.language === "ar";
 
   return (
     <>
       <MetaData
-        title="Login"
-        description="Login to your account"
-        keywords="login, account, signin"
+        title="Login to Your Account | Secure Access"
+        description="Securely login to your account. Access your personalized dashboard with our safe and encrypted login system. Supporting both email and social login options."
+        keywords="login, secure login, account access, user authentication, sign in, social login, medical portal access"
         author="Mohab Mohammed"
-
+        ogTitle="Login to Your Account | Secure Access"
+        ogDescription="Access your personalized dashboard securely. Quick login with email or social accounts."
+        ogImage="/path-to-login-preview-image.jpg"
+        twitterCard="summary_large_image"
+        twitterCreator="@YourTwitterHandle"
+        canonical={window.location.href}
+        language={i18n.language}
       />
       <div
         className={`min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 bg-gray-50 ${
           isRTL ? "rtl" : "ltr"
         }`}
+        role="main"
+        aria-labelledby="login-title"
       >
-        {/* Left side - Image (hidden on small screens) */}
+        {/* Left side - Image */}
         <div className="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0 h-full hidden lg:flex items-center justify-center">
           <img
             src={heroImage}
-            alt="Medical professionals"
+            alt="Healthcare professionals working together"
             className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto md:rtl:pl-6"
             loading="lazy"
-            role="presentation"
+            width="600"
+            height="700"
           />
         </div>
 
         {/* Right side - Form */}
         <div className="lg:w-1/2 w-full max-w-md">
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h1 className="text-3xl font-bold text-center mb-2">{t("Hello")}!</h1>
-            <p className="text-gray-600 text-center mb-8">
+          <div className="bg-white rounded-2xl p-8 shadow-sm" role="region" aria-label="Login form">
+            <h1 id="login-title" className="text-3xl font-bold text-center mb-2" tabIndex="0">
+              {t("Hello")}!
+            </h1>
+            <p className="text-gray-600 text-center mb-8" tabIndex="0">
               {t("WeAreHappy")}
             </p>
 
@@ -66,11 +76,12 @@ export default function Login() {
                 }, 400);
               }}
             >
-              {({ errors, touched }) => (
-                <Form className="space-y-6">
+              {({ errors, touched, isSubmitting }) => (
+                <Form className="space-y-6" noValidate>
                   {/* Email Field */}
                   <div className="relative">
                     <Field
+                      id="email"
                       name="email"
                       type="email"
                       className={`peer w-full px-4 py-3 rounded-lg border ${
@@ -81,6 +92,10 @@ export default function Login() {
                         isRTL ? "placeholder:rtl" : "placeholder:ltr"
                       }`}
                       placeholder={t("email")}
+                      aria-required="true"
+                      aria-invalid={errors.email && touched.email ? "true" : "false"}
+                      aria-describedby={errors.email && touched.email ? "email-error" : undefined}
+                      autoComplete="email"
                     />
                     <label
                       htmlFor="email"
@@ -91,7 +106,7 @@ export default function Login() {
                       {t("email")}
                     </label>
                     {errors.email && touched.email && (
-                      <div className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left">
+                      <div id="email-error" className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left" role="alert">
                         {errors.email}
                       </div>
                     )}
@@ -100,6 +115,7 @@ export default function Login() {
                   {/* Password Field */}
                   <div className="relative">
                     <Field
+                      id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       className={`peer w-full px-4 py-3 rounded-lg border ${
@@ -110,6 +126,10 @@ export default function Login() {
                         isRTL ? "placeholder:rtl" : "placeholder:ltr"
                       }`}
                       placeholder={t("password")}
+                      aria-required="true"
+                      aria-invalid={errors.password && touched.password ? "true" : "false"}
+                      aria-describedby={errors.password && touched.password ? "password-error" : undefined}
+                      autoComplete="current-password"
                     />
                     <label
                       htmlFor="password"
@@ -125,11 +145,12 @@ export default function Login() {
                       className={`absolute ${
                         isRTL ? "left-3" : "right-3"
                       } top-3 text-gray-400 hover:text-gray-600`}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                     {errors.password && touched.password && (
-                      <div className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left">
+                      <div id="password-error" className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left" role="alert">
                         {errors.password}
                       </div>
                     )}
@@ -140,6 +161,7 @@ export default function Login() {
                     <Link
                       to="/forgot_password"
                       className="text-blue-500 hover:text-blue-600 text-lg font-medium"
+                      aria-label="Forgot password? Click to reset"
                     >
                       {t("ForgotPassword")}
                     </Link>
@@ -149,8 +171,10 @@ export default function Login() {
                   <button
                     type="submit"
                     className="w-full bg-[#11319e] text-white py-3 rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg"
+                    disabled={isSubmitting}
+                    aria-busy={isSubmitting}
                   >
-                    {t("Login")}
+                    {isSubmitting ? t("LoggingIn") : t("Login")}
                   </button>
 
                   {/* Signup Link */}
@@ -160,6 +184,7 @@ export default function Login() {
                       <Link
                         to="/register"
                         className="text-blue-500 hover:text-blue-600 font-bold"
+                        aria-label="Sign up for a new account"
                       >
                         {t("Signup")}
                       </Link>
@@ -167,7 +192,7 @@ export default function Login() {
                   </div>
 
                   {/* Divider */}
-                  <div className="relative">
+                  <div className="relative" role="separator" aria-label="or">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-300"></div>
                     </div>
@@ -183,11 +208,13 @@ export default function Login() {
                     <button
                       type="button"
                       className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      aria-label="Login with Google"
                     >
                       <img
                         src="https://www.google.com/favicon.ico"
-                        alt="Google"
+                        alt=""
                         className="w-5 h-5"
+                        role="presentation"
                       />
                       <span className="font-medium">
                         {t("LoginWithGoogle")}
@@ -197,11 +224,13 @@ export default function Login() {
                     <button
                       type="button"
                       className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      aria-label="Login with Facebook"
                     >
                       <img
                         src="https://www.facebook.com/favicon.ico"
-                        alt="Facebook"
+                        alt=""
                         className="w-5 h-5"
+                        role="presentation"
                       />
                       <span className="font-medium">
                         {t("LoginWithFacebook")}
