@@ -1,8 +1,7 @@
 User-agent: *
-Disallow: /
-Disallow: /admin/
-Disallow: /dashboard/
-Disallow: /profile/
-Disallow: /api/
+Allow: /      # Allow all crawlers to access everything
+Disallow: /admin  # Block admin panel
+Disallow: /api    # Block API routes
+Disallow: /private/* # Block private folders
 
 Sitemap: https://clinical-management-system.vercel.app/sitemap.xml
