@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /api/
+
+Sitemap: https://clinical-management-system-git-main-mohabmohamed44s-projects.vercel.app/sitemap.xml
