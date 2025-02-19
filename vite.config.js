@@ -13,7 +13,7 @@ export default defineConfig({
     include:["react-helmet-async"],
   },
   build:{
-    minify: 'terser',
+    minify: false,
     terserOptions:{
       compress:{
         drop_console: true,
