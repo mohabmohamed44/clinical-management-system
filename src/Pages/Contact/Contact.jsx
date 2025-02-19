@@ -42,7 +42,7 @@ export default function Contact() {
         <figure className="flex justify-center w-full lg:w-auto" aria-label="Doctor Image">
           <img
             src={DoctorImage}
-            className="max-w-xs sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl"
+            className="max-w-xs sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl h-full w-full"
             alt="Doctor"
             loading="lazy"
           />
