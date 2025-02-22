@@ -69,7 +69,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="#"
+                    to="/departments"
                     className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Departments")}
@@ -77,7 +77,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="#"
+                    to="/doctors"
                     className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Doctors")}
@@ -93,7 +93,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="#"
+                    to="/appointments"
                     className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Appointments")}
@@ -115,7 +115,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    to="#"
+                    to="/blog"
                     className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("Blog")}
@@ -123,7 +123,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="#"
+                    to="/contact"
                     className="text-gray-800 :hover:lg:text-gray-800 transition-colors"
                   >
                     {t("ContactUs")}

@@ -15,6 +15,7 @@ import AllDone from "./Pages/AllDone/AllDone";
 import Contact from "./Pages/Contact/Contact";
 import Appointments from "./Pages/Appointments/Appointments";
 import FindDoctor from "./Pages/FindDoctor/FindDoctor";
+import Blog from "./Pages/Blog/Blog";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "appointments", element: <Appointments /> },
       { path: "find_doctor", element: <FindDoctor /> },
+      { path: "blog", element: <Blog /> },
       { path: "*", element: <NotFound /> },
     ],
   },
