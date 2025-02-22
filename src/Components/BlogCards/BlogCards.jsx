@@ -46,25 +46,25 @@ export default function BlogCard({ image, title, description }) {
 
           {/* Social Media Icons */}
           <div className="flex gap-4 mb-4 justify-center">
-            <a
-              href="#"
-              className="p-2 border rounded-full hover:bg-gray-50 transition-colors"
-            >
-              <FaFacebookF size={20} className="text-[#274760]" />
-            </a>
-            <a
-              href="#"
-              className="p-2 border rounded-full hover:bg-gray-50 transition-colors"
-            >
-              <FaTwitter size={20} className="text-[#274760]" />
-            </a>
-            <a
-              href="#"
-              className="p-2 border rounded-full hover:bg-gray-50 transition-colors"
-            >
-              <FaLinkedinIn size={20} className="text-[#274760]" />
-            </a>
-          </div>
+          <a
+            href="#"
+            className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
+          >
+            <FaFacebookF size={20} className="text-[#274760] group-hover:text-white" />
+          </a>
+          <a
+            href="#"
+            className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
+          >
+            <FaTwitter size={20} className="text-[#274760] group-hover:text-white" />
+          </a>
+          <a
+            href="#"
+            className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
+          >
+            <FaLinkedinIn size={20} className="text-[#274760] group-hover:text-white" />
+          </a>
+        </div>
 
           <a
             href="#"
