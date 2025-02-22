@@ -63,7 +63,7 @@ export default function Blog() {
       />
       
       <main id="main-content" role="main" className="container mx-auto px-4 py-8">
-        <nav aria-label="Breadcrumb" className="breadcrumbs bg-base-200 rounded-md text-md">
+        <nav aria-label="Breadcrumb" className="breadcrumbs bg-base-200 rounded-md text-md font-medium">
           <ul className="flex items-center text-[#274760] space-x-1">
             <li>
               <Link to="/" className="hover:underline" aria-label="Go to homepage">
@@ -82,7 +82,7 @@ export default function Blog() {
         </nav>
 
         <h1
-          className={`text-4xl ${Style.text} font-bold text-gray-900 mb-8 text-left rtl:text-right`}
+          className={`text-4xl ${Style.text} font-bold mb-8 text-left rtl:text-right`}
           tabIndex="-1"
         >
           {t("Blog")}
