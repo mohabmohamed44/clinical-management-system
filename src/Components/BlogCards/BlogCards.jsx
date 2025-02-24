@@ -27,7 +27,7 @@ export default function BlogCard({ image, title, description }) {
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+      <section className="bg-white border border-gray-200 rounded-lg shadow-sm">
         <a href="#">
           <img
             className="rounded-t-lg w-full h-48 object-cover"
@@ -74,7 +74,7 @@ export default function BlogCard({ image, title, description }) {
             <ArrowRight className="w-3.5 h-3.5 ms-2" />
           </a>
         </div>
-      </div>
+      </section>
     </>
   );
 }
