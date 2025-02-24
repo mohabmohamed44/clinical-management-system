@@ -34,6 +34,7 @@ export default [
         { allowConstantExport: true },
       ],
       'react/prop-types': 'off',
+      'react/style': 'off',
       'react/jsx-uses-vars': 'error',
       "react/jsx-uses-react": "error",
       
