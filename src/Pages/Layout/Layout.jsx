@@ -1,8 +1,14 @@
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 export default function Layout() {
+  // get the current route
+  const location = useLocation();
+
+  // Define routes where the footer should be hidden
+  const hideFooterRoutes = ["/login","/register","/forgot_password","/reset_code","/update_password", "/all_done"];
   return (
     <div className="flex flex-col min-h-screen relative overflow-x-hidden"> {/* Add relative */}
       <Navbar />
@@ -11,7 +17,8 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
-      <Footer />
+      {/* only render footer if current path is not in hideFooterRoutes*/}
+      {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </div>
   );
 }
