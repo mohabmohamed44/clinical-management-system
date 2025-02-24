@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import Style from "./ProtectedRoute.module.css";
-export default function ProtectedRoute() {
-  return (
-    <>
-     <h2>Template Name</h2>
-    </>
-  );
+import Cookies from 'js-cookie';
+export default function ProtectedRoute({ children }) {
+  // If token exists, render children
+  // If no token, redirect to login
+  return Cookies.get("token") ? children : <Navigate to={"/login"} />;
 }
