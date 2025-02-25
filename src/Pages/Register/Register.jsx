@@ -110,7 +110,7 @@ export default function Register() {
         keywords="register, account, patient, doctor"
         author="Mohab Mohammed"
       />
-      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
+      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10 bg-gray-50">
         {/* Left side - Image (hidden on mobile) */}
         <div className="hidden lg:block lg:w-full lg:pr-5 rtl:lg:pl-5">
           <img
@@ -121,7 +121,7 @@ export default function Register() {
         </div>
 
         {/* Right side - Form */}
-        <div className="w-full lg:w-full max-w-xl">
+        <div className="w-full lg:w-full max-w-lg">
           <div className="bg-white rounded-2xl shadow-sm mb-6 p-8 mt-14">
             {/* Progress indicator */}
             <div className="flex justify-center mb-6">
@@ -436,7 +436,9 @@ export default function Register() {
                                 : "border-gray-300"
                             } focus:outline-none focus:border-blue-500 rtl:text-right`}
                           >
-                            <option value="" selected disabled hidden>{t("SelectBloodType")}</option>
+                            <option value="" selected disabled hidden>
+                              {t("SelectBloodType")}
+                            </option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -673,6 +675,17 @@ export default function Register() {
                       </button>
                     </div>
                   )}
+                  <div className="mt-6 flex justify-center items-center text-center rtl:text-center">
+                    <span className="font-medium text-lg">
+                      Already have an account?
+                    </span>
+                    <Link
+                      className="text-[#3454c1] font-medium text-lg text-center ml-3 hover:underline mt-1"
+                      to="/login"
+                    >
+                      Login here
+                    </Link>
+                  </div>
                 </Form>
               )}
             </Formik>
