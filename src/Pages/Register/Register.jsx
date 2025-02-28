@@ -110,7 +110,7 @@ export default function Register() {
         keywords="register, account, patient, doctor"
         author="Mohab Mohammed"
       />
-      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10 bg-gray-50">
+      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
         {/* Left side - Image (hidden on mobile) */}
         <div className="hidden lg:block lg:w-full lg:pr-5 rtl:lg:pl-5">
           <img

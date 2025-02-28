@@ -38,7 +38,7 @@ export default function Login() {
         language={i18n.language}
       />
       <div
-        className={`min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 bg-gray-50 ${
+        className={`min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 ${
           isRTL ? "rtl" : "ltr"
         }`}
         role="main"
