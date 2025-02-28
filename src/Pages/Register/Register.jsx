@@ -675,7 +675,8 @@ export default function Register() {
                       </button>
                     </div>
                   )}
-                  <div className="mt-6 flex justify-center items-center text-center rtl:text-center">
+                  {currentStep === 1 && (
+                    <div className="mt-6 flex justify-center items-center text-center rtl:text-center">
                     <span className="font-medium text-lg">
                       Already have an account?
                     </span>
@@ -686,6 +687,7 @@ export default function Register() {
                       Login here
                     </Link>
                   </div>
+                  )}
                 </Form>
               )}
             </Formik>
