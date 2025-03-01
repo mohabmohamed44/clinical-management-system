@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Logo from "../../assets/logo.webp";
 import footerBg from "../../assets/Frame.webp";
 
-const Footer = () => {
+export default function Footer() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   return (
@@ -153,6 +153,14 @@ const Footer = () => {
                     {t("TermsAndConditions")}
                   </Link>
                 </li>
+                <li>
+                  <Link 
+                    to="/about"
+                    className="text-gray-800 hover:lg:text-gray-800 transition-colors"
+                  >
+                    {t("About")}
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -206,5 +214,3 @@ const Footer = () => {
     </footer>
   );
 };
-
-export default Footer;

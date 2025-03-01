@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import About from "../Pages/About/About";
 
 const resources = {
   // English translations
@@ -10,6 +11,7 @@ const resources = {
       NotFound: "Not Found",
       NotFoundDescription: "The page you are looking for does not exist.",
       Back: "Go back",
+      About: "About",
       CompleteCode: "Complete the code",
       Doctors: "Doctors",
       Blog: "Blog",
@@ -149,6 +151,7 @@ ar: {
       ContactUs: 'تواصل معانا من هنا',
       FollowUs: 'تابعنا عبر منصات التواصل الإجتماعي',
       PasswordReset: 'إعادة تعيين كلمة المرور',
+      About: "حول",
       Name: 'الإسم كاملا',
       Subject: 'العنوان',
       Message: 'الرسالة',

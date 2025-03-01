@@ -37,6 +37,7 @@ export default function Navbar() {
           <div className="hidden lg:flex space-x-6">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
             <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
+            <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("About")}</NavLink>
             <NavLink to="/appointments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Appointments")}</NavLink>
             <NavLink to="/blog" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Blog"))}</NavLink>
             <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Contact"))}</NavLink>
@@ -80,6 +81,7 @@ export default function Navbar() {
         <div className="flex flex-col items-start px-4 py-4 space-y-4">
           <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
           <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
+          <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/appointments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Appointments")}</NavLink>
           <NavLink to="/blog" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(true)}>{t("Blog")}</NavLink>
           <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>
