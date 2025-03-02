@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import group109 from "../../assets/Group-112.png";
 import { CircleChevronDown, CircleChevronUp } from "lucide-react";
+import {useTranslation} from "react-i18next";
 
 const faqs = [
   { question: "What services does Delma ProHealth offer?", 
@@ -23,7 +24,7 @@ const faqs = [
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState(null);
-
+  const {t} = useTranslation();
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -34,7 +35,7 @@ export default function FAQSection() {
         {/* FAQ Content */}
         <div className="lg:col-span-8">
           <h2 className="text-[#274760] sm:text-5xl max-w-md  text-3xl font-medium leading-[1.2]">
-            Frequently Asked Questions
+            {t("FAQ")}
           </h2>
 
           <div className="mt-10">

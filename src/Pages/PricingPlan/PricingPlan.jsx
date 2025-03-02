@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Banner from "../../assets/banner_img.png";
 import Image from "../../assets/div-1.webp";
 import { useTranslation } from "react-i18next";
-import Style from "./PricingPlan.module.css";
 import PriceCards from "../../Components/PriceCards/PriceCards";
 import FAQSection from "../../Components/FAQ/FAQ";
 import MetaData from "../../Components/MetaData/MetaData";
@@ -33,7 +32,7 @@ export default function PricingPlan() {
               {/* Text Content - Left Side */}
               <div className="text-[#274760] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center rtl:text-right"
+                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center text-left rtl:text-right"
                   aria-label="About Heading"
                 >
                   {t("pricing")}
@@ -71,8 +70,8 @@ export default function PricingPlan() {
         </header>
       </main>
       <div>
-        <h1 className="text-4xl font-bold text-[#274760] leading-11 rtl:leading-12 text-center max-w-md mx-auto">
-          Choose Your ProHealth Membership Plan
+        <h1 className="text-4xl font-bold text-[#274760] leading-11 rtl:leading-12 rtl:max-w-lg text-center max-w-2xl mx-auto">
+          {t("PricingHeading")}
         </h1>
         <PriceCards />
         <FAQSection />

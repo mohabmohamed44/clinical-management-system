@@ -1,5 +1,6 @@
 import React from "react";
 import itemImg from "../../assets/item-img.svg";
+import { MoveRight } from "lucide-react";
 
 // Plan data to avoid repetition
 const plans = [
@@ -141,7 +142,7 @@ const PlanCard = ({ title, badge, description, price, features }) => (
           "
         >
           <span className="text-white">Get Started</span>
-          
+          <MoveRight size={24} />
         </button>
       </div>
     </div>
