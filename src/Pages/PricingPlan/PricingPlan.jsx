@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import Style from "./About.module.css";
-import MetaData from "../../Components/MetaData/MetaData";
-import { useTranslation } from "react-i18next";
-import Image from "../../assets/div-1.webp";
 import Banner from "../../assets/banner_img.png";
-
-export default function About() {
+import Image from "../../assets/div-1.webp";
+import { useTranslation } from "react-i18next";
+import Style from "./PricingPlan.module.css";
+import PriceCards from "../../Components/PriceCards/PriceCards";
+import FAQSection from "../../Components/FAQ/FAQ";
+import MetaData from "../../Components/MetaData/MetaData";
+export default function PricingPlan() {
   const { t } = useTranslation();
   return (
     <>
       <MetaData
-        title="about"
-        description="about"
-        keywords="about, our services"
+        title="Pricing Plan"
+        description="Choose your ProHealth membership plan. Get access to premium healthcare services and benefits."
+        keywords="pricing, membership, healthcare, plans"
         author="Mohab Mohammed"
       />
-      <main className="w-full object-cover h-screen mb-[1200px]">
+      <main className="w-full object-cover h-screen">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
             src={Image}
@@ -32,16 +33,16 @@ export default function About() {
               {/* Text Content - Left Side */}
               <div className="text-[#274760] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center rtl:text-right"
                   aria-label="About Heading"
                 >
-                  {t("WelcomeMessage")}
+                  {t("pricing")}
                 </h2>
                 <p
-                  className={Style.About}
+                  className="text-xl font-medium sm:text-xl mt-4"
                   aria-label="Contact Reason"
                 >
-                  {t("partner")}
+                  {t("pricingDetails")}
                 </p>
               </div>
               {/* Image - Right Side */}
@@ -54,7 +55,7 @@ export default function About() {
                   className="
                     w-full 
                     h-auto
-                    max-w-[280px]
+                    max-w-[400px]
                     sm:max-w-sm
                     md:max-w-md
                     lg:max-w-lg
@@ -65,11 +66,17 @@ export default function About() {
                   loading="lazy"
                 />
               </figure>
-              {/* Text Content - Left Side */}
             </div>
           </section>
         </header>
       </main>
+      <div>
+        <h1 className="text-4xl font-bold text-[#274760] leading-11 rtl:leading-12 text-center max-w-md mx-auto">
+          Choose Your ProHealth Membership Plan
+        </h1>
+        <PriceCards />
+        <FAQSection />
+      </div>
     </>
   );
 }

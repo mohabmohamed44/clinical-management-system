@@ -1,6 +1,5 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import About from "../Pages/About/About";
 
 const resources = {
   // English translations
@@ -15,6 +14,7 @@ const resources = {
       CompleteCode: "Complete the code",
       Doctors: "Doctors",
       Blog: "Blog",
+      partner: "your Partner in Health and Wellness",
       FAQ: "FAQs",
       PrivacyPolicy: "Privacy Policy",
       TermsAndConditions: "Terms and Conditions",
@@ -79,6 +79,8 @@ const resources = {
       Location: "Location",
       CodeWarning: 'Only 6 characters allowed',
       PasswordReset: "Password reset",
+      pricing: "Pricing Plan",
+      pricingDetails: 'Explore Our Membership Options and Start Your Journey to Better Health',
       AboutUs: 'About Us',
       Timetable: "Timetable",
       GetAdviceFromOurExperts: 'To get the latest news about health from our experts',
@@ -101,6 +103,7 @@ const resources = {
       GenderRequired: "Gender is required",
       findUsHere: "find us here",
       Submit: "Submit",
+      WelcomeMessage: "Welcome to Delma ProHealth & HealthCare Center",
       EmailAlreadyExists: "Email already exists",
       FollowUs: "Follow Us",
       Login: "Login",
@@ -110,12 +113,14 @@ const resources = {
 ar: {
     translation: {
       "Welcome to delma": "مرحبا بك في دلما",
+      WelcomeMessage: "مرحبًا بكم في مركز دلما برو للصحة والرعاية الصحية",
       firstName: 'الاسم الأول',
       lastName: 'الاسم الأخير',
       email: 'البريد الإلكتروني',
       findUsHere: 'تجدنا هنا',
       Doctors: 'الدكاترة',
       FAQ: 'أسئلة متكررة',
+      partner: 'شريكك في الصحة والعافية',
       FieldLength: 'كل حقل يجب أن يحتوي علي عنصر واحد',
       Continue: 'متابعة',
       Blog: 'المدونات',
@@ -133,6 +138,8 @@ ar: {
       UpdatePassword: 'تغيير كلمة المرور',
       UpdatePasswordRequired: 'يجب ان تكون كلمة المرور الجديدة مختلفة من كلمة المرور القديمة',
       ConfirmPasswordRequired: 'تأكيد كلمة المرور مطلوب',
+      pricing: "خطة الأسعار",
+      pricingDetails: 'استكشف خيارات عضويتنا وابدأ رحلتك نحو صحة أفضل',
       newPasswordIsRequired: 'كلمة المرور الجديدة مطلوبة',
       CodeRequired: 'الكود مطلوب',
       AllDone: 'تمت بنجاح',

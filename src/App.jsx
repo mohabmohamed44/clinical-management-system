@@ -17,6 +17,7 @@ import Appointments from "./Pages/Appointments/Appointments";
 import FindDoctor from "./Pages/FindDoctor/FindDoctor";
 import Blog from "./Pages/Blog/Blog";
 import About from "./Pages/About/About";
+import PricingPlan from "./Pages/PricingPlan/PricingPlan";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: "find_doctor", element: <FindDoctor /> },
       { path: "about", element: <About /> },
       { path: "blog", element: <Blog /> },
+      { path:  "pricing", element: <PricingPlan />},
       { path: "*", element: <NotFound /> },
     ],
   },
