@@ -30,7 +30,7 @@ export default function PricingPlan() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               {/* Text Content - Left Side */}
-              <div className="text-[#274760] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
+              <div className="text-white max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
                   className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center text-left rtl:text-right"
                   aria-label="About Heading"
@@ -70,7 +70,7 @@ export default function PricingPlan() {
         </header>
       </main>
       <div>
-        <h1 className="text-4xl font-bold text-[#274760] leading-11 rtl:leading-12 rtl:max-w-lg text-center max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-[#3454c1] leading-11 rtl:leading-12 rtl:max-w-lg text-center max-w-2xl mx-auto">
           {t("PricingHeading")}
         </h1>
         <PriceCards />

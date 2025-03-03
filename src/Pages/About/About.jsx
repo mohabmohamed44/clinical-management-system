@@ -30,7 +30,7 @@ export default function About() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               {/* Text Content - Left Side */}
-              <div className="text-[#274760] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
+              <div className="text-[#ffffff] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
                   className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"

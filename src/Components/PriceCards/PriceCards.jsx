@@ -5,43 +5,6 @@ import { MoveRight } from "lucide-react";
 // Plan data to avoid repetition
 const plans = [
   {
-    title: "Family Health Plan",
-    description:
-      "Specialized care for seniors. Benefit from tailored assessments, fall prevention, and support for your golden years.",
-    price: "$249",
-    features: [
-      "Whole Family Coverage",
-      "Reduced Vaccination Costs",
-      "24/7 Medical Advice",
-    ],
-  },
-  {
-    title: "Wellness Plan",
-    badge: "Popular",
-    description:
-      "Comprehensive healthcare tailored to your needs. Experience unlimited care and exclusive access to wellness events.",
-    price: "$99",
-    features: [
-      "Unlimited Check-ups",
-      "Discounts on Treatments",
-      "Annual Health Assessment",
-      "Priority Scheduling",
-      "Wellness Workshops",
-    ],
-  },
-  {
-    title: "Senior Wellness Plan",
-    description:
-      "Specialized care for seniors. Benefit from tailored assessments, fall prevention, and support for your golden years.",
-    price: "$149",
-    features: [
-      "Senior-Specific Care",
-      "Geriatric Assessments",
-      "Fall Prevention Programs",
-      "Medication Discounts",
-    ],
-  },
-  {
     title: "Dental Health Plan",
     description:
       "Smile with confidence. Enjoy regular dental check-ups, emergency coverage, and exclusive discounts on dental procedures.",
@@ -51,6 +14,18 @@ const plans = [
       "Procedure Discounts",
       "Emergency Coverage",
       "Oral Health Advice",
+    ],
+  },
+  {
+    title: "Sports & Fitness Plan",
+    description:
+      "Optimized for athletes. Access sports injury assessments, physiotherapy, and expert advice for peak performance and recovery.",
+    price: "$119",
+    features: [
+      "Sports Injury Assessments",
+      "Physiotherapy Sessions",
+      "Sports Medicine Experts",
+      "Fitness Support",
     ],
   },
   {
@@ -66,29 +41,18 @@ const plans = [
       "Prenatal & Postnatal Support",
     ],
   },
-  {
-    title: "Sports & Fitness Plan",
-    description:
-      "Optimized for athletes. Access sports injury assessments, physiotherapy, and expert advice for peak performance and recovery.",
-    price: "$119",
-    features: [
-      "Sports Injury Assessments",
-      "Physiotherapy Sessions",
-      "Sports Medicine Experts",
-      "Fitness Support",
-    ],
-  },
+  
 ];
 
 const PlanCard = ({ title, badge, description, price, features }) => (
   <article className="relative flex flex-col bg-white rounded-2xl shadow-xs hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-    <header className="bg-gradient-to-br from-[#307bc4] to-[#274760] p-8 text-white">
+    <header className="bg-gradient-to-br from-[#11319E] to-[#061138] p-8 text-white">
       <div className="flex items-center gap-3 flex-wrap">
-        <span className="px-4 py-2 bg-gradient-to-b from-[#d2eaeF] to-[#86bbf1] text-[#307bc4] font-semibold rounded-full border-2 border-white shadow-sm">
+        <span className="px-4 py-2 bg-gradient-to-b from-[#11319E] to-[#061138] text-[#ffffff] font-semibold rounded-full border-2 border-white shadow-sm">
           {title}
         </span>
         {badge && (
-          <span className="px-3 py-1 bg-white text-[#274760] font-semibold rounded-full border-2 border-[#86bbf1] shadow-sm">
+          <span className="px-3 py-1 bg-white text-[#11319e] font-semibold rounded-full border-2 border-[#86bbf1] shadow-sm">
             {badge}
           </span>
         )}
@@ -103,13 +67,13 @@ const PlanCard = ({ title, badge, description, price, features }) => (
     <div className="flex-1 p-8 border-x border-b border-gray-200 flex flex-col justify-between">
       <ul className="space-y-4">
         {features.map((feature, index) => (
-          <li key={index} className="flex items-start gap-3">
+          <li key={index} className="flex items-start gap-3 text-[#061138]">
             <img 
               src={itemImg} 
               alt="" 
-              className="w-5 h-5 mt-1 flex-shrink-0" 
+              className="w-5 h-5 mt-1 flex-shrink-0 text-[#061138]" 
             />
-            <span className="text-[#274760] text-base lg:text-lg">
+            <span className="text-base lg:text-lg">
               {feature}
             </span>
           </li>
@@ -131,8 +95,8 @@ const PlanCard = ({ title, badge, description, price, features }) => (
             font-semibold
             text-white
             bg-gradient-to-r 
-            from-[#307bc4] 
-            to-[#274760]
+            from-[#11319E] 
+            to-[#061138]
             rounded-full 
             shadow-md 
             hover:shadow-lg 

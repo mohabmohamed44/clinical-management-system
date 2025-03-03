@@ -34,7 +34,7 @@ export default function FAQSection() {
       <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* FAQ Content */}
         <div className="lg:col-span-8">
-          <h2 className="text-[#274760] sm:text-5xl max-w-md  text-3xl font-medium leading-[1.2]">
+          <h2 className="text-[#11319E] sm:text-5xl max-w-md  text-3xl font-medium leading-[1.2]">
             {t("FAQ")}
           </h2>
 
@@ -44,12 +44,12 @@ export default function FAQSection() {
                 key={index}
                 className={`border border-[#307bc4] rounded-[20px] mb-4 overflow-hidden transition-all ${
                   openIndex === index
-                    ? "bg-gradient-to-b from-[#d2eaef] to-[#86bbf1]"
+                    ? "bg-gradient-to-b from-[#061138] to-[#11319E] text-white"
                     : "bg-white"
                 }`}
               >
                 <button
-                  className="w-full flex justify-between items-center p-5 text-left text-[#274760] text-xl md:text-[22.5px] font-normal"
+                  className="w-full flex justify-between items-center p-5 text-left text-[#11319E] text-xl md:text-[22.5px] font-normal"
                   onClick={() => toggleFAQ(index)}
                 >
                   {faq.question}
@@ -58,7 +58,7 @@ export default function FAQSection() {
                   </span>
                 </button>
                 {openIndex === index && (
-                  <p className="px-6 pb-4 text-[#274760] text-base leading-[26px]">
+                  <p className="px-6 pb-4 text-[#fff] text-base leading-[26px]">
                     {faq.answer}
                   </p>
                 )}
