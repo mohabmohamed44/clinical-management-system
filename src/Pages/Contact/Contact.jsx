@@ -33,7 +33,7 @@ export default function Contact() {
         aria-label="Contact Information"
       >
         {/* Left Side - Text Section */}
-        <div className="text-[#274760] max-w-lg mb-6 md:mb-6 lg:mb-0">
+        <div className="text-white max-w-lg mb-6 md:mb-6 lg:mb-0">
           <h2 className="text-4xl sm:text-5xl font-bold" aria-label="Contact Heading">{t("Contact")}</h2>
           <p className="text-lg sm:text-xl mt-4" aria-label="Contact Reason">{t("ContactReason")}</p>
         </div>

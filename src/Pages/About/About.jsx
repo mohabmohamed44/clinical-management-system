@@ -3,7 +3,9 @@ import Style from "./About.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
 import Image from "../../assets/div-1.webp";
+import _ServiceCards from "../../Components/_ServiceCards/_ServiceCards";
 import Banner from "../../assets/banner_img.png";
+import ServiceCards from "../../Components/ServiceCards/ServiceCards";
 
 export default function About() {
   const { t } = useTranslation();
@@ -15,7 +17,7 @@ export default function About() {
         keywords="about, our services"
         author="Mohab Mohammed"
       />
-      <main className="w-full object-cover h-screen mb-[1200px]">
+      <main className="w-full object-cover h-screen">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
             src={Image}
@@ -37,10 +39,7 @@ export default function About() {
                 >
                   {t("WelcomeMessage")}
                 </h2>
-                <p
-                  className={Style.About}
-                  aria-label="Contact Reason"
-                >
+                <p className={Style.About} aria-label="Contact Reason">
                   {t("partner")}
                 </p>
               </div>
@@ -54,8 +53,8 @@ export default function About() {
                   className="
                     w-full 
                     h-auto
-                    max-w-[280px]
-                    sm:max-w-sm
+                    max-w-[320px]
+                    sm:max-w-md
                     md:max-w-md
                     lg:max-w-lg
                     xl:max-w-xl
@@ -70,6 +69,8 @@ export default function About() {
           </section>
         </header>
       </main>
+      <_ServiceCards/>
+      <ServiceCards/>
     </>
   );
 }
