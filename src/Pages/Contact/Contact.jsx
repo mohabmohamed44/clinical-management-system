@@ -34,8 +34,8 @@ export default function Contact() {
       >
         {/* Left Side - Text Section */}
         <div className="text-white max-w-lg mb-6 md:mb-6 lg:mb-0">
-          <h2 className="text-4xl sm:text-5xl font-bold" aria-label="Contact Heading">{t("Contact")}</h2>
-          <p className="text-lg sm:text-xl mt-4" aria-label="Contact Reason">{t("ContactReason")}</p>
+          <h2 className="text-4xl sm:text-5xl font-bold rtl:text-right" aria-label="Contact Heading">{t("Contact")}</h2>
+          <p className="text-lg sm:text-xl mt-4 rtl:text-right" aria-label="Contact Reason">{t("ContactReason")}</p>
         </div>
 
         {/* Right Side - Doctor Image */}

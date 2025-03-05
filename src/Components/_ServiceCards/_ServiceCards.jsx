@@ -42,11 +42,11 @@ export default function _ServiceCards() {
       <div className="max-w-[1308px] mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Header Section */}
-          <div className="lg:col-span-1">
-            <h2 className="text-[#307bc4] text-[25.3px] leading-[34.1px]">
+          <div className="lg:col-span-1 mt-6">
+            <h2 className="text-[#307bc4] font-semibold text-[25.3px] leading-[34.1px]">
               SERVICES
             </h2>
-            <h1 className="text-[#274760] text-[51.6px] leading-[63.8px] mt-6">
+            <h1 className="text-[#274760] text-5xl leading-[63.8px] mt-6">
               Provides Our<br />
               Best Services
             </h1>

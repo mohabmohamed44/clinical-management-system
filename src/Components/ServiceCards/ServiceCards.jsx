@@ -23,7 +23,7 @@ export default function _ServiceCards() {
     },
     {
       icon: <UsersRound className="w-6 h-6" />,
-      title: "Comprehensive Services",
+      title: "Comprehensive Services approach",
       description: `We offer a wide range of healthcare services,
                     from preventive care to specialized
                     treatment for complex conditions.`,
