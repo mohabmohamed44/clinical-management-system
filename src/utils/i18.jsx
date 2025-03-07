@@ -19,6 +19,7 @@ const resources = {
       FAQ: "Frequently Asked Questions",
       PrivacyPolicy: "Privacy Policy",
       TermsAndConditions: "Terms and Conditions",
+      Services: "Services",
       lastName: "Last Name",
       email: "Email",
       Delma: "Delma",
@@ -115,6 +116,7 @@ ar: {
     translation: {
       "Welcome to delma": "مرحبا بك في دلما",
       WelcomeMessage: "مرحبًا بكم في مركز دلما برو للصحة والرعاية الصحية",
+      Services: "خدماتنا",
       firstName: 'الاسم الأول',
       lastName: 'الاسم الأخير',
       email: 'البريد الإلكتروني',

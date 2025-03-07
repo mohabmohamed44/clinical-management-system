@@ -3,11 +3,11 @@ import Style from "./About.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
 import Image from "../../assets/div-1.webp";
-import _ServiceCards from "../../Components/_ServiceCards/_ServiceCards";
 import Banner from "../../assets/banner_img.png";
 import ServiceCards from "../../Components/ServiceCards/ServiceCards";
-
+import Details from "../../Components/_ServiceCards/_ServiceCards";
 export default function About() {
+
   const { t } = useTranslation();
   return (
     <>
@@ -69,7 +69,7 @@ export default function About() {
           </section>
         </header>
       </main>
-      <_ServiceCards/>
+      <Details/>
       <ServiceCards/>
     </>
   );
