@@ -1,13 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { expect, test, describe } from '@jest/globals';
-import _ServiceCards from './_ServiceCards';
 import '@testing-library/jest-dom';
 import Details from './_ServiceCards';
 
 describe('_ServiceCards Component', () => {
   test('renders header section with correct text', () => {
-    render(<_ServiceCards />);
+    render(<Details/>);
 
     // Ensure "Services" is translated correctly
     expect(screen.getByText('Services')).toBeInTheDocument();
