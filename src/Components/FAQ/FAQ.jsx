@@ -49,7 +49,9 @@ export default function FAQSection() {
                 }`}
               >
                 <button
-                  className="w-full flex justify-between items-center p-5 text-left text-[#11319E] text-xl md:text-[22.5px] font-normal"
+                  className={`w-full flex justify-between items-center p-5 text-left ${
+                    openIndex === index ? "text-gray-50" : "text-[#11319E]"
+                  } text-xl md:text-[22.5px] font-normal`}
                   onClick={() => toggleFAQ(index)}
                 >
                   {faq.question}

@@ -32,13 +32,13 @@ export default function PricingPlan() {
               {/* Text Content - Left Side */}
               <div className="text-white max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center text-left rtl:text-right"
+                  className="text-5xl text-center md:text-5xl lg:text-left sm:text-center leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center rtl:text-right"
                   aria-label="About Heading"
                 >
                   {t("pricing")}
                 </h2>
                 <p
-                  className="text-xl font-medium sm:text-xl mt-4"
+                  className="text-2xl font-medium sm:text-2xl mt-4"
                   aria-label="Contact Reason"
                 >
                   {t("pricingDetails")}
@@ -46,7 +46,7 @@ export default function PricingPlan() {
               </div>
               {/* Image - Right Side */}
               <figure
-                className="mt-auto lg:mt-auto flex justify-center w-full lg:w-1/2 order-2 lg:order-2"
+                className="mt-auto lg:mt-auto flex justify-center items-center w-full lg:w-1/2 order-2 lg:order-2"
                 aria-label="Doctor Image"
               >
                 <img
