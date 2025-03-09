@@ -31,7 +31,7 @@ export default function BlogCard({ image, title, description }) {
         <a href="#">
           <img
             className="rounded-t-lg w-full h-48 object-cover"
-            src={imageError || !image ? getFallbackImage() : image}
+            src={imageError || !image ? getFallbackImage(0) : image} // Added index parameter
             alt={title}
             onError={handleImageError}
           />
@@ -50,19 +50,19 @@ export default function BlogCard({ image, title, description }) {
             href="#"
             className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
           >
-            <FaFacebookF size={20} className="text-[#274760] group-hover:text-white" />
+            <FaFacebookF size={20} className="text-[#274760] group-hover:text-white" alt="facebook" />
           </a>
           <a
             href="#"
             className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
           >
-            <FaTwitter size={20} className="text-[#274760] group-hover:text-white" />
+            <FaTwitter size={20} className="text-[#274760] group-hover:text-white" alt="twitter" />
           </a>
           <a
             href="#"
             className="group p-2 border rounded-full hover:bg-[#274760] transition-colors duration-300 hover:border-transparent"
           >
-            <FaLinkedinIn size={20} className="text-[#274760] group-hover:text-white" />
+            <FaLinkedinIn size={20} className="text-[#274760] group-hover:text-white"  alt="linkedin"/>
           </a>
         </div>
 

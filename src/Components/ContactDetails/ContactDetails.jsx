@@ -40,6 +40,7 @@ export default function ContactDetails() {
           style={{ border: 0 }}
           allowFullScreen=""
           loading="lazy"
+          title= "Google Map"
         ></iframe>
       </div>
     </div>
