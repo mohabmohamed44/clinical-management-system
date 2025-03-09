@@ -33,7 +33,7 @@ export default function Contact() {
         aria-label="Contact Information"
       >
         {/* Left Side - Text Section */}
-        <div className="text-white max-w-lg mb-6 md:mb-6 lg:mb-0">
+        <div className="text-white max-w-lg mb-6 md:mb-6 lg:mb-0 xl:mb-0">
           <h2 className="text-4xl sm:text-5xl font-bold rtl:text-right" aria-label="Contact Heading">{t("Contact")}</h2>
           <p className="text-lg sm:text-xl mt-4 rtl:text-right" aria-label="Contact Reason">{t("ContactReason")}</p>
         </div>
@@ -42,7 +42,7 @@ export default function Contact() {
         <figure className="flex justify-center w-full lg:w-auto" aria-label="Doctor Image">
           <img
             src={DoctorImage}
-            className="max-w-xs sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl h-full w-full"
+            className="max-w-md pb-12 sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl xl:pb-10 h-full w-full"
             alt="Doctor"
             loading="lazy"
           />
