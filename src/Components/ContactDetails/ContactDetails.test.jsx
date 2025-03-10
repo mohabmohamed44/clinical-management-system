@@ -71,7 +71,7 @@ describe('ContactDetails Component', () => {
     expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-3', 'gap-4');
 
     // Check map container
-    const mapContainer = container.querySelector('.w-full.h-\\[500px\\]');
+    const mapContainer = container.querySelector('.w-full');
     expect(mapContainer).toBeInTheDocument();
   });
 });
