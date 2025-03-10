@@ -6,11 +6,10 @@ jest.mock("react-router-dom", () => ({
   
   import React from 'react';
   import { render, screen, fireEvent } from '@testing-library/react';
-  import {jest, expect, test} from 
   import '@testing-library/jest-dom';
   import { I18nextProvider } from 'react-i18next';
   import i18n from 'i18next';
-  import Footer from '../Footer';
+  import Footer from './Footer';
   
   // Mock the assets
   jest.mock('../../assets/logo.webp', () => 'logo-mock.webp', { virtual: true });
@@ -88,12 +87,14 @@ jest.mock("react-router-dom", () => ({
   });
   
   // For correct path resolution based on your error
-  const actualFooterPath = '../Footer';
+  const actualFooterPath = './Footer';
   
   describe('Footer Component', () => {
     beforeEach(() => {
       // Reset i18n direction to LTR before each test
       i18n.dir = jest.fn().mockReturnValue('ltr');
+      // Set language to English for these tests
+      i18n.language = 'en';
       
       render(
         <I18nextProvider i18n={i18n}>
@@ -250,6 +251,10 @@ jest.mock("react-router-dom", () => ({
   // Test for responsive behavior
   describe('Footer Component Responsive Behavior', () => {
     beforeEach(() => {
+      // Set language to Arabic for these tests
+      i18n.language = 'ar';
+      i18n.dir = jest.fn().mockReturnValue('rtl');
+      
       render(
         <I18nextProvider i18n={i18n}>
           <Footer />
@@ -258,7 +263,8 @@ jest.mock("react-router-dom", () => ({
     });
   
     test('uses responsive grid layout', () => {
-      const footerGrid = screen.getByText('Delma').closest('div').parentElement;
+      // Using Arabic text "دلما" for Arabic language
+      const footerGrid = screen.getByText('دلما').closest('div').parentElement;
       expect(footerGrid).toHaveClass(
         'grid',
         'grid-cols-1',
@@ -269,7 +275,8 @@ jest.mock("react-router-dom", () => ({
     });
   
     test('bottom bar has responsive layout', () => {
-      const bottomBar = screen.getByText('Follow Us').closest('div').parentElement;
+      // Using Arabic text "تابعنا" for Arabic language
+      const bottomBar = screen.getByText('تابعنا').closest('div').parentElement;
       expect(bottomBar).toHaveClass(
         'flex',
         'flex-col',
