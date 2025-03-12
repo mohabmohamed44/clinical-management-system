@@ -3,7 +3,7 @@ import Style from "./About.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
 import Image from "../../assets/div-1.webp";
-import Banner from "../../assets/banner_img.png";
+import Banner from "../../assets/nurse.png";
 import ServiceCards from "../../Components/ServiceCards/ServiceCards";
 import Details from "../../Components/_ServiceCards/_ServiceCards";
 export default function About() {
@@ -54,6 +54,9 @@ export default function About() {
                     w-full 
                     h-auto
                     max-w-[320px]
+                    max-h-[340px]
+                    md:max-h-[350px]
+                    lg:max-h-[500px]
                     sm:max-w-md
                     md:max-w-md
                     lg:max-w-lg
