@@ -15,28 +15,28 @@ export default function Details() {
   const services = [
     {
       icon: <Stethoscope className="w-6 h-6" />,
-      title: t("Diagnostic Testing"),
-      description: t("Blood tests, imaging studies, and other tests to diagnose health conditions")
+      title: t("DiagnosticTesting"),
+      description: t("DiagnosticTestingCard")
     },
     {
       icon: <Heart className="w-6 h-6" />,
-      title: t("Rehabilitation Services"),
-      description: t("Physical therapy, occupational therapy, and other services to help patients recover")
+      title: t("RehabilitationServices"),
+      description: t("RehabilitationServicesCard")
     },
     {
       icon: <Brain className="w-6 h-6" />,
-      title: t("Mental Health Services"),
-      description: t("Counseling, therapy, and other services to help manage mental health conditions")
+      title: t("MentalHealthServices"),
+      description: t("HealthMonitoringCard")
     },
     {
       icon: <Activity className="w-6 h-6" />,
-      title: t("Health Monitoring"),
-      description: t("Regular health checkups and continuous monitoring services")
+      title: t("HealthMonitoring"),
+      description: t("HealthMonitoringCard")
     },
     {
       icon: <UserCog className="w-6 h-6" />,
-      title: t("Preventive Care"),
-      description: t("Annual checkups, immunizations, and health screenings")
+      title: t("PreventiveCare"),
+      description: t("PreventiveCareCard")
     }
   ];
 
@@ -51,8 +51,8 @@ export default function Details() {
               {t("Services")}
             </h2>
             <h1 className="text-[#274760] text-5xl leading-[63.8px] mt-6">
-              {t("Provides Our")}<br />
-              {t("Best Services")}
+              {t("Provide")}<br />
+              {t("bestService")}
             </h1>
           </div>
 
