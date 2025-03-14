@@ -4,8 +4,11 @@ import MetaData from '../../Components/MetaData/MetaData';
 import { Meta } from "react-router-dom";
 import Backgound from '../../assets/background.png';
 import Doctor from '../../assets/find_doctor.png';
+import { useTranslation } from "react-i18next";
 
 export default function FindDoctor() {
+
+  const { t } = useTranslation();
   return (
     <>
       <MetaData
@@ -31,18 +34,16 @@ export default function FindDoctor() {
               {/* Text Content - Left Side */}
               <div className="text-white max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-2xl text-center md:text-5xl lg:text-left sm:text-center leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center rtl:text-right"
+                  className="text-2xl text-center md:text-5xl sm:text-center leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center lg:text-left rtl:text-right"
                   aria-label="About Heading"
                 >
-                  Introduce You to
-                  Our Experts
+                  {t("Experts")}
                 </h2>
                 <p
-                  className="text-xl font-medium sm:text-2xl mt-4"
+                  className="text-xl font-medium sm:text-2xl mt-4 text-left rtl:text-right"
                   aria-label="Contact Reason"
                 >
-                  The list of certified doctors with years of
-                  professional experiences
+                  {t("ExpertsDescription")}
                 </p>
               </div>
               {/* Image - Right Side */}
