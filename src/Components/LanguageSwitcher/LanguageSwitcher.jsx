@@ -6,7 +6,7 @@ const LanguageSwitcher = () => {
 
   useEffect(() => {
     // Get saved language from localStorage or default to 'en'
-    const savedLanguage = localStorage.getItem('language') || document.documentElement.lang || navigator.language?.split('-')[0] || 'en';
+    const savedLanguage = localStorage.getItem('language') || 'en';
     
     // Set initial language and direction
     i18n.changeLanguage(savedLanguage);
@@ -24,16 +24,10 @@ const LanguageSwitcher = () => {
 
   return (
     <div className="flex items-center space-x-2">
-      <button 
-        onClick={() => changeLanguage("en")} 
-        className={`p-2 rounded ${i18n.language === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-      >
+      <button onClick={() => changeLanguage("en")} className="p-2 bg-gray-200 rounded">
         🇺🇸 {t("language")}
       </button>
-      <button 
-        onClick={() => changeLanguage("ar")} 
-        className={`p-2 rounded ${i18n.language === 'ar' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-      >
+      <button onClick={() => changeLanguage("ar")} className="p-2 bg-gray-200 rounded">
         🇸🇦 {t("language")}
       </button>
     </div>
