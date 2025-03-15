@@ -18,6 +18,7 @@ import FindDoctor from "./Pages/FindDoctor/FindDoctor";
 import Blog from "./Pages/Blog/Blog";
 import About from "./Pages/About/About";
 import PricingPlan from "./Pages/PricingPlan/PricingPlan";
+import { LanguageProvider } from "./Lib/Context/LanguageContext";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -45,14 +46,17 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 function App() {
   // Browser router
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster position="top-center" reverseOrder={false} />
-        <ReactQueryDevtools />
+        <LanguageProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-center" reverseOrder={false} />
+          <ReactQueryDevtools />
+        </LanguageProvider>
       </QueryClientProvider>
     </>
   );

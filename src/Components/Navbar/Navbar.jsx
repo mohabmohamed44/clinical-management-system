@@ -1,29 +1,16 @@
 import { Menu, X, ChevronDown } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.webp";
 import { useTranslation } from "react-i18next";
 import ar from "../../assets/circle.webp";
 import en from "../../assets/united-states.webp";
-import {useLocalStorage} from "../../hooks/useLocalStorage";
+import { useLanguage } from "../../Lib/Context/LanguageContext";
 
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const [languageOpen, setLanguageOpen] = useState(false);
-  const [language, setLanguage] = useLocalStorage("defaultLanguage", "en");
-  const { i18n, t } = useTranslation();
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-    document.documentElement.dir = lng === "ar" ? "rtl" : "ltr";
-    setLanguage(lng);
-    setLanguageOpen(false);
-  };
-
-  useEffect(() => {
-    i18n.changeLanguage(language);
-    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
-  }, [language, i18n]);
+  const { language, changeLanguage, languageDropdownOpen, toggleLanguageDropdown } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow w-full top-0 z-100 sticky left-0">
@@ -52,13 +39,13 @@ export default function Navbar() {
           {/* Language Dropdown */}
           <div className="relative" aria-label="Language Dropdown" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown">
             <button
-              onClick={() => setLanguageOpen(!languageOpen)}
+              onClick={toggleLanguageDropdown}
               className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
             >
-              <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <img loading="lazy" src={language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="w-4 h-4" />
             </button>
-            {languageOpen && (
+            {languageDropdownOpen && (
               <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
                 <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" aria-label="english language">
                   <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English
@@ -84,7 +71,7 @@ export default function Navbar() {
           <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
           <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/appointments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Appointments")}</NavLink>
-          <NavLink to="/blog" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(true)}>{t("Blog")}</NavLink>
+          <NavLink to="/blog" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Blog")}</NavLink>
           <NavLink to="/pricing" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("pricing")}</NavLink>
           <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>
           <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Login")}</NavLink>
@@ -92,11 +79,11 @@ export default function Navbar() {
           
           {/* Language Dropdown Mobile */}
           <div className="relative w-fit" aria-label="Language Dropdown" aria-expanded="false" aria-haspopup="true" data-toggle="dropdown">
-            <button onClick={() => setLanguageOpen(!languageOpen)} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
-              <img loading="lazy" src={i18n.language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+            <button onClick={toggleLanguageDropdown} className="flex items-center w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+              <img loading="lazy" src={language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
               <ChevronDown className="ml-auto w-4 h-4" />
             </button>
-            {languageOpen && (
+            {languageDropdownOpen && (
               <div className="absolute left-4 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
                 <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full cursor-pointer">
                   <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English

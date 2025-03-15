@@ -5,7 +5,6 @@ const resources = {
   // English translations
   en: {
     translation: {
-      "Welcome to delma": "Welcome to delma",
       firstName: "First Name",
       NotFound: "Not Found",
       NotFoundDescription: "The page you are looking for does not exist.",
@@ -124,9 +123,8 @@ const resources = {
       language: "English (US)",
     },
 },
-ar: {
+  ar: {
     translation: {
-      "Welcome to delma": "مرحبا بك في دلما",
       WelcomeMessage: "مرحبًا بكم في مركز دلما برو للصحة والرعاية الصحية",
       Services: "خدماتنا",
       firstName: 'الاسم الأول',
@@ -252,11 +250,13 @@ ar: {
   },
 };
 
+// Get saved language from localStorage or default to English
 const savedLanguage = localStorage.getItem("defaultLanguage") || "en";
+
 i18n.use(initReactI18next).init({
   resources,
-  lng: savedLanguage, // Set the stored language or default to English
-  fallbackLng: "en", // Corrected from "fallbckLang"
+  lng: savedLanguage,
+  fallbackLng: "en", 
   interpolation: {
     escapeValue: false,
   },
