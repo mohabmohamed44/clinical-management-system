@@ -252,12 +252,15 @@ ar: {
   },
 };
 
+const savedLanguage = localStorage.getItem("defaultLanguage") || "en";
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en", // default language
+  lng: savedLanguage, // Set the stored language or default to English
+  fallbackLng: "en", // Corrected from "fallbckLang"
   interpolation: {
     escapeValue: false,
   },
 });
+
 
 export default i18n;
