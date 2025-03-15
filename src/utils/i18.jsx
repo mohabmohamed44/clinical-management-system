@@ -125,7 +125,7 @@ const resources = {
 },
   ar: {
     translation: {
-      WelcomeMessage: "مرحبًا بكم في مركز دلما برو للصحة والرعاية الصحية",
+      WelcomeMessage: "مرحبا بكم في مركز دلما برو للصحة والرعاية الصحية",
       Services: "خدماتنا",
       firstName: 'الاسم الأول',
       lastName: 'الاسم الأخير',
