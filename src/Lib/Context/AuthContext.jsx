@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
+import Cookies from 'js-cookie';
 // Create the authentication context
 const AuthContext = createContext();
 
@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     const checkAuthStatus = async () => {
       try {
         // Check for token in localStorage
-        const token = localStorage.getItem('authToken');
+        const token = Cookies.get('authToken');
         
         if (token) {
           // Validate token with your API (example)
