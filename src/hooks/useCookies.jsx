@@ -1,52 +1,56 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import Cookies from 'js-cookie';
 
 /**
- * useCookies hook
- *
- * @param {string} name Cookie name
- * @param {*} defaultValue Default value if cookie is not set
- * @param {Object} options Options to pass to js-cookie
- * @returns {Array} [value, updateCookies, deleteCookie]
- *
- * - `value`: The current value of the cookie
- * - `updateCookies`: A callback to update the cookie value
- * - `deleteCookie`: A callback to delete the cookie
- *
- * By default, the hook sets the cookie with the following options:
- * - `secure`: Ensures cookies are sent only over HTTPS
- * - `sameSite`: Prevents CSRF attacks
- * - `expires`: Default expiration time (7 days)
- * You can override these options by passing a custom options object as the third argument.
+ * Custom hook for managing cookies with React
+ * 
+ * @param {string} key - The cookie key/name
+ * @param {any} initialValue - Default value if cookie doesn't exist
+ * @param {Object} options - Cookie options (path, expires, secure, etc.)
+ * @returns {Array} - [cookieValue, setCookie, removeCookie]
  */
+const useCookies = (key, initialValue = '', options = {}) => {
+  // Get initial value from cookie or use provided initialValue
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = Cookies.get(key);
+      // Parse stored json or if none return initialValue
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      // If error also return initialValue
+      console.error(`Error reading cookie "${key}":`, error);
+      return initialValue;
+    }
+  });
 
-export default function useCookies(name, defaultValue, options = {}) {
-    const secureOptions = useMemo(() => ({
-        secure: true, // Ensures cookies are sent only over HTTPS
-        sameSite: 'Strict', // Prevents CSRF attacks
-        expires: 7, // Default expiration time (7 days)
-        ...options, // Allows overriding defaults
-    }), [options]); // Only updates when options change
+  // Set cookie value
+  const setCookie = useCallback((value, cookieOptions = {}) => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      
+      // Save to cookie
+      const mergedOptions = { ...options, ...cookieOptions };
+      Cookies.set(key, JSON.stringify(valueToStore), mergedOptions);
+      
+      // Save state
+      setStoredValue(valueToStore);
+    } catch (error) {
+      console.error(`Error setting cookie "${key}":`, error);
+    }
+  }, [key, options, storedValue]);
 
-    const [value, setValue] = useState(() => {
-        const cookie = Cookies.get(name);
-        if (cookie) {
-            return cookie;
-        }
-        Cookies.set(name, defaultValue, secureOptions);
-        return defaultValue;
-    });
+  // Remove cookie
+  const removeCookie = useCallback(() => {
+    try {
+      Cookies.remove(key, { ...options });
+      setStoredValue(initialValue);
+    } catch (error) {
+      console.error(`Error removing cookie "${key}":`, error);
+    }
+  }, [key, options, initialValue]);
 
-    const updateCookies = useCallback((newValue, customOptions = {}) => {
-        const finalOptions = { ...secureOptions, ...customOptions };
-        Cookies.set(name, newValue, finalOptions);
-        setValue(newValue);
-    }, [name, secureOptions]);
+  return [storedValue, setCookie, removeCookie];
+};
 
-    const deleteCookie = useCallback(() => {
-        Cookies.remove(name, { secure: true, sameSite: 'Strict' });
-        setValue(null);
-    }, [name]);
-
-    return [value, updateCookies, deleteCookie];
-}
+export default useCookies; 

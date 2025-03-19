@@ -1,7 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import useCookies from '../../hooks/useCookies';
+
 // Create the authentication context
 const AuthContext = createContext();
+
+// Cookie options for auth token - adjust as needed
+const COOKIE_OPTIONS = {
+  path: '/',
+  expires: 7, // 7 days
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict'
+};
 
 /**
  * AuthProvider component provides authentication state to the application
@@ -11,6 +20,7 @@ const AuthContext = createContext();
  * @returns {React.ReactNode} - Context provider with children
  */
 export function AuthProvider({ children }) {
+  const [authToken, setAuthToken, removeAuthToken] = useCookies('authToken', null, COOKIE_OPTIONS);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,13 +29,11 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        // Check for token in localStorage
-        const token = Cookies.get('authToken');
-        
-        if (token) {
+        // Check for token in cookies
+        if (authToken) {
           // Validate token with your API (example)
           // const response = await fetch('/api/auth/validate-token', {
-          //   headers: { Authorization: `Bearer ${token}` }
+          //   headers: { Authorization: `Bearer ${authToken}` }
           // });
           
           // if (response.ok) {
@@ -33,8 +41,8 @@ export function AuthProvider({ children }) {
           //   setUser(userData);
           //   setIsAuthenticated(true);
           // } else {
-          //   // Token invalid, clear storage
-          //   localStorage.removeItem('authToken');
+          //   // Token invalid, clear cookies
+          //   removeAuthToken();
           //   setIsAuthenticated(false);
           //   setUser(null);
           // }
@@ -48,13 +56,14 @@ export function AuthProvider({ children }) {
         console.error('Auth check failed:', error);
         setIsAuthenticated(false);
         setUser(null);
+        removeAuthToken();
       } finally {
         setLoading(false);
       }
     };
 
     checkAuthStatus();
-  }, []);
+  }, [authToken, removeAuthToken]);
 
   // Login function
   const login = async (credentials) => {
@@ -70,7 +79,7 @@ export function AuthProvider({ children }) {
       
       // if (response.ok) {
       //   const data = await response.json();
-      //   localStorage.setItem('authToken', data.token);
+      //   setAuthToken(data.token);
       //   setUser(data.user);
       //   setIsAuthenticated(true);
       //   return { success: true };
@@ -80,7 +89,7 @@ export function AuthProvider({ children }) {
       // }
 
       // Mock successful login
-      localStorage.setItem('authToken', 'mock-token');
+      setAuthToken('mock-token');
       setUser({ id: 1, name: credentials.email });
       setIsAuthenticated(true);
       return { success: true };
@@ -94,7 +103,7 @@ export function AuthProvider({ children }) {
 
   // Logout function
   const logout = () => {
-    localStorage.removeItem('authToken');
+    removeAuthToken();
     setIsAuthenticated(false);
     setUser(null);
   };

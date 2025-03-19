@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Style from "./Home.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
 import Background from '../../assets/home.webp';
 import Doctor from '../../assets/doctor_home.webp';
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import HomeCard from "../../Components/HomeCard/HomeCard";
+import SearchCard from "../../Components/SearchCard/SearchCard";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -16,7 +18,7 @@ export default function Home() {
         keywords="home, page, welcome"
         author="Mohab Mohammed"
       />
-      <main className="w-full object-cover h-screen">
+      <main className="w-full object-cover h-screen mb-60">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
             src={Background}
@@ -76,7 +78,19 @@ export default function Home() {
               </figure>
             </div>
           </section>
+          
+          {/* Search Input Card */}
+          <div className="relative z-30 transform translate-y-[-80%]">
+            <SearchCard />
+          </div>
+
+          <section>
+            
+          </section>
+
         </header>
+        
+        {/* Additional content would go here */}
       </main>
     </>
   );
