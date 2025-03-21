@@ -677,14 +677,14 @@ export default function Register() {
                   )}
                   {currentStep === 1 && (
                     <div className="mt-6 flex justify-center items-center text-center rtl:text-center">
-                    <span className="font-medium text-lg">
-                      Already have an account?
+                    <span className="font-medium text-lg rtl:ml-2">
+                      {t("Already have an account")}
                     </span>
                     <Link
                       className="text-[#3454c1] font-medium text-lg text-center ml-3 hover:underline mt-1"
                       to="/login"
                     >
-                      Login here
+                      {t("Login")}
                     </Link>
                   </div>
                   )}
