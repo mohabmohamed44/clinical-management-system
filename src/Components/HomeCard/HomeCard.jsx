@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Clock, CalendarClock, ShieldCheck, Stethoscope } from 'lucide-react';
+import { Clock, CalendarClock, ShieldCheck, Stethoscope, Brain } from 'lucide-react';
 
 const FeatureCard = ({ icon: Icon, title, description, isRTL }) => (
   <div className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'} items-start p-5 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100`}>
@@ -38,7 +38,13 @@ export default function HomeCard() {
       icon: Stethoscope,
       title: t('Comprehensive Services'),
       description: t('From preventive care to specialized treatments, all under one roof')
-    }
+    },
+    {
+      icon: Brain,
+      title: t('Mental Health Support'),
+      description: t('Professional counseling and therapy services for mental well-being')
+    },
+    
   ];
 
   return (

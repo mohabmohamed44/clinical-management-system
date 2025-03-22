@@ -19,7 +19,7 @@ export default function Home() {
         keywords="home, page, welcome"
         author="Mohab Mohammed"
       />
-      <main className="w-full object-cover h-screen mb-[1200px]">
+      <main className="w-full object-cover h-screen">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
             src={Background}
@@ -37,7 +37,7 @@ export default function Home() {
               {/* Text Content - Left Side */}
               <div className="text-[#ffffff] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                  className="text-4xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"
                 >
                   {t("HomeContent")}
@@ -77,23 +77,18 @@ export default function Home() {
               </figure>
             </div>
           </section>
-          
+
           {/* Search Input Card */}
-          <div className="relative z-30 transform translate-y-[-80%] mt-20">
+          <div className="relative z-30 transform translate-y-[-80%]">
             <SearchCard />
-            
-            {/* Services Heading */}
-            <div className="w-full max-w-screen-xl mx-auto px-4 mt-20">
-              <h1 className="text-center text-3xl sm:text-4xl font-bold mt-6 mb-6 text-[#3454c1]">
-                Providing the best medical services
-              </h1>
-              <p className="text-center md:text-xl sm:text-4xl font-medium text-[#3454c1]">
-              World-class care for everyone. Our health System offers unmatched, expert health care.
-              </p>
-            </div>
           </div>
+          {/* Services Heading */}
         </header>
       </main>
+      <div className="mt-77 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
+        <FeatureSection />
+      </div>
+      
     </>
   );
 }

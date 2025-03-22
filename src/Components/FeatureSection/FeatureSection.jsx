@@ -4,8 +4,8 @@ import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 // Import the images
 import doctorImage from '../../assets/doctor-1.svg';
-import scheduleImage from '../../assets/icon02.png';
-import locationImage from '../../assets/icon03.png';
+import scheduleImage from '../../assets/book.svg';
+import locationImage from '../../assets/location.svg';
 
 const FeatureCard = ({ image, title, description, linkText, linkUrl }) => {
   const { i18n } = useTranslation();
@@ -13,7 +13,7 @@ const FeatureCard = ({ image, title, description, linkText, linkUrl }) => {
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   
   return (
-    <div className="flex flex-col items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <div className="flex flex-col items-center bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
       <div className="w-full p-4 flex justify-center">
         <img 
           src={image} 
@@ -68,6 +68,10 @@ export default function FeatureSection() {
   return (
     <div className="w-full py-8 px-4">
       <div className="max-w-7xl mx-auto">
+        <h1 className='text-center text-[#3454c1] font-semibold text-3xl py-3 mx-2'>Providing the best medical services for you</h1>
+        <p className='text-center text-[#3454c1] font-medium text-xl py-3 pt-2'>
+          {t('World-class care for everyone. Our health System offers unmatched, expert health care.')}
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <FeatureCard 
