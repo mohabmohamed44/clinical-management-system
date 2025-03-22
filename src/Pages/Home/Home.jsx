@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
+import FeatureSection from "../../Components/FeatureSection/FeatureSection";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export default function Home() {
         keywords="home, page, welcome"
         author="Mohab Mohammed"
       />
-      <main className="w-full object-cover h-screen mb-60">
+      <main className="w-full object-cover h-screen mb-[1200px]">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
             src={Background}
@@ -36,7 +37,7 @@ export default function Home() {
               {/* Text Content - Left Side */}
               <div className="text-[#ffffff] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl text-end rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                  className="text-4xl rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"
                 >
                   {t("HomeContent")}
@@ -60,8 +61,8 @@ export default function Home() {
                   className="
                     w-full 
                     h-auto
-                    max-w-[320px]
-                    max-h-[300px]
+                    max-w-[330px]
+                    max-h-[330px]
                     md:max-h-[350px]
                     lg:max-h-[500px]
                     sm:max-w-sm
@@ -78,17 +79,20 @@ export default function Home() {
           </section>
           
           {/* Search Input Card */}
-          <div className="relative z-30 transform translate-y-[-80%]">
+          <div className="relative z-30 transform translate-y-[-80%] mt-20">
             <SearchCard />
+            
+            {/* Services Heading */}
+            <div className="w-full max-w-screen-xl mx-auto px-4 mt-20">
+              <h1 className="text-center text-3xl sm:text-4xl font-bold mt-6 mb-6 text-[#3454c1]">
+                Providing the best medical services
+              </h1>
+              <p className="text-center md:text-xl sm:text-4xl font-medium text-[#3454c1]">
+              World-class care for everyone. Our health System offers unmatched, expert health care.
+              </p>
+            </div>
           </div>
-
-          <section>
-
-          </section>
-
         </header>
-        
-        {/* Additional content would go here */}
       </main>
     </>
   );

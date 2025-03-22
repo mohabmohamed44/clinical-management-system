@@ -21,7 +21,7 @@ export default function SearchCard() {
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-60 sm:mt-60 md:mt-32 lg:mt-36 xl:mt-15">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-80 sm:mt-60 md:mt-32 lg:mt-36">
       <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 border border-gray-100">
         <h2 className={`text-2xl font-bold text-gray-800 mb-4 ${isRTL ? 'text-right' : 'text-left'}`}>
           {t('FindDoctor')}
