@@ -88,7 +88,7 @@ export default function Home() {
       <div className="mt-77 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
         <FeatureSection />
       </div>
-      
+      <HomeCard/>
     </>
   );
 }

@@ -1,66 +1,80 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Clock, CalendarClock, ShieldCheck, Stethoscope, Brain } from 'lucide-react';
+import { FaHeartbeat, FaLungs, FaBrain, FaWheelchair, FaTooth, FaFlask } from 'react-icons/fa';
 
-const FeatureCard = ({ icon: Icon, title, description, isRTL }) => (
-  <div className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'} items-start p-5 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100`}>
-    <div className="flex-shrink-0 p-3 bg-gradient-to-r from-[#11319E] to-[#061138] rounded-full">
-      <Icon className="w-6 h-6 text-white" />
-    </div>
-    <div className={`${isRTL ? 'mr-4 text-right' : 'ml-4'}`}>
-      <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-      <p className="mt-1 text-sm text-gray-600">{description}</p>
-    </div>
-  </div>
-);
 
-export default function HomeCard() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.dir() === 'rtl';
 
-  const features = [
+const HealthcareServices = () => {
+  const services = [
     {
-      icon: Clock,
-      title: t('24/7 Medical Care'),
-      description: t('Round-the-clock medical services for all your healthcare needs')
+      id: 1,
+      icon: <FaHeartbeat className="text-blue-600" size={24} />,
+      title: 'Cardiology',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.1s'
     },
     {
-      icon: CalendarClock,
-      title: t('Online Scheduling'),
-      description: t('Easily book appointments with your preferred healthcare providers')
+      id: 2,
+      icon: <FaLungs className="text-blue-600" size={24} />,
+      title: 'Pulmonary',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.3s'
     },
     {
-      icon: ShieldCheck,
-      title: t('Certified Professionals'),
-      description: t('Our doctors and staff are experienced and highly qualified')
+      id: 3,
+      icon: <FaBrain className="text-blue-600" size={24} />,
+      title: 'Neurology',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.5s'
     },
     {
-      icon: Stethoscope,
-      title: t('Comprehensive Services'),
-      description: t('From preventive care to specialized treatments, all under one roof')
+      id: 4,
+      icon: <FaWheelchair className="text-blue-600" size={24} />,
+      title: 'Orthopedics',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.1s'
     },
     {
-      icon: Brain,
-      title: t('Mental Health Support'),
-      description: t('Professional counseling and therapy services for mental well-being')
+      id: 5,
+      icon: <FaTooth className="text-blue-600" size={24} />,
+      title: 'Dental Surgery',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.3s'
     },
-    
+    {
+      id: 6,
+      icon: <FaFlask className="text-blue-600" size={24} />,
+      title: 'Laboratory',
+      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      delay: '0.5s'
+    }
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature, index) => (
-          <FeatureCard 
-            key={index}
-            icon={feature.icon}
-            title={feature.title}
-            description={feature.description}
-            isRTL={isRTL}
-          />
-        ))}
+    <div className="py-12 w-full">
+      <div className="container mx-auto px-4">
+        <div className="text-center mx-auto mb-10 max-w-xl">
+          <p className="inline-block border rounded-full border-[#3454c1] py-1 px-4 text-[#3454c1]">Departments</p>
+          <h1 className="text-4xl font-bold mt-2">Choose Doctor’s Expertise</h1>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <div key={service.id} className="bg-gray-100 rounded-lg h-full p-6 shadow-sm transition-transform duration-300 hover:scale-105">
+              <div className="inline-flex items-center justify-center bg-white rounded-full mb-4 w-16 h-16 shadow-sm">
+                {service.icon}
+              </div>
+              <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
+              <p className="mb-4 text-gray-600">{service.description}</p>
+              <a className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
+                <span className="mr-2">+</span>
+                Read More
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-}
+};
 
+export default HealthcareServices;
