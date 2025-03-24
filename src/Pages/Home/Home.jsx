@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
 import FeatureSection from "../../Components/FeatureSection/FeatureSection";
+import AdditionalServices from "../../Components/AdditionalServices/AdditionalServices";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -89,6 +90,7 @@ export default function Home() {
         <FeatureSection />
       </div>
       <HomeCard/>
+      <AdditionalServices/>
     </>
   );
 }

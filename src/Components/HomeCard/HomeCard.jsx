@@ -1,9 +1,14 @@
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaHeartbeat, FaLungs, FaBrain, FaWheelchair, FaTooth, FaFlask } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 
 
 const HealthcareServices = () => {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const services = [
     {
       id: 1,
@@ -65,13 +70,22 @@ const HealthcareServices = () => {
               </div>
               <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
               <p className="mb-4 text-gray-600">{service.description}</p>
-              <a className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
+              <Link className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
                 <span className="mr-2">+</span>
                 Read More
-              </a>
+              </Link>
             </div>
           ))}
         </div>
+      <div className="flex justify-end w-full">
+        <Link 
+          to="/departments" 
+          className='inline-flex mt-3 hover:underline duration-300 items-center text-blue-600 hover:text-blue-800 text-lg font-medium'
+        >
+          {t('Departments')}
+          <ArrowIcon className="ml-2 h-5 w-5 rtl:mr-2" />
+        </Link>
+      </div>
       </div>
     </div>
   );
