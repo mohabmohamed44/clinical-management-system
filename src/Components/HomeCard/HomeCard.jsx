@@ -5,7 +5,7 @@ import { FaHeartbeat, FaLungs, FaBrain, FaWheelchair, FaTooth, FaFlask } from 'r
 import { Link } from 'react-router-dom';
 
 
-const HealthcareServices = () => {
+export default function HealthcareServices(){
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -90,5 +90,3 @@ const HealthcareServices = () => {
     </div>
   );
 };
-
-export default HealthcareServices;
