@@ -5,7 +5,7 @@ import { FaHeartbeat, FaLungs, FaBrain, FaWheelchair, FaTooth, FaFlask } from 'r
 import { Link } from 'react-router-dom';
 
 
-export default function HealthcareServices(){
+export default function HealthcareServices() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -58,10 +58,10 @@ export default function HealthcareServices(){
     <div className="py-12 w-full">
       <div className="container mx-auto px-4">
         <div className="text-center mx-auto mb-10 max-w-xl">
-          <p className="inline-block border rounded-full border-[#3454c1] py-1 px-4 text-[#3454c1]">Departments</p>
-          <h1 className="text-4xl font-bold mt-2">Choose Doctor’s Expertise</h1>
+          <p className="inline-block border rounded-full border-[#3454c1] py-1 px-4 text-[#3454c1]">{t("Departments")}</p>
+          <h1 className="text-4xl font-bold mt-2">{t("DoctorExpertise")}</h1>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
             <div key={service.id} className="bg-gray-100 rounded-lg h-full p-6 shadow-sm transition-transform duration-300 hover:scale-105">
@@ -77,15 +77,15 @@ export default function HealthcareServices(){
             </div>
           ))}
         </div>
-      <div className="flex justify-end w-full">
-        <Link 
-          to="/departments" 
-          className='inline-flex mt-3 hover:underline duration-300 items-center text-blue-600 hover:text-blue-800 text-lg font-medium'
-        >
-          {t('Departments')}
-          <ArrowIcon className="ml-2 h-5 w-5 rtl:mr-2" />
-        </Link>
-      </div>
+        <div className="flex justify-end w-full">
+          <Link
+            to="/departments"
+            className='inline-flex mt-3 hover:underline duration-300 items-center text-blue-600 hover:text-blue-800 text-lg font-medium'
+          >
+            {t('Departments')}
+            <ArrowIcon className="ml-2 h-5 w-5 rtl:mr-2" />
+          </Link>
+        </div>
       </div>
     </div>
   );

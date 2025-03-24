@@ -6,6 +6,7 @@ import { ArrowRight, ArrowLeft } from 'lucide-react';
 import doctorImage from '../../assets/doctor-1.svg';
 import scheduleImage from '../../assets/book.svg';
 import locationImage from '../../assets/location.svg';
+import { Link } from 'react-router-dom';
 
 const FeatureCard = ({ image, title, description, linkText, linkUrl }) => {
   const { i18n } = useTranslation();
@@ -26,13 +27,13 @@ const FeatureCard = ({ image, title, description, linkText, linkUrl }) => {
         <h3 className="text-xl font-bold text-gray-800 mb-3">{title}</h3>
         <p className="text-gray-600 mb-4 flex-grow">{description}</p>
         
-        <a 
-          href={linkUrl} 
+        <Link
+          to={linkUrl} 
           className={`flex items-center text-[#3454c1] font-medium hover:underline ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
         >
           {linkText}
-          <ArrowIcon className={`h-4 w-4 ${isRTL ? 'mr-2' : 'ml-2'}`} />
-        </a>
+          <ArrowIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+        </Link>
       </div>
     </div>
   );
@@ -44,9 +45,9 @@ export default function FeatureSection() {
   const features = [
     {
       image: doctorImage,
-      title: t('Find a Doctor'),
+      title: t('FindDoctor'),
       description: t('Our team of specialists is here to provide you with the best medical care and ensure your health needs are met.'),
-      linkText: t('Find Now'),
+      linkText: t('FindDoctor'),
       linkUrl: '/find_doctor'
     },
     {
@@ -68,9 +69,9 @@ export default function FeatureSection() {
   return (
     <div className="w-full py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className='text-center text-[#3454c1] font-semibold text-3xl py-3 mx-2'>Providing the best medical services for you</h1>
+        <h1 className='text-center text-[#3454c1] font-semibold text-3xl py-3 mx-2'>{t("FeatureSectionHeading")}</h1>
         <p className='text-center text-black font-medium text-xl py-3 pt-2'>
-          {t('World-class care for everyone. Our health System offers unmatched, expert health care.')}
+          {t('FeatureSectionDescription')}
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
@@ -87,4 +88,4 @@ export default function FeatureSection() {
       </div>
     </div>
   );
-} 
+}

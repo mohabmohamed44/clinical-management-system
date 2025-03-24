@@ -41,7 +41,7 @@ export default function Home() {
                   className="text-4xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"
                 >
-                  {t("HomeContent")}
+                  {t("Home")}
                 </h2>
                 <p className={Style.text} aria-label="Home Description">
                   {t("HomeDescription")}
