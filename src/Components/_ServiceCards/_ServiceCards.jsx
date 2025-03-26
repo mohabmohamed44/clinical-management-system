@@ -26,7 +26,7 @@ export default function Details() {
     {
       icon: <Brain className="w-6 h-6" />,
       title: t("MentalHealthServices"),
-      description: t("HealthMonitoringCard")
+      description: t("MentalHealthServicesCard")
     },
     {
       icon: <Activity className="w-6 h-6" />,
@@ -50,7 +50,7 @@ export default function Details() {
             <h2 className="text-[#307bc4] font-semibold text-[25.3px] leading-[34.1px]">
               {t("Services")}
             </h2>
-            <h1 className="text-[#274760] text-5xl leading-[63.8px] mt-6">
+            <h1 className="text-[#274760] text-5xl font-bold leading-[63.8px] mt-6">
               {t("Provide")}<br />
               {t("bestService")}
             </h1>
