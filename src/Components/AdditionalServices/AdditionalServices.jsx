@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function AdditionalServices() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const isRTL = i18n.dir() === 'rtl';
 
   const services = [
     {
@@ -20,7 +19,7 @@ export default function AdditionalServices() {
     },
     {
       id: 2,
-      title: t("DentalWhitening"),
+      title: "Dental Whitening",
       description: "Professional teeth whitening for a brighter, more confident smile",
       price: 200,
       salePrice: 149,
@@ -29,7 +28,7 @@ export default function AdditionalServices() {
     },
     {
       id: 3,
-      title: t("NutritionalConsultation"),
+      title: "Nutritional Consultation",
       description: "Personalized nutrition plans tailored to your health goals and needs",
       price: 85,
       salePrice: null,
@@ -56,7 +55,7 @@ export default function AdditionalServices() {
     },
     {
       id:6,
-      title: t('Orthodontics'),
+      title: 'Orthodontics',
       description: 'Orthodontics corrects misaligned teeth and jaw issues using braces.',
       price: 12000,
       salePrice: 10000,
@@ -119,13 +118,13 @@ export default function AdditionalServices() {
 
         <div className="relative max-w-7xl mx-auto px-4">
           {/* Carousel Navigation */}
-          <div className={`absolute top-1/2 ${isRTL ? '-right-4' : '-left-4'} transform -translate-y-1/2 z-10`}>
+          <div className="absolute top-1/2 -left-4 transform -translate-y-1/2 z-10">
             <button 
               onClick={prevSlide}
               className="bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
               aria-label="Previous slide"
             >
-              {isRTL ? <ChevronRight className="w-6 h-6 text-[#3454c1]" /> : <ChevronLeft className="w-6 h-6 text-[#3454c1]" />}
+              <ChevronLeft className="w-6 h-6 text-[#3454c1]" />
             </button>
           </div>
           
@@ -143,21 +142,21 @@ export default function AdditionalServices() {
                     className="w-full h-48 object-cover"
                   />
                   {service.onSale && (
-                    <div className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md`}>
-                      {t("HOT")}
+                    <div className="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                      HOT
                     </div>
                   )}
                 </div>
-                <div className={`p-6 ${isRTL ? 'text-right' : 'text-left'}`}>
+                <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-800">{service.title}</h3>
                   <p className="mt-2 text-gray-600 text-sm">{service.description}</p>
-                  <div className={`mt-4 flex items-center ${isRTL ? 'flex-row-reverse justify-end' : 'flex-row'}`}>
+                  <div className="mt-4 flex items-center">
                     {service.onSale ? (
                       <>
                         <span className="text-2xl font-bold text-[#3454c1]">${service.salePrice}</span>
-                        <span className={`${isRTL ? 'ml-2 mr-2' : 'ml-2'} text-gray-500 line-through`}>${service.price}</span>
-                        <span className={`${isRTL ? 'ml-0 mr-2' : 'ml-2'} text-red-500 text-sm font-medium`}>
-                          {Math.round((service.price - service.salePrice) / service.price * 100)}% {t("OFF")}
+                        <span className="ml-2 text-gray-500 line-through">${service.price}</span>
+                        <span className="ml-2 text-red-500 text-sm font-medium">
+                          {Math.round((service.price - service.salePrice) / service.price * 100)}% OFF
                         </span>
                       </>
                     ) : (
@@ -165,7 +164,7 @@ export default function AdditionalServices() {
                     )}
                   </div>
                   <button className="mt-4 w-full bg-[#3454c1] hover:bg-[#2a43a0] text-white py-2 px-4 rounded-md transition-colors">
-                    {t("Book Now")}
+                    Book Now
                   </button>
                 </div>
               </div>
@@ -173,13 +172,13 @@ export default function AdditionalServices() {
           </div>
           
           {/* Next button */}
-          <div className={`absolute top-1/2 ${isRTL ? '-left-4' : '-right-4'} transform -translate-y-1/2 z-10`}>
+          <div className="absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
             <button 
               onClick={nextSlide}
               className="bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
               aria-label="Next slide"
             >
-              {isRTL ? <ChevronLeft className="w-6 h-6 text-[#3454c1]" /> : <ChevronRight className="w-6 h-6 text-[#3454c1]" />}
+              <ChevronRight className="w-6 h-6 text-[#3454c1]" />
             </button>
           </div>
           

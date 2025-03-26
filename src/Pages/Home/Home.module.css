@@ -1,6 +1,7 @@
 .text {
-    text-align: start;
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin-top: 20px;
+  text-align: start;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  font-size: 20px;
 }

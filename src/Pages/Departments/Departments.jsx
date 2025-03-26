@@ -3,7 +3,13 @@ import Style from "./Departments.module.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { GiLiver, GiKidneys, GiStomach } from "react-icons/gi";
-import { ChevronRight } from "lucide-react";
+import { IoMaleOutline } from "react-icons/io5";
+import { ArrowLeft, ArrowRight, ChevronRight} from "lucide-react";
+import MetaData from "../../Components/MetaData/MetaData";
+import Cardiology from '../../assets/Cardio.svg';
+import Lungs from '../../assets/Lungs.svg';
+import Gynecologist from '../../assets/Gynecologist.svg';
+import Liver from '../../assets/liver.svg';
 import { 
   FaBrain, 
   FaFlask, 
@@ -15,7 +21,7 @@ import {
   FaAllergies,
   FaBaby,
   FaUserMd,
-  FaXRay
+  FaMars
 } from "react-icons/fa";
 import { 
   MdOutlinePregnantWoman, 
@@ -23,147 +29,149 @@ import {
   MdBloodtype
 } from "react-icons/md";
 import { RiMentalHealthLine, RiSurgicalMaskLine } from "react-icons/ri";
+import { LuBrain } from "react-icons/lu";
 
 export default function Departments() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const departments = [
     {
       id: 1,
-      icon: <FaHeartbeat className="text-blue-600" size={24} />,
+      icon: <img src={Cardiology} alt="Cardiology" className="text-[#11319E] h-12 w-12" size={20} />,
       title: 'Cardiology',
-      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      description: 'Expert care for heart conditions including diagnosis and treatment of cardiovascular diseases.',
       delay: '0.1s'
     },
     {
       id: 2,
-      icon: <FaLungs className="text-blue-600" size={24} />,
-      title: 'Pulmonary',
+      icon: <img src={Lungs} className="text-[#11319E] h-9 w-9" />,
+      title: 'Respiratory',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
     },
     {
       id: 3,
-      icon: <FaBrain className="text-blue-600" size={24} />,
+      icon: <LuBrain className="text-[#11319E]" size={30} />,
       title: 'Neurology',
-      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      description: 'Doctors specializing in diagnosing and treating nervous system disorders like brain, spine and nerve conditions.',
       delay: '0.5s'
     },
     {
       id: 4,
-      icon: <FaWheelchair className="text-blue-600" size={24} />,
+      icon: <FaWheelchair className="text-[#11319E]" size={24} />,
       title: 'Orthopedics',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.1s'
     },
     {
       id: 5,
-      icon: <FaTooth className="text-blue-600" size={24} />,
+      icon: <FaTooth className="text-[#11319E]" size={24} />,
       title: 'Dental Surgery',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
     },
     {
       id: 6,
-      icon: <FaFlask className="text-blue-600" size={24} />,
-      title: 'Laboratory',
-      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
+      icon: <img src={Gynecologist} className="text-[#11319E] w-9 h-9" />,
+      title: 'Obstetrics & Gynecology',
+      description: 'Comprehensive care for women including pregnancy, childbirth, and reproductive health.',
       delay: '0.5s'
     },
     {
       id: 7,
-      icon: <GiLiver className="text-blue-600" size={24}/>,
+      icon: <img src={Liver} className="text-[#11319E] h-8 w-8"/>,
       title: 'Hepatology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet',
       delay: '0.6s',
     },
     {
       id: 8,
-      icon: <FaEye className="text-blue-600" size={24}/>,
+      icon: <FaEye className="text-[#11319E]" size={24}/>,
       title: 'Ophthalmology',
       description: 'Specialized care for eye conditions and vision problems with advanced diagnostic technology',
       delay: '0.7s',
     },
     {
       id: 9,
-      icon: <MdOutlinePregnantWoman className="text-blue-600" size={24}/>,
-      title: 'Obstetrics & Gynecology',
-      description: 'Comprehensive care for women including pregnancy, childbirth, and reproductive health',
+      icon: <IoMaleOutline  className="text-[#11319E]" size={35}/>,
+      title: 'Gynecology',
+      description: 'Specialized care for men\'s health including reproductive and urological conditions',
       delay: '0.2s',
     },
     {
       id: 10,
-      icon: <FaAllergies className="text-blue-600" size={24}/>,
+      icon: <FaAllergies className="text-[#11319E]" size={24}/>,
       title: 'Allergy & Immunology',
       description: 'Diagnosis and treatment of allergies, asthma, and disorders of the immune system',
       delay: '0.4s',
     },
     {
       id: 11,
-      icon: <GiKidneys className="text-blue-600" size={24}/>,
+      icon: <GiKidneys className="text-[#11319E]" size={24}/>,
       title: 'Nephrology',
       description: 'Specialized care for kidney diseases and disorders with advanced treatment options',
       delay: '0.3s',
     },
     {
       id: 12,
-      icon: <FaBaby className="text-blue-600" size={24}/>,
+      icon: <FaBaby className="text-[#11319E]" size={24}/>,
       title: 'Pediatrics',
       description: 'Comprehensive healthcare for infants, children, and adolescents focusing on growth and development',
       delay: '0.5s',
     },
     {
       id: 13,
-      icon: <GiStomach className="text-blue-600" size={24}/>,
+      icon: <GiStomach className="text-[#11319E]" size={24}/>,
       title: 'Gastroenterology',
       description: 'Diagnosis and treatment of digestive system disorders and gastrointestinal conditions',
       delay: '0.2s',
     },
     {
       id: 14,
-      icon: <RiMentalHealthLine className="text-blue-600" size={24}/>,
+      icon: <RiMentalHealthLine className="text-[#11319E]" size={24}/>,
       title: 'Psychiatry',
       description: 'Mental health services including diagnosis, treatment, and management of psychological disorders',
       delay: '0.6s',
     },
     {
       id: 15,
-      icon: <MdOutlineElderly className="text-blue-600" size={24}/>,
+      icon: <MdOutlineElderly className="text-[#11319E]" size={24}/>,
       title: 'Geriatrics',
       description: 'Specialized healthcare for elderly patients focusing on unique needs and conditions',
       delay: '0.4s',
     },
     {
       id: 16,
-      icon: <RiSurgicalMaskLine className="text-blue-600" size={24}/>,
+      icon: <RiSurgicalMaskLine className="text-[#11319E]" size={24}/>,
       title: 'General Surgery',
       description: 'Surgical procedures for various conditions with state-of-the-art equipment and techniques',
       delay: '0.3s',
     },
     {
       id: 17,
-      icon: <FaUserMd className="text-blue-600" size={24}/>,
+      icon: <FaUserMd className="text-[#11319E]" size={24}/>,
       title: 'Internal Medicine',
       description: 'Comprehensive care for adults focusing on prevention, diagnosis, and treatment of diseases',
       delay: '0.5s',
     },
     {
       id: 18,
-      icon: <MdBloodtype className="text-blue-600" size={24}/>,
+      icon: <MdBloodtype className="text-[#11319E]" size={24}/>,
       title: 'Hematology',
       description: 'Diagnosis and treatment of blood disorders and diseases with advanced therapeutic options',
       delay: '0.7s',
     },
-    {
-      id: 19,
-      icon: <FaXRay className="text-blue-600" size={24}/>,
-      title: 'Radiology',
-      description: 'Advanced imaging services including X-rays, MRI, CT scans, and ultrasound for accurate diagnosis',
-      delay: '0.2s',
-    }
   ];
   
   return (
     <>
+      <MetaData
+       title="Medical Departments | Clinical Management System"
+       description="Explore our comprehensive medical departments offering specialized healthcare services including cardiology, neurology, pediatrics and more"
+       keywords="medical departments, healthcare specialties, hospital departments, clinical specialties, medical services, specialized healthcare"
+       author="Clinical Management System"
+      />
       {/* Breadcrumb Navigation */}
       <nav className="bg-gray-50 py-3 px-4 md:px-6 mb-6">
         <div className="max-w-7xl mx-auto">
@@ -197,9 +205,9 @@ export default function Departments() {
             </div>
             <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
             <p className="mb-4 text-gray-600">{service.description}</p>
-            <Link className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
-              <span className="mr-2">+</span>
-              Read More
+            <Link className="inline-flex items-center text-[#11319E] hover:text-blue-800 transition-colors duration-300" href="#">
+              Show Doctors
+              <span className="mr-2"><ArrowIcon size={20}/></span>
             </Link>
           </div>
         ))}

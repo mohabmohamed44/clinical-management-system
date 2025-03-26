@@ -72,7 +72,7 @@ export default function HealthcareServices() {
               <p className="mb-4 text-gray-600">{service.description}</p>
               <Link className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
                 <span className="mr-2">+</span>
-                Read More
+                Show Doctors
               </Link>
             </div>
           ))}
