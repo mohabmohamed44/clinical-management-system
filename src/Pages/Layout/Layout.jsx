@@ -1,5 +1,6 @@
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../../Components/Footer/Footer";
+import ChatBot from '../../Components/ChatBot/ChatBot';
 import { useLocation } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
@@ -17,6 +18,7 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
+      <ChatBot/>
       {/* only render footer if current path is not in hideFooterRoutes*/}
       {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </div>

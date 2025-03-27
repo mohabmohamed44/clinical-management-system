@@ -19,6 +19,7 @@ import Blog from "./Pages/Blog/Blog";
 import About from "./Pages/About/About";
 import PricingPlan from "./Pages/PricingPlan/PricingPlan";
 import Departments from './Pages/Departments/Departments';
+import Offers from './Pages/Offers/Offers';
 import { LanguageProvider } from "./Lib/Context/LanguageContext";
 
 // React Query Client
@@ -43,7 +44,8 @@ const router = createBrowserRouter([
       { path: "departments", element: <Departments/>},
       { path: "about", element: <About /> },
       { path: "blog", element: <Blog /> },
-      { path:  "pricing", element: <PricingPlan />},
+      { path: "pricing", element: <PricingPlan />},
+      { path: "offers", element: <Offers/>},
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -57,7 +59,7 @@ function App() {
         <LanguageProvider>
           <RouterProvider router={router} />
           <Toaster position="top-center" reverseOrder={false} />
-          <ReactQueryDevtools />
+          {/* <ReactQueryDevtools /> */}
         </LanguageProvider>
       </QueryClientProvider>
     </>

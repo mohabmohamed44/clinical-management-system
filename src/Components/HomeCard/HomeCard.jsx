@@ -65,7 +65,7 @@ export default function HealthcareServices() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
             <div key={service.id} className="bg-gray-100 rounded-lg h-full p-6 shadow-sm transition-transform duration-300 hover:scale-105">
-              <div className="inline-flex items-center justify-center bg-white rounded-full mb-4 w-16 h-16 shadow-sm">
+              <div className="inline-flex items-center justify-center bg-[#1972EE]/10 rounded-full mb-4 w-16 h-16 shadow-sm">
                 {service.icon}
               </div>
               <h4 className="text-xl font-semibold mb-3">{service.title}</h4>

@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { GiLiver, GiKidneys, GiStomach } from "react-icons/gi";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { TbGenderMale } from "react-icons/tb";
+import Cardiology from '../../assets/Cardio.svg';
+import Liver from '../../assets/liver.svg';
+import Gynecologist from '../../assets/Gynecologist.svg';
 import { 
   FaBrain, 
   FaFlask, 
@@ -15,7 +19,8 @@ import {
   FaAllergies,
   FaBaby,
   FaUserMd,
-  FaXRay
+  FaXRay,
+  FaMale
 } from "react-icons/fa";
 import { 
   MdOutlinePregnantWoman, 
@@ -32,7 +37,7 @@ export default function Departments() {
   const departments = [
     {
       id: 1,
-      icon: <FaHeartbeat className="text-blue-600" size={24} />,
+      icon: <img src={Cardiology} className="text-blue-600 h-12 w-12" />,
       title: 'Cardiology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.1s'
@@ -74,7 +79,7 @@ export default function Departments() {
     },
     {
       id: 7,
-      icon: <GiLiver className="text-blue-600" size={24}/>,
+      icon: <img src={Liver} className="text-blue-600 h-8 w-8"/>,
       title: 'Hepatology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet',
       delay: '0.6s',
@@ -88,9 +93,16 @@ export default function Departments() {
     },
     {
       id: 9,
-      icon: <MdOutlinePregnantWoman className="text-blue-600" size={24}/>,
+      icon: <img src={Gynecologist} className="text-blue-600 h-9 w-9"/>,
       title: 'Obstetrics & Gynecology',
       description: 'Comprehensive care for women including pregnancy, childbirth, and reproductive health',
+      delay: '0.2s',
+    },
+    {
+      id: 10,
+      icon: <TbGenderMale className="text-blue-600" size={30}/>,
+      title: 'Men\'s Health',
+      description: 'Specialized care for men including reproductive health, prostate health, and hormonal disorders',
       delay: '0.2s',
     },
     {
@@ -188,7 +200,7 @@ export default function Departments() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {departments.map((service) => (
           <div key={service.id} className="bg-gray-100 rounded-lg h-full p-6 shadow-sm transition-transform duration-300 hover:scale-105">
-            <div className="inline-flex items-center justify-center bg-white rounded-full mb-4 w-16 h-16 shadow-sm">
+            <div className="inline-flex items-center justify-center bg-[#1972EE]/10 rounded-full mb-4 w-16 h-16 shadow-sm">
               {service.icon}
             </div>
             <h4 className="text-xl font-semibold mb-3">{service.title}</h4>

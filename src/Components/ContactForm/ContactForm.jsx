@@ -1,60 +1,96 @@
+import { useFormik } from 'formik';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import * as Yup from "yup";
 
 export default function ContactForm() {
-  const { t, i18n } = useTranslation(); // Use i18n for language direction
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+  const { t, i18n } = useTranslation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Define handleSubmit function before using it in Formik
+  const handleSubmit = (values, { resetForm, setSubmitting }) => {
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      console.log('Form submitted:', values);
+      setSubmitSuccess(true);
+      setIsSubmitting(false);
+      resetForm();
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 3000);
+    }, 1000);
+  };
+
+  // Validation Schema
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required(t('fullNameRequired')),
+    email: Yup.string().email(t('Invalid email address')).required(t('EmailRequired')),
+    subject: Yup.string().required(t('SubjectRequired')),
+    message: Yup.string().required(t('MessageRequired'))
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
+  // contactForm Formik
+  const contactFormik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    },
+    validationSchema,
+    onSubmit: handleSubmit,
+  });
+  
   return (
     <div
       className="max-h-screen flex items-center justify-center mt-20 p-4"
-      dir={i18n.dir()} // Dynamically set direction (ltr or rtl)
+      dir={i18n.dir()}
     >
       <div className="max-w-5xl w-full mt-30 bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-8" dir={i18n.dir()}>
           {t('ContactUs')}
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {submitSuccess && (
+          <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
+            {t('Your message has been sent successfully! We will get back to you soon.')}
+          </div>
+        )}
+
+        <form onSubmit={contactFormik.handleSubmit} className="space-y-6">
           {/* Name Field */}
           <div className="relative">
             <input
               type="text"
               id="name"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="peer w-full border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={contactFormik.values.name}
+              onChange={contactFormik.handleChange}
+              onBlur={contactFormik.handleBlur}
+              className={`peer w-full border ${
+                contactFormik.touched.name && contactFormik.errors.name 
+                  ? 'border-red-500' 
+                  : 'border-gray-300'
+              } rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
               placeholder=" "
-              required
-              dir={i18n.dir()} // Ensure input direction matches language
+              dir={i18n.dir()}
             />
             <label
               htmlFor="name"
-              className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
-              dir={i18n.dir()} // Add dir attribute to label
+              className={`absolute ${i18n.dir() === 'rtl' ? 'right-4' : 'left-4'} top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500`}
+              dir={i18n.dir()}
             >
               {t('Name')}
             </label>
+            {contactFormik.touched.name && contactFormik.errors.name && (
+              <p className="mt-1 text-red-500 text-xs">{contactFormik.errors.name}</p>
+            )}
           </div>
 
           {/* Email Field */}
@@ -63,20 +99,27 @@ export default function ContactForm() {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="peer w-full border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={contactFormik.values.email}
+              onChange={contactFormik.handleChange}
+              onBlur={contactFormik.handleBlur}
+              className={`peer w-full border ${
+                contactFormik.touched.email && contactFormik.errors.email 
+                  ? 'border-red-500' 
+                  : 'border-gray-300'
+              } rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
               placeholder=" "
-              required
-              dir={i18n.dir()} // Ensure input direction matches language
+              dir={i18n.dir()}
             />
             <label
               htmlFor="email"
-              className="absolute placeholder:rtl:text-start left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
-              dir={i18n.dir()} // Add dir attribute to label
+              className={`absolute ${i18n.dir() === 'rtl' ? 'right-4' : 'left-4'} top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500`}
+              dir={i18n.dir()}
             >
               {t('Email')}
             </label>
+            {contactFormik.touched.email && contactFormik.errors.email && (
+              <p className="mt-1 text-red-500 text-xs">{contactFormik.errors.email}</p>
+            )}
           </div>
 
           {/* Subject Field */}
@@ -85,20 +128,27 @@ export default function ContactForm() {
               type="text"
               id="subject"
               name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-              className="peer w-full border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={contactFormik.values.subject}
+              onChange={contactFormik.handleChange}
+              onBlur={contactFormik.handleBlur}
+              className={`peer w-full border ${
+                contactFormik.touched.subject && contactFormik.errors.subject 
+                  ? 'border-red-500' 
+                  : 'border-gray-300'
+              } rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
               placeholder=" "
-              required
-              dir={i18n.dir()} // Ensure input direction matches language
+              dir={i18n.dir()}
             />
             <label
               htmlFor="subject"
-              className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
-              dir={i18n.dir()} // Add dir attribute to label
+              className={`absolute ${i18n.dir() === 'rtl' ? 'right-4' : 'left-4'} top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500`}
+              dir={i18n.dir()}
             >
               {t('Subject')}
             </label>
+            {contactFormik.touched.subject && contactFormik.errors.subject && (
+              <p className="mt-1 text-red-500 text-xs">{contactFormik.errors.subject}</p>
+            )}
           </div>
 
           {/* Message Field */}
@@ -106,29 +156,42 @@ export default function ContactForm() {
             <textarea
               id="message"
               name="message"
-              value={formData.message}
-              onChange={handleChange}
+              value={contactFormik.values.message}
+              onChange={contactFormik.handleChange}
+              onBlur={contactFormik.handleBlur}
               rows="4"
-              className="peer w-full border border-gray-300 rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className={`peer w-full border ${
+                contactFormik.touched.message && contactFormik.errors.message 
+                  ? 'border-red-500' 
+                  : 'border-gray-300'
+              } rounded-lg px-4 pt-6 pb-2 text-gray-900 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none`}
               placeholder=" "
-              required
-              dir={i18n.dir()} // Ensure textarea direction matches language
+              dir={i18n.dir()}
             ></textarea>
             <label
               htmlFor="message"
-              className="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500"
-              dir={i18n.dir()} // Add dir attribute to label
+              className={`absolute ${i18n.dir() === 'rtl' ? 'right-4' : 'left-4'} top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-sm peer-focus:text-blue-500`}
+              dir={i18n.dir()}
             >
               {t('Message')}
             </label>
+            {contactFormik.touched.message && contactFormik.errors.message && (
+              <p className="mt-1 text-red-500 text-xs">{contactFormik.errors.message}</p>
+            )}
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full flex items-center justify-center bg-[#113193] text-white py-4 px-4 rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-[#11319e] focus:ring-offset-2"
+            disabled={isSubmitting}
+            className={`w-full flex items-center justify-center ${
+              isSubmitting ? 'bg-gray-400' : 'bg-[#113193] hover:bg-blue-700'
+            } text-white py-4 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#11319e] focus:ring-offset-2`}
           >
-            <span className='mr-3 rtl:ml-3'>{t('SendMessage')}</span> <Send />
+            <span className={`${i18n.dir() === 'rtl' ? 'ml-3' : 'mr-3'}`}>
+              {isSubmitting ? t('Sending...') : t('SendMessage')}
+            </span> 
+            <Send />
           </button>
         </form>
       </div>
