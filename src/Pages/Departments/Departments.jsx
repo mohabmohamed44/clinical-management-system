@@ -8,6 +8,7 @@ import { TbGenderMale } from "react-icons/tb";
 import Cardiology from '../../assets/Cardio.svg';
 import Liver from '../../assets/liver.svg';
 import Gynecologist from '../../assets/Gynecologist.svg';
+import Lungs from '../../assets/Lungs.svg';
 import { 
   FaBrain, 
   FaFlask, 
@@ -44,7 +45,7 @@ export default function Departments() {
     },
     {
       id: 2,
-      icon: <FaLungs className="text-blue-600" size={24} />,
+      icon: <img src={Lungs} className="text-blue-600 h-9 w-9" />,
       title: 'Pulmonary',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
@@ -69,13 +70,6 @@ export default function Departments() {
       title: 'Dental Surgery',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
-    },
-    {
-      id: 6,
-      icon: <FaFlask className="text-blue-600" size={24} />,
-      title: 'Laboratory',
-      description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
-      delay: '0.5s'
     },
     {
       id: 7,
