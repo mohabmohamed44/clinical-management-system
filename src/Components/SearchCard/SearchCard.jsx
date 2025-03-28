@@ -1,24 +1,36 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, MapPin, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchCard() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === 'rtl';
   const navigate = useNavigate();
-  
-  const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState('');
-  const [date, setDate] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Navigate to search results page with query parameters
-    navigate(`/find_doctor?query=${searchQuery}&location=${location}&date=${date}`);
-  };
-
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+  const [error, setError] = useState(false);
+  // Validation schema
+  const searchValidationSchema = Yup.object().shape({
+    search: Yup.string().required(t("SearchInputRequired")),
+    location: Yup.string().required(t("LocationInputRequired")),
+    date: Yup.string().required(t("DateInputRequired"))
+  });
+  
+  // Formik implementation
+  const formik = useFormik({
+    initialValues: {
+      search: '',
+      location: '',
+      date: '',
+    },
+    validationSchema: searchValidationSchema,
+    onSubmit: (values) => {
+      // Navigate to search results page with query parameters
+      navigate(`/find_doctor?query=${values.search}&location=${values.location}&date=${values.date}`);
+    }
+  });
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-80 sm:mt-60 md:mt-32 lg:mt-36">
@@ -27,7 +39,7 @@ export default function SearchCard() {
           {t('FindDoctor')}
         </h2>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search Input */}
             <div className="col-span-1 md:col-span-2">
@@ -40,14 +52,20 @@ export default function SearchCard() {
                 </div>
                 <input
                   type="text"
-                  name="search"
                   id="search"
-                  className={`block w-full rounded-md border-gray-300 py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900 shadow-sm`}
+                  name="search"
+                  className={`block w-full rounded-md border ${formik.touched.search && formik.errors.search 
+                    ? 'border-red-500' 
+                    : 'border-gray-300'} py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900 shadow-sm`}
                   placeholder={t('e.g. Cardiology, Dr. Smith')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={formik.values.search}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.search && formik.errors.search && (
+                <p className="mt-1 text-sm text-red-600">{formik.errors.search}</p>
+              )}
             </div>
 
             {/* Location Input */}
@@ -61,14 +79,20 @@ export default function SearchCard() {
                 </div>
                 <input
                   type="text"
-                  name="location"
                   id="location"
-                  className={`block w-full rounded-md border-gray-300 py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900`}
+                  name="location"
+                  className={`block w-full rounded-md border ${formik.touched.location && formik.errors.location 
+                    ? 'border-red-500' 
+                    : 'border-gray-300'} py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900`}
                   placeholder={t('Any City')}
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={formik.values.location}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.location && formik.errors.location && (
+                <p className="mt-1 text-sm text-red-600">{formik.errors.location}</p>
+              )}
             </div>
 
             {/* Date Input */}
@@ -82,13 +106,19 @@ export default function SearchCard() {
                 </div>
                 <input
                   type="date"
-                  name="date"
                   id="date"
-                  className={`block w-full rounded-md border-gray-300 py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900`}
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  name="date"
+                  className={`block w-full rounded-md border ${formik.touched.date && formik.errors.date 
+                    ? 'border-red-500' 
+                    : 'border-gray-300'} py-3 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'} focus:border-blue-500 focus:ring-blue-500 text-gray-900`}
+                  value={formik.values.date}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.date && formik.errors.date && (
+                <p className="mt-1 text-sm text-red-600">{formik.errors.date}</p>
+              )}
             </div>
           </div>
 

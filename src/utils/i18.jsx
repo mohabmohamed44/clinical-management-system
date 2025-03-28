@@ -6,6 +6,9 @@ const resources = {
   en: {
     translation: {
       firstName: "First Name",
+      SearchInputRequired: "Search input is required",
+      LocationInputRequired: "Location input is required",
+      DateInputRequired: "Date input is required",
       NotFound: "Not Found",
       NotFoundDescription: "The page you are looking for does not exist.",
       Back: "Go back",
@@ -151,6 +154,9 @@ const resources = {
       firstName: 'الاسم الأول',
       lastName: 'الاسم الأخير',
       email: 'البريد الإلكتروني',
+      SearchInputRequired: 'حقل البحث مطلوب',
+      LocationInputRequired: 'حقل الموقع مطلوب',
+      DateInputRequired: 'حقل التاريخ مطلوب',
       findUsHere: 'تجدنا هنا',
       Doctors: 'الدكاترة',
       FAQ: 'أسئلة متكررة',
