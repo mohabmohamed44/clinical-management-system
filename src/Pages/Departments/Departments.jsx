@@ -38,126 +38,126 @@ export default function Departments() {
   const departments = [
     {
       id: 1,
-      icon: <img src={Cardiology} className="text-blue-600 h-12 w-12" />,
+      icon: <img src={Cardiology} className="text-[#11319E] h-12 w-12" />,
       title: 'Cardiology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.1s'
     },
     {
       id: 2,
-      icon: <img src={Lungs} className="text-blue-600 h-9 w-9" />,
+      icon: <img src={Lungs} className="text-[#11319E] h-9 w-9" />,
       title: 'Pulmonary',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
     },
     {
       id: 3,
-      icon: <FaBrain className="text-blue-600" size={24} />,
+      icon: <FaBrain className="text-[#11319E]" size={24} />,
       title: 'Neurology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.5s'
     },
     {
       id: 4,
-      icon: <FaWheelchair className="text-blue-600" size={24} />,
+      icon: <FaWheelchair className="text-[#11319E]" size={24} />,
       title: 'Orthopedics',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.1s'
     },
     {
       id: 5,
-      icon: <FaTooth className="text-blue-600" size={24} />,
+      icon: <FaTooth className="text-[#11319E]" size={24} />,
       title: 'Dental Surgery',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.',
       delay: '0.3s'
     },
     {
       id: 7,
-      icon: <img src={Liver} className="text-blue-600 h-8 w-8"/>,
+      icon: <img src={Liver} className="text-[#11319E] h-8 w-8"/>,
       title: 'Hepatology',
       description: 'Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet',
       delay: '0.6s',
     },
     {
       id: 8,
-      icon: <FaEye className="text-blue-600" size={24}/>,
+      icon: <FaEye className="text-[#11319E]" size={24}/>,
       title: 'Ophthalmology',
       description: 'Specialized care for eye conditions and vision problems with advanced diagnostic technology',
       delay: '0.7s',
     },
     {
       id: 9,
-      icon: <img src={Gynecologist} className="text-blue-600 h-9 w-9"/>,
+      icon: <img src={Gynecologist} className="text-[#11319E] h-9 w-9"/>,
       title: 'Obstetrics & Gynecology',
       description: 'Comprehensive care for women including pregnancy, childbirth, and reproductive health',
       delay: '0.2s',
     },
     {
       id: 10,
-      icon: <TbGenderMale className="text-blue-600" size={30}/>,
+      icon: <TbGenderMale className="text-[#11319E]" size={30}/>,
       title: 'Men\'s Health',
       description: 'Specialized care for men including reproductive health, prostate health, and hormonal disorders',
       delay: '0.2s',
     },
     {
       id: 10,
-      icon: <FaAllergies className="text-blue-600" size={24}/>,
+      icon: <FaAllergies className="text-[#11319E]" size={24}/>,
       title: 'Allergy & Immunology',
       description: 'Diagnosis and treatment of allergies, asthma, and disorders of the immune system',
       delay: '0.4s',
     },
     {
       id: 11,
-      icon: <GiKidneys className="text-blue-600" size={24}/>,
+      icon: <GiKidneys className="text-[#11319E]" size={24}/>,
       title: 'Nephrology',
       description: 'Specialized care for kidney diseases and disorders with advanced treatment options',
       delay: '0.3s',
     },
     {
       id: 12,
-      icon: <FaBaby className="text-blue-600" size={24}/>,
+      icon: <FaBaby className="text-[#11319E]" size={24}/>,
       title: 'Pediatrics',
       description: 'Comprehensive healthcare for infants, children, and adolescents focusing on growth and development',
       delay: '0.5s',
     },
     {
       id: 13,
-      icon: <GiStomach className="text-blue-600" size={24}/>,
+      icon: <GiStomach className="text-[#11319E]" size={24}/>,
       title: 'Gastroenterology',
       description: 'Diagnosis and treatment of digestive system disorders and gastrointestinal conditions',
       delay: '0.2s',
     },
     {
       id: 14,
-      icon: <RiMentalHealthLine className="text-blue-600" size={24}/>,
+      icon: <RiMentalHealthLine className="text-[#11319E]" size={24}/>,
       title: 'Psychiatry',
       description: 'Mental health services including diagnosis, treatment, and management of psychological disorders',
       delay: '0.6s',
     },
     {
       id: 15,
-      icon: <MdOutlineElderly className="text-blue-600" size={24}/>,
+      icon: <MdOutlineElderly className="text-[#11319E]" size={24}/>,
       title: 'Geriatrics',
       description: 'Specialized healthcare for elderly patients focusing on unique needs and conditions',
       delay: '0.4s',
     },
     {
       id: 16,
-      icon: <RiSurgicalMaskLine className="text-blue-600" size={24}/>,
+      icon: <RiSurgicalMaskLine className="text-[#11319E]" size={24}/>,
       title: 'General Surgery',
       description: 'Surgical procedures for various conditions with state-of-the-art equipment and techniques',
       delay: '0.3s',
     },
     {
       id: 17,
-      icon: <FaUserMd className="text-blue-600" size={24}/>,
+      icon: <FaUserMd className="text-[#11319E]" size={24}/>,
       title: 'Internal Medicine',
       description: 'Comprehensive care for adults focusing on prevention, diagnosis, and treatment of diseases',
       delay: '0.5s',
     },
     {
       id: 18,
-      icon: <MdBloodtype className="text-blue-600" size={24}/>,
+      icon: <MdBloodtype className="text-[#11319E]" size={24}/>,
       title: 'Hematology',
       description: 'Diagnosis and treatment of blood disorders and diseases with advanced therapeutic options',
       delay: '0.7s',
@@ -199,7 +199,7 @@ export default function Departments() {
             </div>
             <h4 className="text-xl font-semibold mb-3">{service.title}</h4>
             <p className="mb-4 text-gray-600">{service.description}</p>
-            <Link className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300" href="#">
+            <Link className="inline-flex items-center text-[#11319E] hover:text-blue-800 transition-colors duration-300" href="#">
               Show Doctors
               <span className="mr-2"><ArrowIcon size={20}/></span>
             </Link>
