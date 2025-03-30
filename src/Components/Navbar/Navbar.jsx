@@ -25,7 +25,7 @@ export default function Navbar() {
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
             <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("About")}</NavLink>
-            <NavLink to="/appointments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Appointments")}</NavLink>
+            <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("pricing")}</NavLink>
             <NavLink to="/blog" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Blog"))}</NavLink>
             <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Contact"))}</NavLink>
@@ -70,7 +70,7 @@ export default function Navbar() {
           <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
           <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
           <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
-          <NavLink to="/appointments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Appointments")}</NavLink>
+          <NavLink to="/departments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>
           <NavLink to="/blog" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Blog")}</NavLink>
           <NavLink to="/pricing" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("pricing")}</NavLink>
           <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>

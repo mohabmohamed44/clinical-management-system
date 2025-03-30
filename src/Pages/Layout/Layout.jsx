@@ -8,19 +8,19 @@ export default function Layout() {
   // get the current route
   const location = useLocation();
 
-  // Define routes where the footer should be hidden
-  const hideFooterRoutes = ["/login","/register","/forgot_password","/reset_code","/update_password", "/all_done"];
+  // Define routes where the footer, navbar, and chatbot should be hidden
+  const hideRoutes = ["/login", "/register", "/forgot_password", "/reset_code", "/update_password", "/all_done", "/chatbot"];
+  
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-gray-50"> 
-      {!hideFooterRoutes.includes(location.pathname) && <Navbar/>}
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 sm:px-6 py-10 max-w-screen-xl">
+      {!hideRoutes.includes(location.pathname) && <Navbar/>}
+      <main className="flex-1">
+        <div className="mx-auto px-4 sm:px-6 py-10 max-w-screen-xl">
           <Outlet />
         </div>
       </main>
-      <ChatBot/>
-      {/* only render footer if current path is not in hideFooterRoutes*/}
-      {!hideFooterRoutes.includes(location.pathname) && <Footer />}
+      {!hideRoutes.includes(location.pathname) && <ChatBot/>}
+      {!hideRoutes.includes(location.pathname) && <Footer />}
     </div>
   );
 }

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Style from "./FindDoctor.module.css";
-import MetaData from '../../Components/MetaData/MetaData';
+import MetaData from "../../Components/MetaData/MetaData";
 import { Meta } from "react-router-dom";
-import Backgound from '../../assets/background.png';
-import Doctor from '../../assets/find_doctor.png';
+import Background from "../../assets/background.png";
+import Doctor from "../../assets/find_doctor.png";
 import { useTranslation } from "react-i18next";
+import SortDepartment from "../../Components/SortDepartment/SortDepartment";
 
 export default function FindDoctor() {
-
   const { t } = useTranslation();
   return (
     <>
@@ -20,7 +20,7 @@ export default function FindDoctor() {
       <main className="w-full object-cover h-screen">
         <header className="absolute top-0 left-0 w-full h-screen">
           <img
-            src={Backgound}
+            src={Background}
             className="w-full h-screen absolute top-0 left-0 right-0"
             alt="Background"
             role="presentation"
@@ -70,6 +70,9 @@ export default function FindDoctor() {
                   loading="lazy"
                 />
               </figure>
+            </div>
+            <div className="mt-10">
+              <SortDepartment />
             </div>
           </section>
         </header>
