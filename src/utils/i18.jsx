@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import { BookA } from "lucide-react";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
@@ -74,6 +75,7 @@ const resources = {
       ConfirmPasswordRequired: "Confirm Password is required",
       LoginWithGoogle: "Login with Google",
       LoginWithFacebook: "Login with Facebook",
+      BookAnAppointment: 'Book an Appointment',
       thankYou:"Thank you for registering. You can now log in to your account.",
       goToLogin: "Go to Log In",
       back: "Back",
@@ -96,6 +98,15 @@ const resources = {
       PasswordRequired: 'Password is required',
       Provide: "Provides Our",
       bestService: 'Best Services',
+      ExperiencedMedicalProfessionals:"Experienced Medical Professionals",
+      ExperiencedMedicalProfessionalsContent: 'Our team of doctors and healthcare professionals are highly experienced and qualified to provide you with the best care.',
+      ComprehensiveServices: 'Comprehensive Services approach',
+      PatientCenteredApproach: 'Patient-Centered Approach',
+      PatientCenteredApproachContent: 'We believe in treating each patient as an individual, and we take the time to understand your unique health needs and concerns.',
+      ComprehensiveServicesContent: 'We offer a wide range of healthcare services,from preventive care to specialized treatment for complex conditions.',
+      StateOfTheArtFacilities: 'State-of-the-Art Facilities',
+      StateOfTheArtFacilitiesContent: 'Our healthcare center is equipped with the latest technology and equipment to provide our patients with the most advanced care possible.',
+      WhyChooseUs: 'WHY CHOOSE US',
       DiagnosticTesting: 'Diagnostic Testing',
       DiagnosticTestingCard: 'Blood tests, imaging studies, and other tests to diagnose health conditions',
       RehabilitationServices: 'Rehabilitation Services',
@@ -293,6 +304,16 @@ const resources = {
       Signup: "تسجيل حساب جديد",
       NoAccount: "ليس لديك حساب؟",
       language: "العربية",
+      ExperiencedMedicalProfessionals: "متخصصون طبيون ذوو خبرة",
+      ExperiencedMedicalProfessionalsContent: "فريقنا من الأطباء والمتخصصين في الرعاية الصحية يتمتعون بخبرة عالية ومؤهلات ممتازة لتقديم أفضل رعاية لكم.",
+      ComprehensiveServices: "نهج الخدمات الشاملة",
+      PatientCenteredApproach: "نهج يركز على المريض",
+      PatientCenteredApproachContent: "نؤمن بمعالجة كل مريض كفرد، ونأخذ الوقت الكافي لفهم احتياجاتك الصحية الفريدة ومخاوفك.",
+      ComprehensiveServicesContent: "نقدم مجموعة واسعة من الخدمات الصحية، من الرعاية الوقائية إلى العلاج المتخصص للحالات المعقدة.",
+      StateOfTheArtFacilities_ar: 'مرافق حديثة',
+      StateOfTheArtFacilitiesContent_ar: 'مركزنا الصحي مجهز بأحدث التقنيات والمعدات لتقديم أفضل رعاية متقدمة لمرضانا',
+      WhyChooseUs: 'لماذا نحن',
+      BookAnAppointment: 'احجز موعد',
     },
   },
 };

@@ -52,9 +52,9 @@ export default function FeatureSection() {
     },
     {
       image: scheduleImage,
-      title: t('Book an Appointment'),
+      title: t('BookAnAppointment'),
       description: t('Easily schedule your visit with our convenient online appointment booking system.'),
-      linkText: t('Book Now'),
+      linkText: t('BookNow'),
       linkUrl: '/appointments'
     },
     {

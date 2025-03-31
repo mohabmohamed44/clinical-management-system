@@ -1,39 +1,31 @@
 import React from "react";
 import { BadgeCheck, UsersRound, Hospital, HandHeart } from "lucide-react";
 import doctorImage from "../../assets/doctor-image.png";
+import { useTranslation } from "react-i18next";
 
 export default function _ServiceCards() {
+  const {t} = useTranslation();
   // existing ChooseUs features..
   const chooseUsFeatures = [
     {
       icon: <Hospital className="w-6 h-6" />,
-      title: "Experienced Medical Professionals",
-      description: `Our team includes experienced doctors
-                    nurses, and other healthcare professionals
-                    who are dedicated to providing the best
-                    possible care to our patients.`,
+      title: t("ExperiencedMedicalProfessionals"),
+      description:  t("ExperiencedMedicalProfessionalsContent"),
     },
     {
       icon: <BadgeCheck className="w-6 h-6" />,
-      title: "Experienced Medical Professionals",
-      description: `Our team includes experienced doctors
-                    nurses, and other healthcare professionals
-                    who are dedicated to providing the best
-                    possible care to our patients`,
+      title: t("StateOfTheArtFacilities"),
+      description:  t("StateOfTheArtFacilitiesContent"),
     },
     {
       icon: <UsersRound className="w-6 h-6" />,
-      title: "Comprehensive Services approach",
-      description: `We offer a wide range of healthcare services,
-                    from preventive care to specialized
-                    treatment for complex conditions.`,
+      title: t("ComprehensiveServices"),
+      description: t("ComprehensiveServicesContent"),
     },
     {
       icon: <HandHeart className="w-6 h-6" />,
-      title: "Patient-Centered Approach",
-      description: `We believe in treating each patient as an
-                    individual, and we take the time to
-                    understand your unique health needs and concerns.`,
+      title: t("PatientCenteredApproach"),
+      description: t("PatientCenteredApproachContent"),
     },
   ];
 
@@ -56,7 +48,7 @@ export default function _ServiceCards() {
           {/* Right Column - Content */}
           <div>
             <h2 className="text-[#307bc4] text-3xl font-semibold leading-[34.1px] mb-4">
-              WHY CHOOSE US
+              {t("WhyChooseUs")}
             </h2>
 
             {/* 2x2 Grid */}
