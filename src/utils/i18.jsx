@@ -33,6 +33,8 @@ const resources = {
       ContactReason: "Kindly reach us to get the fastest response and treatment",
       Register: "Register",
       Appointments: "Appointments",
+      DepartmentsHeading: 'Get to Know Departments',
+      DepartmentsDescription: 'All medical Departmens available on Delma',
       FindDoctor: 'Find Doctor',
       FieldLength: "Each field must be 1 character",
       Contact: 'Contact Us',

@@ -1,1 +1,11 @@
-.Departments {}
+.Departments {
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.Departments-heading {
+    font-size: 40px;
+    font-weight: 600;
+    margin-top: 20px;
+}
