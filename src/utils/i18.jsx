@@ -242,6 +242,8 @@ const resources = {
       FollowUs: 'تابعنا عبر منصات التواصل الإجتماعي',
       PasswordReset: 'إعادة تعيين كلمة المرور',
       About: "حول",
+      DepartmentsHeading: '',
+      DepartmentsDescription: '',
       Name: 'الإسم كاملا',
       Subject: 'العنوان',
       SubjectRequired: 'العنوان مطلوب',
