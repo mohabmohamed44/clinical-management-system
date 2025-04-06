@@ -7,6 +7,9 @@ import Logo from "../../assets/logo.webp";
 import footerBg from "../../assets/Frame.webp";
 
 export default function Footer() {
+
+  const currentYear = new Date().getFullYear();
+
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   return (
@@ -206,7 +209,7 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <p>{t("CopyRights")}</p>
+              <p>{t("CopyRights")} {t(currentYear)}</p>
             </div>
           </div>
         </div>
