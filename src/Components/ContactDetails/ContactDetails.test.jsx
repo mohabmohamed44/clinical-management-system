@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { expect, test, describe, jest } from '@jest/globals';
+import { expect, test, describe, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import ContactDetails from './ContactDetails';
 
 // Mock the react-i18next hook
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key) => {
       const translations = {
@@ -20,58 +20,70 @@ jest.mock('react-i18next', () => ({
 }));
 
 describe('ContactDetails Component', () => {
-  test('renders main title', () => {
+  beforeEach(() => {
     render(<ContactDetails />);
-    expect(screen.getByText('Find Us Here')).toBeInTheDocument();
   });
 
-  test('renders all three contact cards', () => {
-    render(<ContactDetails />);
-    const cards = screen.getAllByRole('heading', { level: 3 });
-    expect(cards).toHaveLength(3);
+  describe('Content Rendering', () => {
+    test('should render main title', () => {
+      expect(screen.getByText('Find Us Here')).toBeInTheDocument();
+    });
+
+    test('should render all three contact cards', () => {
+      const cards = screen.getAllByRole('heading', { level: 3 });
+      expect(cards).toHaveLength(3);
+    });
+
+    test('should display correct contact information', () => {
+      const expectedContacts = [
+        '123-456-7890',
+        'hellocallcenter@gmail.com',
+        '123 Anywhere St., Any City, 12345'
+      ];
+
+      expectedContacts.forEach(contact => {
+        expect(screen.getByText(contact)).toBeInTheDocument();
+      });
+    });
   });
 
-  test('displays correct contact information', () => {
-    render(<ContactDetails />);
-    expect(screen.getByText('123-456-7890')).toBeInTheDocument();
-    expect(screen.getByText('hellocallcenter@gmail.com')).toBeInTheDocument();
-    expect(screen.getByText('123 Anywhere St., Any City, 12345')).toBeInTheDocument();
+  describe('Accessibility', () => {
+    test('should render all icons with correct aria-labels', () => {
+      const expectedLabels = ['phone', 'email', 'location'];
+      
+      expectedLabels.forEach(label => {
+        expect(screen.getByLabelText(label)).toBeInTheDocument();
+      });
+    });
+
+    test('should render google maps iframe with title', () => {
+      const iframe = screen.getByTitle('Google Map');
+      expect(iframe).toBeInTheDocument();
+      expect(iframe).toHaveProperty('tagName', 'IFRAME');
+    });
   });
 
-  test('renders all icons with correct aria-labels', () => {
-    render(<ContactDetails />);
-    expect(screen.getByLabelText('phone')).toBeInTheDocument();
-    expect(screen.getByLabelText('email')).toBeInTheDocument();
-    expect(screen.getByLabelText('location')).toBeInTheDocument();
+  describe('Translations', () => {
+    test('should render translated content correctly', () => {
+      const translatedTexts = ['Phone', 'Email', 'Location'];
+      
+      translatedTexts.forEach(text => {
+        expect(screen.getByText(text)).toBeInTheDocument();
+      });
+    });
   });
 
-  test('renders google maps iframe', () => {
-    render(<ContactDetails />);
-    const iframe = screen.getByTitle('Google Map');
-    expect(iframe).toBeInTheDocument();
-    expect(iframe.tagName.toLowerCase()).toBe('iframe');
-  });
-
-  test('renders translated content', () => {
-    render(<ContactDetails />);
-    expect(screen.getByText('Phone')).toBeInTheDocument();
-    expect(screen.getByText('Email')).toBeInTheDocument();
-    expect(screen.getByText('Location')).toBeInTheDocument();
-  });
-
-  test('applies correct layout classes', () => {
-    const { container } = render(<ContactDetails />);
-    
-    // Check container classes
-    const mainContainer = container.firstChild;
-    expect(mainContainer).toHaveClass('container', 'mx-auto', 'p-4');
-
-    // Check grid layout
-    const gridContainer = container.querySelector('.grid');
-    expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-3', 'gap-4');
-
-    // Check map container
-    const mapContainer = container.querySelector('.w-full');
-    expect(mapContainer).toBeInTheDocument();
+  describe('Layout', () => {
+    test('should apply correct layout classes', () => {
+      const { container } = render(<ContactDetails />);
+      
+      expect(container.firstChild).toHaveClass('container', 'mx-auto', 'p-4');
+      
+      const gridContainer = container.querySelector('.grid');
+      expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-3', 'gap-4');
+      
+      const mapContainer = container.querySelector('.w-full');
+      expect(mapContainer).toBeInTheDocument();
+    });
   });
 });
