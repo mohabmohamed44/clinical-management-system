@@ -11,6 +11,10 @@ export default defineConfig({
     compression(),
     cssnanoPlugin(),
   ],
+  test:{
+    globals: true,
+    environment: 'jsdom',
+  },
   optimizeDeps: {
     include:["react-helmet-async"],
   },
