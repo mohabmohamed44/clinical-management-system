@@ -42,7 +42,7 @@ export default function Contact() {
         <figure className="flex justify-center w-full lg:w-auto" aria-label="Doctor Image">
           <img
             src={DoctorImage}
-            className="max-w-md pb-12 sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl xl:pb-10 h-full w-full"
+            className="max-w-[300px] pb-10 sm:max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl xl:pb-22 h-full w-full"
             alt="Doctor"
             loading="lazy"
           />
@@ -50,7 +50,7 @@ export default function Contact() {
       </section>
 
       {/* Contact Form & Details Section */}
-      <section className="absolute top-100 left-0 right-0 z-50" aria-label="Contact Form Section">
+      <section className="absolute top-100 left-0 mt-20 right-0 z-50" aria-label="Contact Form Section">
         <ContactForm />
         <ContactDetails className="mt-8" aria-label="Contact Details" />
       </section>
