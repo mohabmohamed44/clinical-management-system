@@ -1,33 +1,41 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { expect, describe, test, beforeEach, jest } from '@jest/globals';
+import { expect, describe, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import FAQSection from './FAQ';
+import { CircleChevronDown, CircleChevronUp } from 'lucide-react';
 
 // Mock the react-i18next module
-jest.mock('react-i18next', () => ({
-  // This mock function returns an object with t and i18n
+vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key) => key, // Simply return the key as the translation
+    t: (key) => key,
     i18n: {
-      changeLanguage: () => {} // Empty function instead of jest.fn()
+      changeLanguage: () => {}
     }
   })
 }));
 
-// Mock the image import
-jest.mock('../../assets/Group-112.png', () => 'mocked-image-path');
+// Mock the image import - fixed to return an object with default
+vi.mock('../../assets/Group-112.png', () => ({
+  default: 'mocked-image-path'
+}));
+
+// Mock Lucide icons
+vi.mock('lucide-react', () => ({
+  CircleChevronDown: () => <div data-testid="chevron-down" />,
+  CircleChevronUp: () => <div data-testid="chevron-up" />
+}));
 
 describe('FAQSection Component', () => {
   beforeEach(() => {
     render(<FAQSection />);
   });
 
-  test('renders FAQ section with title', () => {
+  it('renders FAQ section with title', () => {
     expect(screen.getByText('FAQ')).toBeInTheDocument();
   });
 
-  test('renders all FAQ questions', () => {
+  it('renders all FAQ questions', () => {
     const questions = [
       'What services does Delma ProHealth offer?',
       'How do I schedule an appointment with ProHealth?',
@@ -41,7 +49,7 @@ describe('FAQSection Component', () => {
     });
   });
 
-  test('toggles FAQ answer visibility when clicking question', () => {
+  it('toggles FAQ answer visibility when clicking question', () => {
     const firstQuestion = screen.getByText('What services does Delma ProHealth offer?');
     
     // Initially answer should not be visible
@@ -56,7 +64,7 @@ describe('FAQSection Component', () => {
     expect(screen.queryByText(/Delma ProHealth offers a wide range/)).not.toBeInTheDocument();
   });
 
-  test('only one FAQ can be open at a time', () => {
+  it('only one FAQ can be open at a time', () => {
     const firstQuestion = screen.getByText('What services does Delma ProHealth offer?');
     const secondQuestion = screen.getByText('How do I schedule an appointment with ProHealth?');
     
@@ -68,20 +76,33 @@ describe('FAQSection Component', () => {
     fireEvent.click(secondQuestion);
     // First FAQ should be closed
     expect(screen.queryByText(/Delma ProHealth offers a wide range/)).not.toBeInTheDocument();
-    // Second FAQ should be open
-    expect(screen.getByText(/Do you accept insurance/)).toBeInTheDocument();
+    // Second FAQ should be open - use a more specific query
+    const answerParagraphs = screen.getAllByText(/schedule an appointment with ProHealth/);
+    expect(answerParagraphs[1]).toBeInTheDocument(); // Get the second occurrence (the answer)
   });
 
-  test('renders FAQ image', () => {
-    // The image is hidden on mobile screens with "hidden" class but appears on lg screens
+  it('renders FAQ image with correct attributes', () => {
     const image = screen.getByAltText('Group');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'mocked-image-path');
     
-    // Check the appropriate classes for responsive behavior
-    expect(image).toHaveClass('hidden'); // It's hidden by default
-    expect(image).toHaveClass('lg:flex'); // Shown on lg screens
+    // Check if image has the expected classes
     expect(image).toHaveClass('max-w-sm');
     expect(image).toHaveClass('md:max-w-md');
+    expect(image).toHaveClass('lg:flex');
+    expect(image).toHaveClass('hidden');
+  });
+
+  it('toggles chevron icons correctly', () => {
+    const firstQuestion = screen.getByText('What services does Delma ProHealth offer?');
+    
+    // Initially should show chevron up (closed state)
+    expect(screen.getAllByTestId('chevron-up').length).toBeGreaterThan(0);
+    
+    // Click to open FAQ
+    fireEvent.click(firstQuestion);
+    
+    // Now should show chevron down (open state)
+    expect(screen.getByTestId('chevron-down')).toBeInTheDocument();
   });
 });
