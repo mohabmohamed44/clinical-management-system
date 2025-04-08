@@ -1,15 +1,18 @@
-// We need to use jest.mock for the assets
-jest.mock("../../assets/item-img.svg", () => "item-img-mock.svg", { virtual: true });
-
-// Mock lucide-react
-jest.mock("lucide-react", () => ({
-  MoveRight: () => <div data-testid="move-right-icon" />
-}), { virtual: true });
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { expect, describe, it, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import PriceCards from './PriceCards';
+
+// Mock the assets
+vi.mock("../../assets/item-img.svg", () => ({
+  default: "item-img-mock.svg"
+}));
+
+// Mock lucide-react
+vi.mock("lucide-react", () => ({
+  MoveRight: () => <div data-testid="move-right-icon" />
+}));
 
 describe('PriceCards Component', () => {
   beforeEach(() => {
@@ -17,7 +20,6 @@ describe('PriceCards Component', () => {
   });
 
   it('renders the correct number of plan cards', () => {
-    // There should be 3 plan cards based on the plans array
     const planCards = screen.getAllByRole('article');
     expect(planCards).toHaveLength(3);
   });
@@ -77,7 +79,7 @@ describe('PriceCards Component', () => {
     // Count the total number of features across all plans
     const totalFeatures = 4 + 4 + 5; // Dental (4) + Sports (4) + Women's (5)
     
-    // Use querySelector instead of getAllByRole since the images don't have proper role
+    // Use querySelectorAll to find all images with the mocked src
     const itemImages = document.querySelectorAll('img[src="item-img-mock.svg"]');
     expect(itemImages.length).toBe(totalFeatures);
   });
