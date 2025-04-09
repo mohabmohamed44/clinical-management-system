@@ -1,31 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import Style from "./SortDepartment.module.css";
 import { useTranslation } from "react-i18next";
 
-export default function SortDepartment({ onDepartmentSelect }) {
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const {t} = useTranslation();
+export default function SortDepartment({ onDepartmentSelect, selectedDepartment = 'all' }) {
+  const { t } = useTranslation();
+  
+  // Updated departments to match the ones in the doctor data
   const departments = [
     { id: 'all', name: 'All Departments' },
-    { id: 'cardiology', name: t('Cardiology') },
-    { id: 'neurology', name: 'Neurology' },
-    { id: 'orthopedics', name: 'Orthopedics' },
-    { id: 'pediatrics', name: 'Pediatrics' },
-    { id: 'dermatology', name: 'Dermatology' },
-    { id: 'ophthalmology', name: 'Ophthalmology' },
-    { id: 'gynecology', name: 'Gynecology' },
-    { id: 'urology', name: 'Urology'},
-    { id: 'dentistry', name: 'Dentistry'},
-    { id: 'general', name: 'General'},
-    { id: 'hematology', name:'Hematology'},
-    { id: 'Gastroenterology', name:'Gastroenterology'},
-    { id: 'hepatology', name: 'Hepatology'},
-    { id: 'internal medicine', name: 'Internal Medicine'},
-    { id: 'geriatrics', name: 'Geriatrics'},
+    { id: 'Cardiology', name: 'Cardiology' },
+    { id: 'Neurology', name: 'Neurology' },
+    { id: 'Orthopedics', name: 'Orthopedics' },
+    { id: 'Pediatrics', name: 'Pediatrics' },
+    { id: 'Dermatology', name: 'Dermatology' },
+    { id: 'Ophthalmology', name: 'Ophthalmology' },
+    { id: 'Gynecology', name: 'Gynecology' },
+    { id: 'Urology', name: 'Urology'},
+    { id: 'Dentistry', name: 'Dentistry'},
+    { id: 'Emergency Medicine', name: 'Emergency Medicine'},
+    { id: 'Psychiatry', name: 'Psychiatry'},
+    { id: 'Gastroenterology', name: 'Gastroenterology'},
+    { id: 'Endocrinology', name: 'Endocrinology'},
+    { id: 'Pulmonology', name: 'Pulmonology'},
+    { id: 'Rheumatology', name: 'Rheumatology'},
+    { id: 'Hematology', name: 'Hematology'},
+    { id: 'Oncology', name: 'Oncology'},
+    { id: 'Nephrology', name: 'Nephrology'},
+    { id: 'Infectious Disease', name: 'Infectious Disease'},
+    { id: 'Anesthesiology', name: 'Anesthesiology'},
+    { id: 'Radiology', name: 'Radiology'},
+    { id: 'Pathology', name: 'Pathology'},
+    { id: 'Plastic Surgery', name: 'Plastic Surgery'},
+    { id: 'General Surgery', name: 'General Surgery'},
+    { id: 'Vascular Surgery', name: 'Vascular Surgery'},
+    { id: 'Thoracic Surgery', name: 'Thoracic Surgery'},
+    { id: 'Neurosurgery', name: 'Neurosurgery'},
+    { id: 'Orthopedic Surgery', name: 'Orthopedic Surgery'},
+    { id: 'Pediatric Surgery', name: 'Pediatric Surgery'},
   ];
 
   const handleDepartmentClick = (departmentId) => {
-    setSelectedDepartment(departmentId);
     if (onDepartmentSelect) {
       onDepartmentSelect(departmentId);
     }
