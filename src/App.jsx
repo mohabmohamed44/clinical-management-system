@@ -21,6 +21,8 @@ import PricingPlan from "./Pages/PricingPlan/PricingPlan";
 import Departments from './Pages/Departments/Departments';
 import Offers from './Pages/Offers/Offers';
 import { LanguageProvider } from "./Lib/Context/LanguageContext";
+import Book from "./Pages/Book/Book";
+import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -46,6 +48,8 @@ const router = createBrowserRouter([
       { path: "blog", element: <Blog /> },
       { path: "pricing", element: <PricingPlan />},
       { path: "offers", element: <Offers/>},
+      { path: "book", element: <Book/>},
+      { path: "doctorDetails", element: <DoctorDetails/>},
       { path: "*", element: <NotFound /> },
     ],
   },
