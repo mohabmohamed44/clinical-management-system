@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
+import MetaData from "../../Components/MetaData/MetaData";
 
 const fetchHospitals = async () => {
   const { data, error } = await supabase
@@ -44,6 +45,13 @@ export default function Hospitals() {
     return <div className="text-red-500 text-center py-8">Error: {error.message}</div>;
 
   return (
+    <>
+    <MetaData
+      title="Hospitals"
+      description="Find the best hospitals in your area. Browse our list of hospitals and their specialties."
+      keywords="hospitals, healthcare, medical facilities, specialties"
+      author="Your Name"
+    />
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2">
@@ -108,5 +116,6 @@ export default function Hospitals() {
         </div>
       </div>
     </div>
+    </>
   );
 }

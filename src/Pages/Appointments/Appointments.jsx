@@ -11,6 +11,7 @@ import {
   FaMapMarkerAlt
 } from "react-icons/fa";
 import { SiCashapp } from "react-icons/si";
+import MetaData from "../../Components/MetaData/MetaData";
 
 const fetchAppointments = async () => {
   const { data, error } = await supabase
@@ -110,6 +111,16 @@ export default function AppointmentsPage() {
   );
 
   return (
+    <>
+    <MetaData
+      title={"Appointments | HealthCare"}
+      description={"Appointments page of HealthCare"}
+      name={"Appointments"}
+      type={"website"}
+      url={window.location.href}
+      author={"Mohab Mohammed"}
+      keywords={["appointments", "healthcare", "medical", "patients"]}
+      />
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
@@ -176,5 +187,6 @@ export default function AppointmentsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
