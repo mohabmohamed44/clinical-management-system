@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { LanguageProvider } from "./Lib/Context/LanguageContext";
 import "./App.css";
 import Login from "./Pages/Login/Login";
 import Layout from "./Pages/Layout/Layout";
@@ -20,9 +21,10 @@ import About from "./Pages/About/About";
 import PricingPlan from "./Pages/PricingPlan/PricingPlan";
 import Departments from './Pages/Departments/Departments';
 import Offers from './Pages/Offers/Offers';
-import { LanguageProvider } from "./Lib/Context/LanguageContext";
 import Book from "./Pages/Book/Book";
 import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
+import Clinics from "./Pages/Clinics/Clinics";
+import Hospitals from './Pages/hospitals/hospitals';
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -50,6 +52,8 @@ const router = createBrowserRouter([
       { path: "offers", element: <Offers/>},
       { path: "book", element: <Book/>},
       { path: "doctorDetails", element: <DoctorDetails/>},
+      { path: 'clinics/:id', element: <Clinics/>},
+      { path: 'hospitals', element: <Hospitals/>},
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -63,7 +67,7 @@ function App() {
         <LanguageProvider>
           <RouterProvider router={router} />
           <Toaster position="top-center" reverseOrder={false} />
-          {/* <ReactQueryDevtools /> */}
+          <ReactQueryDevtools />
         </LanguageProvider>
       </QueryClientProvider>
     </>
