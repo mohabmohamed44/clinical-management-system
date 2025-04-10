@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
-import FeatureSection from "../../Components/FeatureSection/FeatureSection";
 import AdditionalServices from "../../Components/AdditionalServices/AdditionalServices";
+import UpcomingVisits from "../../Components/UpcomingVisits/UpcomingVisits";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export default function Home() {
                 <p className={Style.text} aria-label="Home Description">
                   {t("HomeDescription")}
                 </p>
-                <button className="px-5 py-2 flex items-center justify-start bg-white text-[#3454c1] mt-6 rounded-xl font-semibold text-lg ">
+                <button className="px-5 py-3 flex items-center justify-start bg-white text-[#3454c1] mt-6 rounded-xl font-semibold text-xl">
                   <Link to="/find_doctor">
                     {t("BookNow")}
                   </Link>
@@ -86,8 +86,8 @@ export default function Home() {
           {/* Services Heading */}
         </header>
       </main>
-      <div className="mt-77 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
-        <FeatureSection />
+      <div className="mt-77 pt-10 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
+        <UpcomingVisits/>
       </div>
       <HomeCard/>
       <AdditionalServices/>
