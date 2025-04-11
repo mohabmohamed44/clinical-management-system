@@ -9,6 +9,7 @@ import {
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
 import MetaData from "../../Components/MetaData/MetaData";
+import toast from "react-hot-toast";
 
 const fetchHospitals = async () => {
   const { data, error } = await supabase
@@ -16,7 +17,11 @@ const fetchHospitals = async () => {
     .select("*")
     .order("name", { ascending: true });
 
-  if (error) throw new Error(error.message);
+  if (error) { 
+    throw new Error(error.message);
+    toast.error("Error fetching hospitals data!");
+  }
+  toast.success("Hospitals data fetched successfully!");
   return data;
 };
 
