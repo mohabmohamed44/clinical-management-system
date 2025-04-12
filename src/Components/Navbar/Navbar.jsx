@@ -21,13 +21,15 @@ export default function Navbar() {
             <span className="self-center text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
-          <div className="hidden lg:flex space-x-6">
+          <div className="hidden lg:flex space-x-5">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
             <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("pricing")}</NavLink>
             <NavLink to="/blog" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Blog"))}</NavLink>
+            <NavLink to="/clinics" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Clinics")}</NavLink>
+            <NavLink to="/hospitals" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Hospitals")}</NavLink>
             <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{(t("Contact"))}</NavLink>
           </div>
         </div>
@@ -71,6 +73,8 @@ export default function Navbar() {
           <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
           <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/departments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>
+          <NavLink to="/clinics" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Clinics")}</NavLink>
+          <NavLink to="/hospitals" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Hospitals")}</NavLink>
           <NavLink to="/blog" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Blog")}</NavLink>
           <NavLink to="/pricing" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("pricing")}</NavLink>
           <NavLink to="/contact" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>
