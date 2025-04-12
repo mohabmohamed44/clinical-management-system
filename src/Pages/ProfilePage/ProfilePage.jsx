@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../Config/Supabase';
 import { Pencil } from 'lucide-react';
+import { DNA } from 'react-loader-spinner';
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
@@ -58,7 +59,15 @@ const ProfilePage = () => {
     setMessage(`Editing ${section} - This would connect to Supabase to update user data`);
   };
 
-  
+  if(loading) {
+    return (
+      <div className='flex items-center justify-center max-h-screen'>
+        <div className='text-center py-8'>
+          <DNA width={90} height={90} ariaLabel="dna-loading" />
+        </div>
+      </div>
+    );
+  }
 
   const ProfileSection = () => (
     <div className="flex-1 p-8 bg-gray-50">
