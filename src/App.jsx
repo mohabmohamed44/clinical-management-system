@@ -25,6 +25,7 @@ import Book from "./Pages/Book/Book";
 import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
 import Clinics from "./Pages/Clinics/Clinics";
 import Hospitals from './Pages/hospitals/hospitals';
+import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       { path: "doctorDetails", element: <DoctorDetails/>},
       { path: 'clinics', element: <Clinics/>},
       { path: 'hospitals', element: <Hospitals/>},
+      { path: "profile", element: <ProfilePage/>},
       { path: "*", element: <NotFound /> },
     ],
   },
