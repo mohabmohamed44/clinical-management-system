@@ -248,15 +248,15 @@ export default function FindDoctor() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               {/* Text Content - Left Side */}
-              <div className="text-white max-w-lg mt-35 text-3xl  text-center lg:text-left order-1 lg:order-1">
+              <div className="text-white max-w-lg mt-12 text-3xl  text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl text-center md:text-5xl sm:text-center leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center lg:text-left rtl:text-right"
+                  className="text-3xl text-center sm:text-5xl sm:text-center leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center lg:text-left rtl:text-right"
                   aria-label="About Heading"
                 >
                   {t("Experts")}
                 </h2>
                 <p
-                  className="text-4xl text-center md:text-left font-medium sm:text-2xl mt-4 rtl:text-right"
+                  className="text-3xl md:text-4xl text-center md:text-left font-medium sm:text-2xl mt-4 rtl:text-right"
                   aria-label="Contact Reason"
                 >
                   {t("ExpertsDescription")}
@@ -273,7 +273,7 @@ export default function FindDoctor() {
                     w-full 
                     h-auto
                     max-w-[320px]
-                    max-h-[380px]
+                    max-h-[360px]
                     md:max-h-[350px]
                     lg:max-h-[500px]
                     sm:max-w-md

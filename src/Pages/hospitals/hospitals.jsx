@@ -18,8 +18,8 @@ const fetchHospitals = async () => {
     .order("name", { ascending: true });
 
   if (error) { 
-    throw new Error(error.message);
     toast.error("Error fetching hospitals data!");
+    throw new Error(error.message);
   }
   toast.success("Hospitals data fetched successfully!");
   return data;

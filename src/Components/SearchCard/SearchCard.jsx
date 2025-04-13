@@ -126,7 +126,7 @@ export default function SearchCard() {
           <div className={`mt-4 flex ${isRTL ? 'justify-start' : 'justify-end'}`}>
             <button
               type="submit"
-              className="flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[#11319E] to-[#061138] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md transition-all duration-300"
+              className="flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md transition-all duration-300"
             >
               {t('FindDoctor')}
               <ArrowIcon className="ml-2 h-5 w-5 rtl:mr-2" />

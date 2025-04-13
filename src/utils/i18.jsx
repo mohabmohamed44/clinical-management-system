@@ -45,7 +45,7 @@ const resources = {
       Subject:"Subject",
       Message: "Message",
       Departments: "Departments",
-      Clinics: 'Clinincs',
+      Clinics: 'Clinics',
       Hospitals: 'Hospitals',
       Testimonials: "Testimonials",
       Hello: "Hello",

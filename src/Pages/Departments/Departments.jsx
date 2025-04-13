@@ -202,7 +202,7 @@ export default function Departments() {
                     {/* Text Content - Left Side */}
                     <div className="text-[#ffffff] max-w-lg mt-20 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1">
                       <h2
-                        className="text-4xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                        className="text-3xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                         aria-label="Departments Heading"
                       >
                         {t("DepartmentsHeading")}
@@ -221,8 +221,8 @@ export default function Departments() {
                         className="
                           w-full 
                           h-auto
-                          max-w-[330px]
-                          max-h-[350px]
+                          max-w-[300px]
+                          max-h-[320px]
                           md:max-h-[350px]
                           lg:max-h-[500px]
                           sm:max-w-md
