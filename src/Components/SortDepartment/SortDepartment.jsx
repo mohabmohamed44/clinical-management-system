@@ -7,7 +7,7 @@ export default function SortDepartment({ onDepartmentSelect, selectedDepartment 
   
   // Updated departments to match the ones in the doctor data
   const departments = [
-    { id: 'all', name: 'All Departments' },
+    { id: 'all', name: 'All' },
     { id: 'Cardiology', name: 'Cardiology' },
     { id: 'Neurology', name: 'Neurology' },
     { id: 'Orthopedics', name: 'Orthopedics' },
