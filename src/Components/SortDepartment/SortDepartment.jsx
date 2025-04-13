@@ -49,7 +49,6 @@ export default function SortDepartment({ onDepartmentSelect, selectedDepartment 
     <div className="w-full px-4 sm:px-6 lg:px-8">
       <div className="relative">
         <div className="flex items-center gap-2 sm:gap-3 py-2">
-          <span className="font-medium text-gray-700 whitespace-nowrap text-sm sm:text-base">Sort by:</span>
           <div className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className="flex gap-2 sm:gap-3 min-w-max pb-2">
               {departments.map((department) => (
