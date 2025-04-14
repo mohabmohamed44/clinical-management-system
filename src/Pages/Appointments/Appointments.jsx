@@ -109,13 +109,13 @@ export default function AppointmentsPage() {
   // Status badge component
   const getStatusBadge = (status) => {
     const statusStyles = {
-      Completed: {
+      completed: {
         color: "bg-green-100 text-green-800",
         icon: <FaCheckCircle />,
       },
-      Pending: { color: "bg-yellow-100 text-yellow-800", icon: <FaClock /> },
-      Cancelled: { color: "bg-red-100 text-red-800", icon: <FaTimesCircle /> },
-      Confirmed: {
+      pending: { color: "bg-yellow-100 text-yellow-800", icon: <FaClock /> },
+      cancelled: { color: "bg-red-100 text-red-800", icon: <FaTimesCircle /> },
+      confirmed: {
         color: "bg-blue-100 text-blue-800",
         icon: <FaCheckCircle />,
       },

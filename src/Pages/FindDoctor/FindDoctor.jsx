@@ -256,7 +256,7 @@ export default function FindDoctor() {
                   {t("Experts")}
                 </h2>
                 <p
-                  className="text-3xl md:text-4xl text-center md:text-left font-medium sm:text-2xl mt-4 rtl:text-right"
+                  className="text-2xl md:text-4xl text-center md:text-left font-medium sm:text-2xl mt-4 rtl:text-right"
                   aria-label="Contact Reason"
                 >
                   {t("ExpertsDescription")}
@@ -273,7 +273,7 @@ export default function FindDoctor() {
                     w-full 
                     h-auto
                     max-w-[320px]
-                    max-h-[360px]
+                    max-h-[300px]
                     md:max-h-[350px]
                     lg:max-h-[500px]
                     sm:max-w-md

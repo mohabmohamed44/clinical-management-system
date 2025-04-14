@@ -26,6 +26,9 @@ import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
 import Clinics from "./Pages/Clinics/Clinics";
 import Hospitals from './Pages/hospitals/hospitals';
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
+import HospitalsDetails from "./Pages/HospitalsDetails/HospitalsDetails";
+import ClinicDetails from './Pages/Clinics/Clinics';
+import DepartmentDetails from './Pages/DepartmentDetails/DepartmentDetails';
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -47,6 +50,9 @@ const router = createBrowserRouter([
       { path: "appointments", element: <Appointments /> },
       { path: "find_doctor", element: <FindDoctor /> },
       { path: "departments", element: <Departments/>},
+      { path: "departments/:id", element: <DepartmentDetails/>},
+      { path: "clinics/:id", element: <ClinicDetails/>},
+      { path: "hospitals/:id", element: <HospitalsDetails/>},
       { path: "about", element: <About /> },
       { path: "blog", element: <Blog /> },
       { path: "pricing", element: <PricingPlan />},

@@ -23,7 +23,7 @@ export default function Navbar() {
           
           <div className="hidden lg:flex space-x-5">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
-            <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
+            <NavLink to="/doctors" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("pricing")}</NavLink>
@@ -70,7 +70,7 @@ export default function Navbar() {
       <div className={`md:hidden bg-white ${navbarOpen ? "block" : "hidden"}`}>
         <div className="flex flex-col items-start px-4 py-4 space-y-4">
           <NavLink to="/" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
-          <NavLink to="/find_doctor" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
+          <NavLink to="/doctors" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
           <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/departments" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>
           <NavLink to="/clinics" className="text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Clinics")}</NavLink>
