@@ -38,12 +38,12 @@ export default function Home() {
               {/* Text Content - Left Side */}
               <div className="text-[#ffffff] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                  className="text-3xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"
                 >
                   {t("Home")}
                 </h2>
-                <p className={Style.text} aria-label="Home Description">
+                <p className={`${Style.text}`} aria-label="Home Description">
                   {t("HomeDescription")}
                 </p>
                 <button className="px-5 py-3 flex items-center justify-start bg-white text-[#3454c1] mt-6 rounded-xl font-semibold text-xl">

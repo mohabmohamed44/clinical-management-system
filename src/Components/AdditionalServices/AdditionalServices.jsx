@@ -242,9 +242,10 @@ export default function AdditionalServices() {
             {offers.map((offer) => (
               <div 
                 key={offer.id} 
-                className="flex-none w-full sm:w-1/2 lg:w-1/3 px-3"
+                className="flex-none w-full sm:w-1/2 lg:w-1/3 px-3 pb-4"
               >
-                <div className="bg-white rounded-xl shadow overflow-hidden transition-all hover:shadow-sm h-full">
+                {/* Modified card to use flex for sticky button */}
+                <div className="bg-white rounded-xl shadow overflow-hidden transition-all hover:shadow-sm h-full flex flex-col">
                   <div className="relative">
                     <img 
                       src={offer.image} 
@@ -258,47 +259,50 @@ export default function AdditionalServices() {
                     )}
                   </div>
                   
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-semibold text-gray-800">{offer.title}</h3>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span className="text-sm">
-                          {formatTime(offer.start_duration)} - {formatTime(offer.end_duration)}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <p className="text-gray-600 text-sm mb-4">{offer.description}</p>
-                    
-                    {/* Doctor info */}
-                    <div className="flex items-center mt-3 pb-3 border-b">
-                      <img 
-                        src={offer.doctor.photo} 
-                        alt={offer.doctor.name}
-                        className="w-10 h-10 rounded-full object-cover mr-3"
-                      />
-                      <div>
-                        <p className="font-medium text-gray-800">{offer.doctor.name}</p>
-                        <p className="text-sm text-gray-500">{offer.doctor.specialty}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 flex items-center">
-                      {offer.onSale ? (
-                        <>
-                          <span className="text-2xl font-bold text-blue-600">${offer.salePrice}</span>
-                          <span className="ml-2 text-gray-500 line-through">${offer.price}</span>
-                          <span className="ml-2 text-red-500 text-sm font-medium">
-                            {Math.round((offer.price - offer.salePrice) / offer.price * 100)}% OFF
+                  <div className="p-6 flex-1 flex flex-col">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-xl font-semibold text-gray-800">{offer.title}</h3>
+                        <div className="flex items-center text-gray-600">
+                          <Clock className="w-4 h-4 mr-1" />
+                          <span className="text-sm">
+                            {formatTime(offer.start_duration)} - {formatTime(offer.end_duration)}
                           </span>
-                        </>
-                      ) : (
-                        <span className="text-2xl font-bold text-blue-600">${offer.price}</span>
-                      )}
+                        </div>
+                      </div>
+                      
+                      <p className="text-gray-600 text-sm mb-4">{offer.description}</p>
+                      
+                      {/* Doctor info */}
+                      <div className="flex items-center mt-3 pb-3 border-b">
+                        <img 
+                          src={offer.doctor.photo} 
+                          alt={offer.doctor.name}
+                          className="w-10 h-10 rounded-full object-cover mr-3"
+                        />
+                        <div>
+                          <p className="font-medium text-gray-800">{offer.doctor.name}</p>
+                          <p className="text-sm text-gray-500">{offer.doctor.specialty}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 flex items-center">
+                        {offer.onSale ? (
+                          <>
+                            <span className="text-2xl font-bold text-blue-600">${offer.salePrice}</span>
+                            <span className="ml-2 text-gray-500 line-through">${offer.price}</span>
+                            <span className="ml-2 text-red-500 text-sm font-medium">
+                              {Math.round((offer.price - offer.salePrice) / offer.price * 100)}% OFF
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-2xl font-bold text-blue-600">${offer.price}</span>
+                        )}
+                      </div>
                     </div>
                     
-                    <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
+                    {/* Button always sticks to bottom with mt-auto */}
+                    <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
                       {t("BookNow")}
                     </button>
                   </div>
