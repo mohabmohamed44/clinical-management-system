@@ -54,7 +54,7 @@ export default function About() {
                     w-full 
                     h-auto
                     max-w-[320px]
-                    max-h-[300px]
+                    max-h-[290px]
                     md:max-h-[350px]
                     lg:max-h-[500px]
                     sm:max-w-md
