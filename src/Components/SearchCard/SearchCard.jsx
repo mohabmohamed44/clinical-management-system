@@ -28,7 +28,7 @@ export default function SearchCard() {
     validationSchema: searchValidationSchema,
     onSubmit: (values) => {
       // Navigate to search results page with query parameters
-      navigate(`/doctors?query=${values.search}&location=${values.location}&date=${values.date}`);
+      navigate(`/find_doctor?query=${values.search}&location=${values.location}&date=${values.date}`);
     }
   });
 

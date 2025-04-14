@@ -47,7 +47,7 @@ export default function Home() {
                   {t("HomeDescription")}
                 </p>
                 <button className="px-5 py-3 flex items-center justify-start bg-white text-[#3454c1] mt-6 rounded-xl font-semibold text-xl">
-                  <Link to="/doctors">
+                  <Link to="/find_doctor">
                     {t("BookNow")}
                   </Link>
                 </button>

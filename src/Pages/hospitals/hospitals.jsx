@@ -10,6 +10,7 @@ import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const fetchHospitals = async () => {
   const { data, error } = await supabase
@@ -66,8 +67,9 @@ export default function Hospitals() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {hospitals.map((hospital) => (
-            <div
+            <Link
               key={hospital.id}
+              to={`/hospitals/${hospital.id}`}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <img
@@ -88,12 +90,12 @@ export default function Hospitals() {
 
                   <div className="flex items-center gap-2">
                     <FaPhone className="text-blue-600" />
-                    <a
-                      href={`tel:${hospital.phone}`}
+                    <Link
+                      to={`tel:${hospital.phone}`}
                       className="hover:text-blue-600"
                     >
                       {hospital.phone}
-                    </a>
+                    </Link>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -116,7 +118,7 @@ export default function Hospitals() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
