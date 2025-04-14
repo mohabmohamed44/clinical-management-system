@@ -32,9 +32,9 @@ export default function About() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               {/* Text Content - Left Side */}
-              <div className="text-[#ffffff] max-w-lg mt-20 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
+              <div className="text-[#ffffff] max-w-lg mt-10 lg:mt-0 text-center lg:text-left order-1 lg:order-1">
                 <h2
-                  className="text-4xl sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
+                  className="text-2xl max-w-md sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   aria-label="About Heading"
                 >
                   {t("WelcomeMessage")}
@@ -54,7 +54,7 @@ export default function About() {
                     w-full 
                     h-auto
                     max-w-[320px]
-                    max-h-[340px]
+                    max-h-[300px]
                     md:max-h-[350px]
                     lg:max-h-[500px]
                     sm:max-w-md
