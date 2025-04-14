@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./Lib/Context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "./Lib/Context/LanguageContext";
 import "./App.css";
@@ -19,16 +20,16 @@ import FindDoctor from "./Pages/FindDoctor/FindDoctor";
 import Blog from "./Pages/Blog/Blog";
 import About from "./Pages/About/About";
 import PricingPlan from "./Pages/PricingPlan/PricingPlan";
-import Departments from './Pages/Departments/Departments';
-import Offers from './Pages/Offers/Offers';
+import Departments from "./Pages/Departments/Departments";
+import Offers from "./Pages/Offers/Offers";
 import Book from "./Pages/Book/Book";
 import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
 import Clinics from "./Pages/Clinics/Clinics";
 import ClinicDetails from "./Pages/ClinicDetails/ClinicDetails"; // Fixed import path
-import Hospitals from './Pages/hospitals/hospitals';
+import Hospitals from "./Pages/hospitals/hospitals";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import HospitalsDetails from "./Pages/HospitalsDetails/HospitalsDetails";
-import DepartmentDetails from './Pages/DepartmentDetails/DepartmentDetails';
+import DepartmentDetails from "./Pages/DepartmentDetails/DepartmentDetails";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -49,19 +50,19 @@ const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "appointments", element: <Appointments /> },
       { path: "find_doctor", element: <FindDoctor /> },
-      { path: "departments", element: <Departments/>},
-      { path: "/departments/:id", element: <DepartmentDetails/>},
-      { path: "clinics", element: <Clinics/>},
-      { path: "/clinics/:id", element: <ClinicDetails/>},
-      { path: "/hospitals/:id", element: <HospitalsDetails/>},
+      { path: "departments", element: <Departments /> },
+      { path: "/departments/:id", element: <DepartmentDetails /> },
+      { path: "clinics", element: <Clinics /> },
+      { path: "/clinics/:id", element: <ClinicDetails /> },
+      { path: "/hospitals/:id", element: <HospitalsDetails /> },
       { path: "about", element: <About /> },
       { path: "blog", element: <Blog /> },
-      { path: "pricing", element: <PricingPlan />},
-      { path: "offers", element: <Offers/>},
-      { path: "book", element: <Book/>},
-      { path: "find_doctor/:id", element: <DoctorDetails/>},
-      { path: "hospitals", element: <Hospitals/>},
-      { path: "profile", element: <ProfilePage/>},
+      { path: "pricing", element: <PricingPlan /> },
+      { path: "offers", element: <Offers /> },
+      { path: "book", element: <Book /> },
+      { path: "find_doctor/:id", element: <DoctorDetails /> },
+      { path: "hospitals", element: <Hospitals /> },
+      { path: "profile", element: <ProfilePage /> },
       { path: "*", element: <NotFound /> },
     ],
   },
@@ -71,13 +72,15 @@ function App() {
   // Browser router
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <RouterProvider router={router} />
-          <Toaster position="top-center" reverseOrder={false} />
-          <ReactQueryDevtools />
-        </LanguageProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <LanguageProvider>
+            <RouterProvider router={router} />
+            <Toaster position="top-center" reverseOrder={false} />
+            <ReactQueryDevtools />
+          </LanguageProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </>
   );
 }

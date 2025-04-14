@@ -3,13 +3,31 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff } from "lucide-react";
 import heroImage from "../../assets/hero_img_1.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
+import { signInWithGoogle } from "../../utils/GoogleAuth";
+import { signInWithFacebook } from "../../utils/FacebookAuth";
+import useCookies from "../../hooks/useCookies"; // Import your custom cookie hook
+import toast from "react-hot-toast";
 
 export default function Login() {
   const { t, i18n } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  
+  // Initialize cookies for storing user authentication data
+  const [userCookie, setUserCookie] = useCookies('user', null, { 
+    expires: 7, // 7 days
+    path: '/'
+  });
+  
+  const [tokenCookie, setTokenCookie] = useCookies('authToken', null, {
+    expires: 7,
+    path: '/',
+    secure: process.env.NODE_ENV === 'production', // Only use secure in production
+    sameSite: 'strict'
+  });
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -21,6 +39,58 @@ export default function Login() {
   });
 
   const isRTL = i18n.language === "ar";
+  
+  // Handle Google Sign-in
+  const handleGoogleLogin = async () => {
+    try {
+      const authData = await signInWithGoogle();
+      
+      // Store user information in cookies
+      setUserCookie({
+        uid: authData.user.uid,
+        displayName: authData.user.displayName,
+        email: authData.user.email,
+        photoURL: authData.user.photoURL
+      });
+      
+      // Store the ID token in cookies
+      if (authData.idToken) {
+        setTokenCookie(authData.idToken);
+      }
+      
+      // Redirect to dashboard or home page after successful login
+      navigate('/');
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
+      // Error is already handled in the signInWithGoogle function with toast
+      toast.error("Google sign-in failed");
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const authData = await signInWithFacebook();
+
+      // set user information in cookies
+      setUserCookie({
+        uid: authData.user.uid,
+        displayName: authData.user.displayName,
+        email: authData.user.email,
+        photoURL: authData.user.photoURL
+      });
+
+      // Store Id token in Cookies
+      if(authData.idToken) {
+        setTokenCookie(authData.idToken);
+      }
+      // redirect to home
+      navigate('/');
+    } catch (error) {
+      console.error("Facebook sign-in failed:", error);
+      // Error is already handled in the signInWithFacebook function with toast
+      toast.error("Facebook sign-in failed");
+    }
+  };
 
   return (
     <>
@@ -30,10 +100,7 @@ export default function Login() {
         keywords="login, secure login, account access, user authentication, sign in, social login, medical portal access"
         author="Mohab Mohammed"
         ogTitle="Login to Your Account | Secure Access"
-        ogDescription="Access your personalized dashboard securely. Quick login with email or social accounts."
-        ogImage="/path-to-login-preview-image.jpg"
-        twitterCard="summary_large_image"
-        twitterCreator="@YourTwitterHandle"
+        ogDescription="Access to delma Medical System. Quick login with email or social accounts."
         canonical={window.location.href}
         language={i18n.language}
       />
@@ -209,6 +276,7 @@ export default function Login() {
                       type="button"
                       className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                       aria-label="Login with Google"
+                      onClick={handleGoogleLogin}
                     >
                       <img
                         src="https://www.google.com/favicon.ico"
@@ -225,6 +293,7 @@ export default function Login() {
                       type="button"
                       className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                       aria-label="Login with Facebook"
+                      onClick={handleFacebookLogin}
                     >
                       <img
                         src="https://www.facebook.com/favicon.ico"
