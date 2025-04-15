@@ -21,8 +21,8 @@ export default function Navbar() {
             <span className="self-center text-lg sm:text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
-          {/* Navigation links - only visible on md screens and up */}
-          <div className="hidden md:flex ml-6 lg:flex space-x-4 lg:space-x-6">
+          {/* Navigation links - only visible on lg screens and up */}
+          <div className="hidden lg:flex ml-6 space-x-4 lg:space-x-6">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Home")}</NavLink>
             <NavLink to="/doctors" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("About")}</NavLink>
@@ -35,8 +35,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Login, Register & Language - only visible on md screens and up */}
-        <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
+        {/* Login, Register & Language - only visible on lg screens and up */}
+        <div className="hidden lg:flex items-center space-x-4 lg:space-x-6">
           <NavLink to="/login" className="text-gray-600 hover:text-blue-700 cursor-pointer text-sm lg:text-base">{t("Login")}</NavLink>
           <NavLink to="/register" className="text-gray-600 hover:text-blue-700 cursor-pointer text-sm lg:text-base">{t("Register")}</NavLink>
           
@@ -62,14 +62,14 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu Button - only visible below md screens */}
-        <button className="md:hidden text-gray-600 hover:text-gray-800 focus:outline-none" onClick={() => setNavbarOpen(!navbarOpen)}>
+        {/* Mobile Menu Button - visible below lg screens */}
+        <button className="lg:hidden text-gray-600 hover:text-gray-800 focus:outline-none" onClick={() => setNavbarOpen(!navbarOpen)}>
           {navbarOpen ? <X aria-label="close menu" size={24} /> : <Menu size={24} aria-label="menu button" />}
         </button>
       </div>
 
-      {/* Mobile Menu - only visible below md screens when menu is open */}
-      <div className={`md:hidden bg-white transition-all duration-300 ease-in-out ${navbarOpen ? "max-h-screen py-4" : "max-h-0 py-0 overflow-hidden"}`}>
+      {/* Mobile Menu - visible below lg screens when menu is open */}
+      <div className={`lg:hidden bg-white transition-all duration-300 ease-in-out ${navbarOpen ? "max-h-screen py-4" : "max-h-0 py-0 overflow-hidden"}`}>
         <div className="flex flex-col items-start px-4 space-y-4">
           <NavLink to="/" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
           <NavLink to="/doctors" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
