@@ -25,7 +25,8 @@ import Offers from "./Pages/Offers/Offers";
 import Book from "./Pages/Book/Book";
 import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
 import Clinics from "./Pages/Clinics/Clinics";
-import ClinicDetails from "./Pages/ClinicDetails/ClinicDetails"; // Fixed import path
+import ClinicDetails from "./Pages/ClinicDetails/ClinicDetails";
+import AppointmentDetails from './Pages/AppointmentDetails/AppointmentDetails';
 import Hospitals from "./Pages/hospitals/hospitals";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import HospitalsDetails from "./Pages/HospitalsDetails/HospitalsDetails";
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
       { path: "clinics", element: <Clinics /> },
       { path: "/clinics/:id", element: <ClinicDetails /> },
       { path: "/hospitals/:id", element: <HospitalsDetails /> },
+      { path: "appointments/:id", element: <AppointmentDetails /> },
       { path: "about", element: <About /> },
       { path: "blog", element: <Blog /> },
       { path: "pricing", element: <PricingPlan /> },

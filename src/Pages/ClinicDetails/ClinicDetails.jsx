@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../../Config/Supabase';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaMoneyBillWave } from 'react-icons/fa';
 import { DNA } from 'react-loader-spinner';
+import MetaData from '../../Components/MetaData/MetaData';
 
 const ClinicDetails = () => {
   const { id } = useParams();
@@ -44,6 +45,13 @@ const ClinicDetails = () => {
   );
 
   return (
+    <>
+    <MetaData
+      title={"Clinic Details"}
+      description={"Detailed information about the clinic"}
+      keywords={"clinic, details, information"}
+      author={"Mohab Mohammed"}
+    />
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">{clinic.name}</h1>
@@ -127,6 +135,7 @@ const ClinicDetails = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

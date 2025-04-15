@@ -14,6 +14,7 @@ import {
 import { SiCashapp } from "react-icons/si";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const fetchAppointments = async (filters) => {
   let query = supabase
@@ -137,11 +138,11 @@ export default function AppointmentsPage() {
 
   // Payment method component
   const getPaymentMethod = (method) => (
-    <div className="flex items-center gap-2 ">
+    <div className="flex items-center gap-2">
       {method === "Visa" ? (
-        <FaCcVisa size={24} className="text-[#1972EE]" />
+        <FaCcVisa size={20} className="text-[#1972EE]" />
       ) : (
-        <SiCashapp size={24} className="text-[#1972EE]" />
+        <SiCashapp size={20} className="text-[#1972EE]" />
       )}
       <span className="capitalize">{method}</span>
     </div>
@@ -191,30 +192,30 @@ export default function AppointmentsPage() {
         url={window.location.href}
       />
 
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
             Appointments
           </h1>
 
-          {/* Filter Section - Updated with shorter inputs */}
-          <div className="bg-white p-6 rounded-lg shadow mb-8 border-2 border-[#1972EE]">
+          {/* Filter Section */}
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow mb-6 border-2 border-[#1972EE]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <FaFilter className="text-[#00155D]" />
-                <h2 className="text-lg font-semibold text-[#00155D]">
+                <h2 className="text-base md:text-lg font-semibold text-[#00155D]">
                   Filter Appointments
                 </h2>
               </div>
               <button
                 onClick={resetFilters}
-                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
               >
                 Reset Filters
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
               <div>
                 <label className="block text-xs text-blue-700 mb-1">
                   Status
@@ -328,32 +329,32 @@ export default function AppointmentsPage() {
           </div>
 
           {/* Appointments Table */}
-          <div className="bg-white rounded-lg shadow overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="bg-white rounded-lg shadow overflow-x-auto webkit-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Doctor
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Date & Time
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Payment
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Location
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Patient
                   </th>
-                  <th className="px-6 py-3 text-left text-md font-medium text-[#00155D] capitalize">
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase tracking-wider">
                     Reason
                   </th>
                 </tr>
@@ -361,9 +362,15 @@ export default function AppointmentsPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {appointments?.length > 0 ? (
                   appointments.map((appointment) => (
-                    <tr key={appointment.id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
+                    <tr 
+                      key={appointment.id}
+                      className="hover:bg-blue-50 transition-colors cursor-pointer"
+                    >
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="flex items-center gap-3 no-underline text-inherit"
+                        >
                           <img
                             src={appointment.Doctors?.image || "/default-avatar.png"}
                             alt="Doctor"
@@ -375,43 +382,78 @@ export default function AppointmentsPage() {
                               {appointment.Doctors?.last_name}
                             </div>
                             <div className="text-sm text-[#667198]">
-                              {appointment.Doctors.specialty}
+                              {appointment.Doctors?.specialty}
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[#667198]">
-                        {formatDate(appointment.date)}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          {formatDate(appointment.date)}
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {getStatusBadge(appointment.status)}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          {getStatusBadge(appointment.status)}
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {getPaymentMethod(appointment.payment_method)}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          {getPaymentMethod(appointment.payment_method)}
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[#667198] capitalize">
-                        {appointment.type}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198] capitalize">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          {appointment.type}
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[#667198]">
-                        {getLocationDisplay(appointment)}
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          {getLocationDisplay(appointment)}
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <FaUser className="w-8 h-8 text-gray-400" />
-                          <div>
-                            <div className="font-medium text-gray-900">
-                              {appointment.patient?.name || "N/A"}
-                            </div>
-                            <div className="text-sm text-[#667198]">
-                              {appointment.patient?.phone || "No phone"}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          <div className="flex items-center gap-3">
+                            <FaUser className="w-6 h-6 text-gray-400" />
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {appointment.patient?.name || "N/A"}
+                              </div>
+                              <div className="text-sm text-[#667198]">
+                                {appointment.patient?.phone || "No phone"}
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#667198] max-w-xs">
-                        <div className="truncate hover:text-clip hover:overflow-visible">
-                          {appointment.patient?.problem || "No Reason Provided"}
-                        </div>
+                      <td className="px-4 py-4 text-sm text-[#667198] max-w-xs">
+                        <Link 
+                          to={`/appointments/${appointment.id}`}
+                          className="no-underline text-inherit"
+                        >
+                          <div className="truncate hover:text-clip hover:overflow-visible">
+                            {appointment.patient?.problem || "No Reason Provided"}
+                          </div>
+                        </Link>
                       </td>
                     </tr>
                   ))
