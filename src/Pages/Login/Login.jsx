@@ -8,8 +8,7 @@ import MetaData from "../../Components/MetaData/MetaData";
 import { useTranslation } from "react-i18next";
 import { signInWithGoogle } from "../../utils/GoogleAuth";
 import { signInWithFacebook } from "../../utils/FacebookAuth";
-import useCookies from "../../hooks/useCookies"; // Import your custom cookie hook
-import toast from "react-hot-toast";
+import useCookies from "../../hooks/useCookies";
 
 export default function Login() {
   const { t, i18n } = useTranslation();
@@ -62,8 +61,6 @@ export default function Login() {
       navigate('/');
     } catch (error) {
       console.error("Google sign-in failed:", error);
-      // Error is already handled in the signInWithGoogle function with toast
-      toast.error("Google sign-in failed");
     }
   };
 
@@ -88,7 +85,6 @@ export default function Login() {
     } catch (error) {
       console.error("Facebook sign-in failed:", error);
       // Error is already handled in the signInWithFacebook function with toast
-      toast.error("Facebook sign-in failed");
     }
   };
 

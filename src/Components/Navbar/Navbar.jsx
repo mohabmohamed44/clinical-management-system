@@ -21,7 +21,7 @@ export default function Navbar() {
             <span className="self-center text-xl font-semibold text-gray-800">{t("Delma")}</span>
           </Link>
           
-          <div className="hidden lg:flex space-x-5">
+          <div className="hidden md:flex space-x-5">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("Home")}</NavLink>
             <NavLink to="/doctors" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer">{t("About")}</NavLink>
