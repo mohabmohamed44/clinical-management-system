@@ -24,7 +24,7 @@ export default function Navbar() {
           {/* Navigation links - only visible on lg screens and up */}
           <div className="hidden lg:flex ml-6 space-x-4 lg:space-x-6">
             <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Home")}</NavLink>
-            <NavLink to="/doctors" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("FindDoctor")}</NavLink>
+            <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("pricing")}</NavLink>
