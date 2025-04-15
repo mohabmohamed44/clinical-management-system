@@ -122,7 +122,7 @@ export default function Register() {
 
         {/* Right side - Form */}
         <div className="w-full lg:w-full max-w-lg">
-          <div className="bg-white rounded-2xl shadow-sm mb-6 p-8 mt-14">
+          <div className="bg-white rounded-2xl shadow mb-6 p-8 mt-14">
             {/* Progress indicator */}
             <div className="flex justify-center mb-6 px-4 sm:px-0">
               <div className="flex items-center flex-wrap sm:flex-nowrap">
