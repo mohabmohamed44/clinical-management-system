@@ -4,8 +4,9 @@ import { supabase } from '../../Config/Supabase';
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaMoneyBillWave } from 'react-icons/fa';
 import { DNA } from 'react-loader-spinner';
 import MetaData from '../../Components/MetaData/MetaData';
+import ClinicImg from '../../assets/clinic.webp';
 
-const ClinicDetails = () => {
+export default function ClinicDetails() {
   const { id } = useParams();
   const [clinic, setClinic] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,7 +60,7 @@ const ClinicDetails = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="h-96 bg-gray-200 rounded-lg overflow-hidden">
             <img
-              src={clinic.image || "/default-clinic.jpg"}
+              src={clinic.image || ClinicImg }
               alt={clinic.name}
               className="w-full h-full object-cover"
             />
@@ -138,5 +139,3 @@ const ClinicDetails = () => {
     </>
   );
 };
-
-export default ClinicDetails;
