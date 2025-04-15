@@ -47,11 +47,11 @@ export default function Register() {
   });
 
   const patientInfoSchema = Yup.object().shape({
-    dateOfBirth: Yup.date().required("Date of birth is required"),
+    dateOfBirth: Yup.string().required("Date of birth is required"),
     occupation: Yup.string().required("Occupation is required"),
     bloodType: Yup.string().required("Blood type is required"),
-    weight: Yup.number().required("Weight is required"),
-    height: Yup.number().required("Height is required"),
+    weight: Yup.string().required("Weight is required"),
+    height: Yup.string().required("Height is required"),
   });
 
   const addressInfoSchema = Yup.object().shape({
@@ -124,22 +124,22 @@ export default function Register() {
         <div className="w-full lg:w-full max-w-lg">
           <div className="bg-white rounded-2xl shadow-sm mb-6 p-8 mt-14">
             {/* Progress indicator */}
-            <div className="flex justify-center mb-6">
-              <div className="flex items-center">
+            <div className="flex justify-center mb-6 px-4 sm:px-0">
+              <div className="flex items-center flex-wrap sm:flex-nowrap">
                 {steps.map((step, index) => (
                   <div key={step.number} className="flex items-center">
                     <div
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
                         currentStep >= step.number
                           ? "bg-blue-600 text-white"
                           : "bg-gray-200 text-gray-400"
                       }`}
                     >
-                      <step.icon size={24} />
+                      <step.icon size={20} className="sm:w-6 sm:h-6" />
                     </div>
                     {index < steps.length - 1 && (
                       <div
-                        className={`w-16 h-1 transition-colors duration-200 ${
+                        className={`w-8 sm:w-16 h-1 transition-colors duration-200 ${
                           currentStep > step.number
                             ? "bg-blue-600"
                             : "bg-gray-200"
@@ -151,7 +151,7 @@ export default function Register() {
               </div>
             </div>
 
-            <h1 className="text-3xl font-bold text-center mb-6">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6 px-4">
               {currentStep === 1
                 ? t("personalInfo")
                 : currentStep === 2
@@ -161,14 +161,14 @@ export default function Register() {
                 : t("registrationComplete")}
             </h1>
             {currentStep === 2 && (
-              <p className="text-gray-600 text-center mb-8 rtl:text-center">
+              <p className="text-sm sm:text-base text-gray-600 text-center mb-6 sm:mb-8 px-4">
                 {t("extraInfo")}
               </p>
             )}
 
             <Formik initialValues={initialValues} onSubmit={handleNext}>
               {({ errors, touched }) => (
-                <Form className="space-y-6">
+                <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0">
                   {/* Step 1: Personal Info */}
                   {currentStep === 1 && (
                     <div className="animate-fade-in">
@@ -677,16 +677,16 @@ export default function Register() {
                   )}
                   {currentStep === 1 && (
                     <div className="mt-6 flex justify-center items-center text-center rtl:text-center">
-                    <span className="font-medium text-lg rtl:ml-2">
-                      {t("Already have an account")}
-                    </span>
-                    <Link
-                      className="text-[#3454c1] font-medium text-lg text-center ml-3 hover:underline mt-1"
-                      to="/login"
-                    >
-                      {t("Login")}
-                    </Link>
-                  </div>
+                      <span className="font-medium text-lg rtl:ml-2">
+                        {t("Already have an account")}
+                      </span>
+                      <Link
+                        className="text-[#3454c1] font-medium text-lg text-center ml-3 hover:underline mt-1"
+                        to="/login"
+                      >
+                        {t("Login")}
+                      </Link>
+                    </div>
                   )}
                 </Form>
               )}
