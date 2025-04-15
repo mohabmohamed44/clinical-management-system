@@ -257,7 +257,6 @@ export default function AppointmentDetails() {
                   {appointment.type || "Not specified"}
                 </p>
               </div>
-              
             </div>
           </div>
           {/* Notes Section */}
@@ -268,25 +267,33 @@ export default function AppointmentDetails() {
             </div>
           )}
           {/* Update the Patient Data section in the JSX */}
-          {appointment.patient && (
-            <div className="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+          {appointment.patient ? (
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
               <h2 className="text-xl font-bold text-[#005] mb-3">
                 Patient Information
               </h2>
               <p className="text-lg text-gray-500">Name</p>
               <p className="font-medium text-gray-800">
-                {appointment.patient?.name}
+                {appointment.patient?.name || "Not specified"}
               </p>
               <p className="text-lg text-gray-500">Gender</p>
-              <p className="font-medium text-gray-800">{appointment.patient?.gender}</p>
-
-              {/* phone number */}
+              <p className="font-medium text-gray-800">
+                {appointment.patient?.gender || "Not specified"}
+              </p>
               <p className="text-lg text-gray-500">Phone</p>
-              <p className="font-medium text-gray-800">{appointment.patient?.phone}</p>
-
-              {/* Reason */}
+              <p className="font-medium text-gray-800">
+                {appointment.patient?.phone || "Not specified"}
+              </p>
               <p className="text-lg text-gray-500">Reason</p>
-              <p>{appointment.patient?.problem || "Not specified"}</p>
+              <p className="font-medium text-gray-800">
+                {appointment.patient?.problem || "Not specified"}
+              </p>
+            </div>
+          ) : (
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h2 className="text-xl font-bold text-[#005] mb-3">
+                There is no Patient Information
+              </h2>
             </div>
           )}
         </div>
