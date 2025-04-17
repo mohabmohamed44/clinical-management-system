@@ -31,6 +31,11 @@ import Hospitals from "./Pages/hospitals/hospitals";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import HospitalsDetails from "./Pages/HospitalsDetails/HospitalsDetails";
 import DepartmentDetails from "./Pages/DepartmentDetails/DepartmentDetails";
+import PrivateRoute from './routes/PrivateRoute/PrivateRoute';
+import PublicRoute from './routes/PublicRoute/PublicRoute';
+import Labs from './Pages/Labs/Labs';
+import LabDetails from './Pages/LabDetails/LabDetails';
+import Ask from "./Pages/Ask/Ask";
 
 // React Query Client
 const queryClient = new QueryClient();
@@ -41,31 +46,34 @@ const router = createBrowserRouter([
     path: "",
     element: <Layout />,
     children: [
-      { path: "", index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "forgot_password", element: <ForgotPassword /> },
-      { path: "reset_code", element: <ResetCode /> },
-      { path: "update_password", element: <UpdatePassword /> },
-      { path: "all_done", element: <AllDone /> },
-      { path: "contact", element: <Contact /> },
-      { path: "appointments", element: <Appointments /> },
-      { path: "find_doctor", element: <FindDoctor /> },
-      { path: "departments", element: <Departments /> },
-      { path: "/departments/:id", element: <DepartmentDetails /> },
-      { path: "clinics", element: <Clinics /> },
-      { path: "/clinics/:id", element: <ClinicDetails /> },
-      { path: "/hospitals/:id", element: <HospitalsDetails /> },
-      { path: "appointments/:id", element: <AppointmentDetails /> },
-      { path: "about", element: <About /> },
-      { path: "blog", element: <Blog /> },
-      { path: "pricing", element: <PricingPlan /> },
-      { path: "offers", element: <Offers /> },
-      { path: "book", element: <Book /> },
-      { path: "find_doctor/:id", element: <DoctorDetails /> },
-      { path: "hospitals", element: <Hospitals /> },
-      { path: "profile", element: <ProfilePage /> },
-      { path: "*", element: <NotFound /> },
+      { path: "", index: true, element: <PrivateRoute><Home /></PrivateRoute> },
+      { path: "login", element: <PublicRoute><Login /></PublicRoute> },
+      { path: "register", element: <PublicRoute><Register /></PublicRoute>},
+      { path: "forgot_password", element: <PublicRoute><ForgotPassword /></PublicRoute> },
+      { path: "reset_code", element: <PublicRoute><ResetCode /></PublicRoute> },
+      { path: "update_password", element: <PublicRoute><UpdatePassword /></PublicRoute> },
+      { path: "all_done", element: <PublicRoute><AllDone /></PublicRoute> },
+      { path: "contact", element: <PrivateRoute><Contact /></PrivateRoute> },
+      { path: "appointments", element: <PrivateRoute><Appointments /></PrivateRoute> },
+      { path: "find_doctor", element: <PrivateRoute><FindDoctor /></PrivateRoute> },
+      { path: "departments", element: <PrivateRoute><Departments /></PrivateRoute> },
+      { path: "/departments/:id", element: <PrivateRoute><DepartmentDetails /></PrivateRoute> },
+      { path: "clinics", element: <PrivateRoute><Clinics /></PrivateRoute> },
+      { path: "/clinics/:id", element: <PrivateRoute><ClinicDetails /></PrivateRoute> },
+      { path: "/hospitals/:id", element: <PrivateRoute><HospitalsDetails /></PrivateRoute> },
+      { path: "appointments/:id", element: <PrivateRoute><AppointmentDetails /></PrivateRoute> },
+      { path: "about", element: <PrivateRoute><About /></PrivateRoute> },
+      { path: "blog", element: <PrivateRoute><Blog /></PrivateRoute> },
+      { path: "pricing", element: <PrivateRoute><PricingPlan /></PrivateRoute> },
+      { path: "offers", element: <PrivateRoute><Offers /></PrivateRoute> },
+      { path: "book", element: <PrivateRoute><Book /></PrivateRoute> },
+      { path: "find_doctor/:id", element: <PrivateRoute><DoctorDetails /></PrivateRoute> },
+      { path: "labs", element: <PrivateRoute><Labs /></PrivateRoute> },
+      { path: "/labs/:id", element: <PrivateRoute><LabDetails /></PrivateRoute> },
+      { path: "hospitals", element: <PrivateRoute><Hospitals /></PrivateRoute> },
+      { path: "profile", element: <PrivateRoute><ProfilePage /></PrivateRoute> },
+      { path: "ask-question", element: <PrivateRoute><Ask/></PrivateRoute>},
+      { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },
 ]);

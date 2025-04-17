@@ -8,18 +8,18 @@ const steps = ['Patient Information', 'Appointment Details', 'Confirmation'];
 
 const validationSchemas = [
   Yup.object().shape({
-    patientName: Yup.string().required('Required'),
-    patientEmail: Yup.string().email('Invalid email').required('Required'),
-    patientPhone: Yup.string().required('Required'),
+    patientName: Yup.string().required('Patient name is required'),
+    patientEmail: Yup.string().email('Invalid email address').required('Email is required'),
+    patientPhone: Yup.string().required('Phone number is required'),
   }),
   Yup.object().shape({
-    appointmentDate: Yup.date().required('Required'),
-    appointmentTime: Yup.string().required('Required'),
-    doctorId: Yup.string().required('Required'),
-    reason: Yup.string().required('Required'),
+    appointmentDate: Yup.date().required('Date is required'),
+    appointmentTime: Yup.string().required('Time is required'),
+    doctorId: Yup.string().required('Please select a doctor'),
+    reason: Yup.string().required('Reason for visit is required'),
   }),
   Yup.object().shape({
-    agreeTerms: Yup.boolean().oneOf([true], 'You must accept the terms'),
+    agreeTerms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
   }),
 ];
 
@@ -34,137 +34,227 @@ const initialValues = {
   agreeTerms: false,
 };
 
-const Step1 = ({ next, values }) => (
-  <div className="space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Full Name</label>
+// Floating label input component
+const FloatingInput = ({ label, name, type = "text", as, children, ...props }) => {
+  return (
+    <div className="relative">
       <Field
-        name="patientName"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+        name={name}
+        type={type}
+        as={as}
+        id={name}
+        className={`peer h-14 w-full rounded-lg border border-gray-300 bg-transparent px-3 pt-5 pb-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 ${props.className || ''}`}
+        placeholder=" "
+        {...props}
       />
-      <ErrorMessage name="patientName" component="div" className="text-red-500 text-sm" />
-    </div>
-
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Email</label>
-      <Field
-        name="patientEmail"
-        type="email"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-      />
-      <ErrorMessage name="patientEmail" component="div" className="text-red-500 text-sm" />
-    </div>
-
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Phone</label>
-      <Field
-        name="patientPhone"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-      />
-      <ErrorMessage name="patientPhone" component="div" className="text-red-500 text-sm" />
-    </div>
-
-    <button
-      type="button"
-      onClick={() => next(values)}
-      className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-    >
-      Next
-    </button>
-  </div>
-);
-
-const Step2 = ({ next, prev, values }) => (
-  <div className="space-y-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Appointment Date</label>
-      <Field
-        name="appointmentDate"
-        type="date"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-      />
-      <ErrorMessage name="appointmentDate" component="div" className="text-red-500 text-sm" />
-    </div>
-
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Appointment Time</label>
-      <Field
-        name="appointmentTime"
-        type="time"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-      />
-      <ErrorMessage name="appointmentTime" component="div" className="text-red-500 text-sm" />
-    </div>
-
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Doctor</label>
-      <Field
-        as="select"
-        name="doctorId"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
+      <label 
+        htmlFor={name} 
+        className="absolute left-3 top-1 z-10 origin-[0] -translate-y-1 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-3 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1 peer-focus:scale-75 peer-focus:text-blue-600"
       >
-        <option value="">Select a doctor</option>
-        <option value="DOCTOR_ID_1">Dr. John Doe</option>
-        <option value="DOCTOR_ID_2">Dr. Jane Smith</option>
-      </Field>
-      <ErrorMessage name="doctorId" component="div" className="text-red-500 text-sm" />
+        {label}
+      </label>
+      {children}
+      <ErrorMessage name={name} component="p" className="mt-1 text-sm text-red-600" />
     </div>
+  );
+};
 
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Reason</label>
-      <Field
-        as="textarea"
-        name="reason"
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"
-      />
-      <ErrorMessage name="reason" component="div" className="text-red-500 text-sm" />
-    </div>
+const Step1 = ({ next, values, validateForm, setTouched, setFieldTouched }) => {
+  const handleNext = async () => {
+    // Touch all fields to trigger validation
+    setTouched({
+      patientName: true,
+      patientEmail: true,
+      patientPhone: true
+    });
 
-    <div className="flex justify-between">
+    // Validate the form
+    const errors = await validateForm();
+    
+    // Check if there are any errors in step 1 fields
+    const step1HasErrors = errors.patientName || errors.patientEmail || errors.patientPhone;
+    
+    // Only proceed if there are no errors
+    if (!step1HasErrors) {
+      next(values);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <FloatingInput label="Full Name" name="patientName" onBlur={() => setFieldTouched('patientName', true)} />
+      <FloatingInput label="Email Address" name="patientEmail" type="email" onBlur={() => setFieldTouched('patientEmail', true)} />
+      <FloatingInput label="Phone Number" name="patientPhone" onBlur={() => setFieldTouched('patientPhone', true)} />
+
       <button
         type="button"
-        onClick={prev}
-        className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300"
-      >
-        Back
-      </button>
-      <button
-        type="button"
-        onClick={() => next(values)}
-        className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+        onClick={handleNext}
+        className="w-full rounded-lg bg-blue-600 px-5 py-3 text-center text-base font-medium text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
       >
         Next
       </button>
     </div>
-  </div>
-);
+  );
+};
 
-const Step3 = ({ prev, submitForm, isSubmitting }) => (
-  <div className="space-y-4">
-    <div className="text-center">
-      <h3 className="text-lg font-medium">Confirm your appointment</h3>
-      <p className="text-gray-600 mt-2">Please review your information before submitting</p>
-    </div>
+const Step2 = ({ next, prev, values, validateForm, setTouched, setFieldTouched }) => {
+  const handleNext = async () => {
+    // Touch all fields to trigger validation
+    setTouched({
+      appointmentDate: true,
+      appointmentTime: true,
+      doctorId: true,
+      reason: true
+    });
 
-    <div className="flex justify-between">
-      <button
-        type="button"
-        onClick={prev}
-        className="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300"
-      >
-        Back
-      </button>
-      <button
-        type="button"
-        onClick={submitForm}
-        disabled={isSubmitting}
-        className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:bg-green-300"
-      >
-        {isSubmitting ? 'Submitting...' : 'Confirm Appointment'}
-      </button>
+    // Validate the form
+    const errors = await validateForm();
+    
+    // Check if there are any errors in step 2 fields
+    const step2HasErrors = errors.appointmentDate || errors.appointmentTime || errors.doctorId || errors.reason;
+    
+    // Only proceed if there are no errors
+    if (!step2HasErrors) {
+      next(values);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <FloatingInput 
+        label="Appointment Date" 
+        name="appointmentDate" 
+        type="date" 
+        className="peer h-14 w-full rounded-lg border border-gray-300 bg-transparent px-3 pt-5 pb-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
+        onBlur={() => setFieldTouched('appointmentDate', true)}
+      />
+      
+      <FloatingInput 
+        label="Appointment Time" 
+        name="appointmentTime" 
+        type="time" 
+        onBlur={() => setFieldTouched('appointmentTime', true)}
+      />
+
+      
+      <FloatingInput 
+        label="Reason for Visit" 
+        name="reason" 
+        as="textarea"
+        className="peer h-24 w-full rounded-lg border border-gray-300 bg-transparent px-3 pt-5 pb-2 text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0"
+        onBlur={() => setFieldTouched('reason', true)}
+      />
+
+      <div className="flex flex-col sm:flex-row justify-between gap-3">
+        <button
+          type="button"
+          onClick={prev}
+          className="rounded-lg bg-gray-200 px-5 py-3 text-center text-base font-medium text-gray-700 transition duration-200 hover:bg-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-300 sm:w-auto w-full"
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          onClick={handleNext}
+          className="rounded-lg bg-blue-600 px-5 py-3 text-center text-base font-medium text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto w-full"
+        >
+          Next
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+const Step3 = ({ prev, submitForm, isSubmitting, values, validateForm, setTouched }) => {
+  const handleSubmit = async () => {
+    // Touch terms checkbox to trigger validation
+    setTouched({ agreeTerms: true });
+
+    // Validate the form
+    const errors = await validateForm();
+    
+    // Only submit if there are no errors
+    if (!errors.agreeTerms) {
+      submitForm();
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center mb-6">
+        <h3 className="text-xl font-semibold text-gray-900">Confirm your appointment</h3>
+        <p className="text-gray-600 mt-2">Please review your information before submitting</p>
+      </div>
+
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-500">Patient Name</p>
+            <p className="font-medium">{values.patientName}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Email Address</p>
+            <p className="font-medium">{values.patientEmail}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Phone Number</p>
+            <p className="font-medium">{values.patientPhone}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Doctor</p>
+            <p className="font-medium">
+              {values.doctorId === 'DOCTOR_ID_1' ? 'Dr. John Doe' : 
+              values.doctorId === 'DOCTOR_ID_2' ? 'Dr. Jane Smith' : ''}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Date & Time</p>
+            <p className="font-medium">
+              {values.appointmentDate} at {values.appointmentTime}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Reason</p>
+            <p className="font-medium">{values.reason}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-start mb-4">
+        <div className="flex items-center h-5">
+          <Field
+            type="checkbox"
+            name="agreeTerms"
+            id="agreeTerms"
+            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
+          />
+        </div>
+        <label htmlFor="agreeTerms" className="ml-2 text-sm text-gray-700">
+          I agree to the <a href="#" className="text-blue-600 hover:underline">terms and conditions</a>
+        </label>
+      </div>
+      <ErrorMessage name="agreeTerms" component="p" className="mt-1 text-sm text-red-600" />
+
+      <div className="flex flex-col sm:flex-row justify-between gap-3">
+        <button
+          type="button"
+          onClick={prev}
+          className="rounded-lg bg-gray-200 px-5 py-3 text-center text-base font-medium text-gray-700 transition duration-200 hover:bg-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-300 sm:w-auto w-full"
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="rounded-lg bg-green-600 px-5 py-3 text-center text-base font-medium text-white transition duration-200 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 disabled:bg-green-300 sm:w-auto w-full"
+        >
+          {isSubmitting ? 'Submitting...' : 'Confirm Appointment'}
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default function AppointmentBooking() {
   const [step, setStep] = useState(0);
@@ -206,41 +296,51 @@ export default function AppointmentBooking() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-center text-gray-900">
-            Book Appointment
+      <div className="max-w-xl mx-auto bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
+            Book Your Appointment
           </h2>
-          <div className="mt-4 flex justify-center">
+          <div className="flex justify-center mb-8">
             {steps.map((label, index) => (
               <div key={label} className="flex items-center">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center 
-                    ${index <= step ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 
+                    ${index < step ? 'bg-green-500 border-green-500 text-white' : 
+                      index === step ? 'bg-blue-600 border-blue-600 text-white' : 
+                      'bg-gray-100 border-gray-300 text-gray-500'}`}
                 >
-                  {index + 1}
+                  {index < step ? '✓' : index + 1}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-1 ${index < step ? 'bg-blue-600' : 'bg-gray-200'}`} />
+                  <div className={`w-16 h-1 sm:w-24 ${index < step ? 'bg-green-500' : 'bg-gray-300'}`} />
                 )}
               </div>
             ))}
           </div>
-        </div>
+          <div className="text-xs text-center flex justify-between mb-6 px-4">
+            <span className={step === 0 ? "font-semibold text-blue-600" : "text-gray-500"}>{steps[0]}</span>
+            <span className={step === 1 ? "font-semibold text-blue-600" : "text-gray-500"}>{steps[1]}</span>
+            <span className={step === 2 ? "font-semibold text-blue-600" : "text-gray-500"}>{steps[2]}</span>
+          </div>
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={currentValidationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting, values }) => (
-            <Form>
-              {step === 0 && <Step1 next={() => setStep(1)} values={values} />}
-              {step === 1 && <Step2 next={() => setStep(2)} prev={() => setStep(0)} values={values} />}
-              {step === 2 && <Step3 prev={() => setStep(1)} submitForm={handleSubmit} isSubmitting={isSubmitting} />}
-            </Form>
-          )}
-        </Formik>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={currentValidationSchema}
+            onSubmit={handleSubmit}
+            validateOnMount={false}
+            validateOnChange={true}
+            validateOnBlur={true}
+          >
+            {({ isSubmitting, values, submitForm, validateForm, setTouched, setFieldTouched }) => (
+              <Form>
+                {step === 0 && <Step1 next={() => setStep(1)} values={values} validateForm={validateForm} setTouched={setTouched} setFieldTouched={setFieldTouched} />}
+                {step === 1 && <Step2 next={() => setStep(2)} prev={() => setStep(0)} values={values} validateForm={validateForm} setTouched={setTouched} setFieldTouched={setFieldTouched} />}
+                {step === 2 && <Step3 prev={() => setStep(1)} submitForm={submitForm} isSubmitting={isSubmitting} values={values} validateForm={validateForm} setTouched={setTouched} />}
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   );

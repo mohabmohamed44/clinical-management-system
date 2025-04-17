@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../../Config/FirebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
+import { signOutUser } from '../../utils/GoogleAuth';
 import useCookies from '../../hooks/useCookies';
 
 const AuthContext = createContext();
@@ -21,6 +22,17 @@ export const AuthProvider = ({ children }) => {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict'
   });
+
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      setCurrentUser(null);
+      removeUserCookie();
+      removeTokenCookie();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   useEffect(() => {
     // Listen for auth state changes
@@ -60,7 +72,8 @@ export const AuthProvider = ({ children }) => {
     currentUser,
     userCookie,
     tokenCookie,
-    isAuthenticated: !!currentUser
+    isAuthenticated: !!currentUser,
+    signOut: handleSignOut // Added signOut function to context
   };
 
   return (

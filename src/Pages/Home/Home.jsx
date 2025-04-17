@@ -9,6 +9,7 @@ import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
 import AdditionalServices from "../../Components/AdditionalServices/AdditionalServices";
 import UpcomingVisits from "../../Components/UpcomingVisits/UpcomingVisits";
+import AskQuestion from "../../Components/AskQuestion/AskQuestion";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -91,6 +92,9 @@ export default function Home() {
       </div>
       <HomeCard/>
       <AdditionalServices/>
+      <div className="mt-7">
+          <AskQuestion/>
+      </div>
     </>
   );
 }
