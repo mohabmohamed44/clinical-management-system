@@ -167,10 +167,10 @@ export default function DcotorDetails() {
       </div>
       <div className="w-full absolute right-0 left-0">
         <div className="h-[300px] md:h-[400px] bg-[#00155D] w-full right-0 left-0 z-50">
-          <div className="container mx-auto p-4 h-full md:flex md:justify-end md:items-start">
-            <div className="max-w-lg text-left mt-2 px-4 md:px-0 md:mr-100 py-10">
+          <div className="container mx-auto p-2 h-full md:flex md:justify-end md:items-start">
+            <div className="max-w-lg text-left mt-2 px-4 md:px-0 md:lg:xl:mr-107 py-7">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white">Dr. Sarah Lee, MD, MPH, FAPA</h1>
-              <h2 className="text-lg sm:text-xl mb-4 text-white">Board-certified Psychiatrist</h2>
+              <h2 className="text-lg sm:text-xl mb-2 text-white">Board-certified Psychiatrist</h2>
               <p className="text-white text-sm sm:text-base">
                 With more than 15 years of experience spanning human psychology and behavior, Dr. Lee is an expert in managing mood disorders and anxiety disorders
               </p>
@@ -180,7 +180,7 @@ export default function DcotorDetails() {
       </div>
 
       {/* Main Content - Adjusted margin-top to lower the photo */}
-      <div className="max-w-7xl mx-auto px-4 mt-60 md:mt-32 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:mt-68 mt-65 md:mt-32 relative z-10">
         <div className="grid md:grid-cols-12 gap-8">
           {/* Left Column - Doctor Info */}
           <div className="md:col-span-4">
