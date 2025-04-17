@@ -17,14 +17,14 @@ const initialValues = {
   phone: "",
   gender: "",
   dateOfBirth: "",
-  occupation: "",
+  ProfileImage: "",
   bloodType: "",
   weight: "",
   height: "",
   city: "",
   area: "",
   street: "",
-  zipCode: "",
+  location: "",
 };
 
 export default function Register() {
@@ -48,7 +48,7 @@ export default function Register() {
 
   const patientInfoSchema = Yup.object().shape({
     dateOfBirth: Yup.string().required("Date of birth is required"),
-    occupation: Yup.string().required("Occupation is required"),
+    ProfileImage: Yup.string().required("Profile image is required"),
     bloodType: Yup.string().required("Blood type is required"),
     weight: Yup.string().required("Weight is required"),
     height: Yup.string().required("Height is required"),
@@ -58,7 +58,7 @@ export default function Register() {
     city: Yup.string().required("City is required"),
     area: Yup.string().required("Area is required"),
     street: Yup.string().required("Street is required"),
-    zipCode: Yup.string().required("Zip code is required"),
+    location: Yup.string().required("Location is required"),
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -102,6 +102,71 @@ export default function Register() {
       });
   };
 
+  const getGeolocation = (form) => {
+    // Check if geolocation is supported by the browser
+    if (navigator.geolocation) {
+      // Show loading indicator or message if needed
+
+      navigator.geolocation.getCurrentPosition(
+        // Success callback
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          // Get location name from coordinates using reverse geocoding
+          // For this example, we'll use a free service
+          fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              // Format the address as needed
+              const address = data.display_name;
+
+              // Update form field
+              form.setFieldValue("location", address);
+
+              // Store coordinates if needed for other purposes
+              form.setFieldValue("latitude", latitude);
+              form.setFieldValue("longitude", longitude);
+            })
+            .catch((error) => {
+              console.error("Error getting address:", error);
+              // Fallback: just use coordinates
+              form.setFieldValue("location", `${latitude}, ${longitude}`);
+            });
+        },
+        // Error callback
+        (error) => {
+          console.error("Error getting location:", error);
+          // Handle error based on error.code
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert(
+                "Location permission denied. Please enable location access."
+              );
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred while getting location.");
+              break;
+          }
+        },
+        // Options
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
   return (
     <>
       <MetaData
@@ -403,50 +468,63 @@ export default function Register() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="relative mt-5">
-                          <Field
-                            name="occupation"
-                            type="text"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
-                              errors.occupation && touched.occupation
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder={t("occupation")}
-                          />
-                          <label
-                            htmlFor="occupation"
-                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
-                          >
-                            {t("occupation")}
-                          </label>
-                          {errors.occupation && touched.occupation && (
+                          <Field name="ProfileImage">
+                            {({ form }) => (
+                              <div>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(event) => {
+                                    const file = event.currentTarget.files[0];
+                                    form.setFieldValue("ProfileImage", file);
+                                  }}
+                                  className={`peer w-full px-4 py-3 rounded-lg border ${
+                                    errors.ProfileImage && touched.ProfileImage
+                                      ? "border-red-500"
+                                      : "border-gray-300"
+                                  } focus:outline-none focus:border-blue-500`}
+                                />
+                                <label className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 rtl:text-right">
+                                  {t("ProfileImage")}
+                                </label>
+                              </div>
+                            )}
+                          </Field>
+                          {errors.ProfileImage && touched.ProfileImage && (
                             <div className="text-red-500 text-md mt-1 rtl:text-right">
-                              {errors.occupation}
+                              {errors.ProfileImage}
                             </div>
                           )}
                         </div>
 
                         <div className="relative mt-5">
-                          <Field
-                            name="bloodType"
-                            as="select"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
-                              errors.bloodType && touched.bloodType
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 rtl:text-right`}
-                          >
-                            <option value="" selected disabled hidden>
-                              {t("SelectBloodType")}
-                            </option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                          <Field name="bloodType">
+                            {({ field, form }) => (
+                              <select
+                                {...field}
+                                className={`peer w-full px-4 py-3 rounded-lg border ${
+                                  errors.bloodType && touched.bloodType
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                } focus:outline-none focus:border-blue-500 rtl:text-right`}
+                                value={field.value || ""}
+                                onChange={(e) => {
+                                  form.setFieldValue("bloodType", e.target.value);
+                                }}
+                              >
+                                <option value="" disabled>
+                                  {t("SelectBloodType")}
+                                </option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                              </select>
+                            )}
                           </Field>
                           <label
                             htmlFor="bloodType"
@@ -592,25 +670,38 @@ export default function Register() {
                       </div>
 
                       <div className="relative mt-5">
-                        <Field
-                          name="zipCode"
-                          type="text"
-                          className={`peer w-full px-4 py-3 rounded-lg border ${
-                            errors.zipCode && touched.zipCode
-                              ? "border-red-500"
-                              : "border-gray-300"
-                          } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                          placeholder={t("zipCode")}
-                        />
+                        <Field name="location">
+                          {({ field, form }) => (
+                            <div className="relative w-full">
+                              <input
+                                type="text"
+                                {...field}
+                                className={`peer w-full px-4 py-3 rounded-lg border ${
+                                  errors.location && touched.location
+                                    ? "border-red-500"
+                                    : "border-gray-300"
+                                } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
+                                placeholder={t("location")}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => getGeolocation(form)}
+                                className="absolute right-3 rtl:right-auto rtl:left-3 top-3 text-blue-500 hover:text-blue-700"
+                              >
+                                <MapPin size={20} />
+                              </button>
+                            </div>
+                          )}
+                        </Field>
                         <label
-                          htmlFor="zipCode"
+                          htmlFor="location"
                           className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                         >
-                          {t("zipCode")}
+                          {t("location")}
                         </label>
-                        {errors.zipCode && touched.zipCode && (
+                        {errors.location && touched.location && (
                           <div className="text-red-500 text-md mt-1 rtl:text-right">
-                            {errors.zipCode}
+                            {errors.location}
                           </div>
                         )}
                       </div>
@@ -645,7 +736,6 @@ export default function Register() {
                       </p>
                       <button
                         type="button"
-                        onClick={() => (window.location.href = "/login")}
                         className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                       >
                         <Link to="/login">{t("goToLogin")}</Link>
