@@ -36,7 +36,8 @@ import PublicRoute from './routes/PublicRoute/PublicRoute';
 import Labs from './Pages/Labs/Labs';
 import LabDetails from './Pages/LabDetails/LabDetails';
 import Ask from "./Pages/Ask/Ask";
-
+import Questions from "./Pages/Questions/Questions";
+import QuestionDetails from './Pages/QuestionDetails/QuestionDetails';
 // React Query Client
 const queryClient = new QueryClient();
 
@@ -73,6 +74,8 @@ const router = createBrowserRouter([
       { path: "hospitals", element: <PrivateRoute><Hospitals /></PrivateRoute> },
       { path: "profile", element: <PrivateRoute><ProfilePage /></PrivateRoute> },
       { path: "ask-question", element: <PrivateRoute><Ask/></PrivateRoute>},
+      { path: "questions", element: <PrivateRoute><Questions/></PrivateRoute> },
+      { path: "questions/:id", element: <PrivateRoute><QuestionDetails/></PrivateRoute>},
       { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },
