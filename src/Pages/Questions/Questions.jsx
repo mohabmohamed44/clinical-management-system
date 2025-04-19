@@ -4,34 +4,34 @@ import { getAuth } from "firebase/auth";
 import toast from "react-hot-toast";
 import { supabase } from "../../Config/Supabase";
 import { Link, useNavigate } from "react-router-dom";
+import { getUserDataByFirebaseUID } from "../../services/AuthService";
 
 export default function Questions() {
   const navigate = useNavigate();
   const auth = getAuth();
 
   // Fetch questions query
-  const { 
-    data: questions,
-    isLoading, 
-    isError,
-    error,
-    refetch 
-  } = useQuery({
-    queryKey: ['questions'],
-    queryFn: async () => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) throw new Error("Not authenticated");
-      
-      const { data, error } = await supabase
-        .from("Questions")
-        .select("*")
-        .eq("user_id", currentUser.uid)
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      return data || [];
-    }
-  });
+  // Change the query filter from Firebase UID to Supabase user ID
+const { data: questions, isLoading, isError, error, refetch } = useQuery({
+  queryKey: ['questions'],
+  queryFn: async () => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error("Not authenticated");
+    
+    // First get Supabase user data
+    const { userData } = await getUserDataByFirebaseUID(currentUser.uid);
+    
+    // Then query using Supabase user ID
+    const { data, error } = await supabase
+      .from("Questions")
+      .select("*")
+      .eq("user_id", userData.id) // Use Supabase ID instead of Firebase UID
+      .order("created_at", { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  }
+});
 
   // Auth state check
   useEffect(() => {
