@@ -1,4 +1,5 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"; // Import storage functions at the top
 import { supabase } from "../Config/Supabase";
 
 /**
@@ -17,14 +18,32 @@ export async function registerUser(auth, userData) {
     );
     const user = userCredential.user;
 
-    // Truncate profile image if it's too long
-    const truncatedProfileImage = userData.profileImage && userData.profileImage.length > 500 ? 
-      userData.profileImage.substring(0, 500) : userData.profileImage || "";
+    // Upload profile image to Firebase Storage if provided
+    let profileImageUrl = "";
+    if (userData.profileImage) {
+      try {
+        // Use the imported storage functions instead of require
+        const storage = getStorage();
+        
+        // Create a storage reference
+        const storageRef = ref(storage, `profile_images/${user.uid}`);
+        
+        // Upload the image (assuming profileImage is a base64 string)
+        await uploadString(storageRef, userData.profileImage, 'data_url');
+        
+        // Get the download URL
+        profileImageUrl = await getDownloadURL(storageRef);
+      } catch (error) {
+        console.error("Error uploading profile image:", error);
+        // Don't use the raw profileImage as fallback since it might be too long
+        profileImageUrl = "";
+      }
+    }
 
     // Step 2: Update Firebase profile
     await updateProfile(user, {
       displayName: `${userData.firstName} ${userData.lastName}`,
-      photoURL: truncatedProfileImage
+      photoURL: profileImageUrl // Use the Firebase Storage URL which will be a proper length
     });
 
     // Step 3: Generate custom ID for Supabase
@@ -41,7 +60,7 @@ export async function registerUser(auth, userData) {
         last_name: userData.lastName,
         gender: userData.gender,
         date_of_birth: userData.dateOfBirth,
-        image: user.photoURL || truncatedProfileImage || "",
+        image: profileImageUrl || "", // Use the uploaded image URL
         phone: userData.phone,
         // Format addresses as a JSONB array with a single object
         addresses: [
@@ -113,10 +132,6 @@ export async function storeGoogleUserInSupabase(googleUserData) {
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
     
-    // Truncate photoURL if it's too long (Firebase limit is 1024 chars)
-    const truncatedPhotoURL = photoURL && photoURL.length > 500 ? 
-      photoURL.substring(0, 500) : photoURL || "";
-    
     // Generate custom ID
     const customId = generateCustomId();
     
@@ -140,6 +155,9 @@ export async function storeGoogleUserInSupabase(googleUserData) {
       };
     }
     
+    // Verify photoURL isn't too long for Firebase (limit is 1024 chars)
+    const safePhotoURL = photoURL && photoURL.length > 500 ? "" : photoURL || "";
+    
     // Insert new user - format addresses as JSONB array
     const { error: usersError } = await supabase
       .from("Users")
@@ -149,7 +167,7 @@ export async function storeGoogleUserInSupabase(googleUserData) {
         uid: uid,
         first_name: firstName,
         last_name: lastName,
-        image: truncatedPhotoURL,
+        image: safePhotoURL,
         gender: "",
         date_of_birth: "",
         phone: "",
