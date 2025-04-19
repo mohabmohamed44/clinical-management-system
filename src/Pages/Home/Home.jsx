@@ -87,7 +87,7 @@ export default function Home() {
           {/* Services Heading */}
         </header>
       </main>
-      <div className="mt-77 pt-10 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
+      <div className="mt-40 pt-10 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
         <UpcomingVisits/>
       </div>
       <HomeCard/>
