@@ -50,7 +50,7 @@ export default function Home() {
             aria-label="Main introduction section"
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
-              <div className="text-[#ffffff] max-w-lg sm:mt-30 mt-20 md:mt-20 text-center lg:text-left order-1 lg:order-1">
+              <div className="text-[#ffffff] max-w-lg sm:mt-30 mt-20 md:mt-50 text-center lg:text-left order-1 lg:order-1">
                 <h1
                   className="text-3xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   role="heading"
@@ -64,7 +64,7 @@ export default function Home() {
                 <div className="flex justify-start">
                 <Link 
                   to="/find_doctor"
-                  className="px-8 py-4 block bg-white text-[#2342a1] mt-6 rounded-xl font-semibold text-xl hover:bg-blue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-w-[200px] text-center"
+                  className="px-8 py-4 block bg-white text-[#2342a1] mt-6 rounded-xl font-semibold text-xl hover:bg-blue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-w-[150px] text-center"
                   aria-label={t("BookNow")}
                   role="button"
                 >
@@ -99,7 +99,7 @@ export default function Home() {
       </main>
 
       {/* Lazy loaded components with suspense */}
-      <div className="mt-40 pt-10 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20 px-4 md:px-8 lg:px-12 py-10">
+      <div className="mt-50 pt-10 sm:mt-50 md:mt-10 lg:mt-20 xl:mt-20 px-4 md:px-8 lg:px-12 py-10">
         <Suspense fallback={<div>Loading appointments...</div>}>
           <UpcomingVisits aria-label="Your upcoming appointments" />
         </Suspense>
