@@ -11,8 +11,8 @@ const Labs = () => {
     const fetchLabs = async () => {
       try {
         const { data, error } = await supabase
-          .from('labs')
-          .select('id, name, description, image_url, capacity')
+          .from('Laboratories')
+          .select('name, description, images, capacity, phone, address, specialty')
 
         if (error) throw error
         setLabs(data)
@@ -59,7 +59,7 @@ const Labs = () => {
                   Capacity: {lab.capacity}
                 </span>
                 <Link
-                  to={`/labs/${lab.id}`}
+                  to={`/Laboratories/${lab.id}`}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 >
                   View Details

@@ -13,7 +13,7 @@ const LabDetails = () => {
     const fetchLabDetails = async () => {
       try {
         const { data, error } = await supabase
-          .from('labs')
+          .from('Laboratories')
           .select('*')
           .eq('id', id)
           .single()
@@ -43,7 +43,7 @@ const LabDetails = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <img
-            src={lab.image_url || '/placeholder-lab.jpg'}
+            src={lab.images || '/placeholder-lab.jpg'}
             alt={lab.name}
             className="w-full h-64 object-cover"
           />
@@ -66,14 +66,14 @@ const LabDetails = () => {
                 <div className="space-y-2">
                   <p><span className="font-medium">Capacity:</span> {lab.capacity}</p>
                   <p><span className="font-medium">Availability:</span> {lab.availability}</p>
-                  <p><span className="font-medium">Contact:</span> {lab.contact_email}</p>
+                  <p><span className="font-medium">Contact:</span> {lab.phone}</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-gray-50 p-4 rounded-lg">
               <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
-              <p className="text-gray-600">{lab.additional_info}</p>
+              <p className="text-gray-600">{lab.email}</p>
             </div>
           </div>
         </div>
