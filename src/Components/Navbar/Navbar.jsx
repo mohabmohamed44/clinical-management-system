@@ -42,7 +42,6 @@ export default function Navbar() {
           
           {/* Navigation links - only visible on lg screens and up */}
           <div className="hidden lg:flex ml-6 space-x-4 lg:space-x-6">
-            <NavLink to="/" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Home")}</NavLink>
             <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("FindDoctor")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Departments")}</NavLink>
@@ -140,7 +139,6 @@ export default function Navbar() {
       {/* Mobile Menu - visible below lg screens when menu is open */}
       <div className={`lg:hidden bg-white transition-all duration-300 ease-in-out ${navbarOpen ? "max-h-screen py-4" : "max-h-0 py-0 overflow-hidden"}`}>
         <div className="flex flex-col items-start px-4 space-y-4">
-          <NavLink to="/" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Home")}</NavLink>
           <NavLink to="/find_doctor" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
           <NavLink to="/about" className="w-full py-2 text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/departments" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>

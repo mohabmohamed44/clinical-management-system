@@ -241,59 +241,91 @@ export default function Register() {
     }
   };
 
-  const getGeolocation = (setFieldValue) => {
-    if (navigator.geolocation) {
+  const getGeolocation = async (setFieldValue) => {
+    const getPosition = () => new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          )
-            .then((response) => response.json())
-            .then((data) => {
-              const address = data.display_name || `${latitude}, ${longitude}`;
-              setFieldValue("location", address);
-            })
-            .catch((error) => {
-              console.error("Error getting address:", error);
-              setFieldValue("location", `${latitude}, ${longitude}`);
-            });
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          alert(t("GeolocationFailed"));
-        },
+        resolve,
+        reject,
         {
           enableHighAccuracy: true,
           timeout: 5000,
-          maximumAge: 0,
+          maximumAge: 0
         }
       );
-    } else {
-      alert(t("GeolocationNotSupported"));
+    });
+  
+    const getAddress = async (latitude, longitude) => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+          {
+            headers: {
+              'User-Agent': 'Your-App-Name' // Required by Nominatim usage policy
+            }
+          }
+        );
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+        return data.display_name || `${latitude}, ${longitude}`;
+      } catch (error) {
+        console.error('Error getting address:', error);
+        return `${latitude}, ${longitude}`;
+      }
+    };
+  
+    try {
+      if (!navigator.geolocation) {
+        throw new Error(t("GeolocationNotSupported"));
+      }
+  
+      const position = await getPosition();
+      const { latitude, longitude } = position.coords;
+      const address = await getAddress(latitude, longitude);
+      setFieldValue("location", address);
+      
+    } catch (error) {
+      console.error("Error getting location:", error);
+      
+      // If we have coordinates but address fetch failed
+      if (error.message !== 'Network response was not ok') {
+        alert(t("GeolocationFailed"));
+      }
+      
+      // If coordinates were obtained but address lookup failed
+      if (error instanceof GeolocationPositionError) {
+        const fallback = error.coords 
+          ? `${error.coords.latitude}, ${error.coords.longitude}`
+          : '';
+        setFieldValue("location", fallback);
+      }
     }
   };
 
   return (
     <>
       <MetaData
-        title="Register"
-        description="Register for an account"
-        keywords="register, account, patient, doctor"
+        title="Register | Clinical Management System"
+        description="Register for an account on our clinical management system. Enjoy a seamless and accessible registration experience."
+        keywords="register, account, patient, doctor, accessibility, SEO"
         author="Mohab Mohammed"
       />
       <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
         <div className="hidden lg:block lg:w-full lg:pr-5 rtl:lg:pl-5">
           <img
             src={Doctor}
-            alt="Doctor"
+            alt="Doctor image showing registration"
             className="rounded-xl w-full h-auto max-w-[600px] max-h-[800px] object-cover"
           />
         </div>
 
         <div className="w-full lg:w-full max-w-lg">
           <div className="bg-white rounded-2xl shadow mb-6 p-8 mt-14">
-            <div className="flex justify-center mb-6 px-4 sm:px-0">
+            <nav
+              aria-label="Registration steps"
+              className="flex justify-center mb-6 px-4 sm:px-0"
+            >
               <div className="flex items-center flex-wrap sm:flex-nowrap">
                 {steps.map((step, index) => (
                   <div key={step.number} className="flex items-center">
@@ -303,8 +335,9 @@ export default function Register() {
                           ? "bg-blue-600 text-white"
                           : "bg-gray-200 text-gray-400"
                       }`}
+                      aria-current={currentStep === step.number ? "step" : undefined}
                     >
-                      <step.icon size={20} className="sm:w-6 sm:h-6" />
+                      <step.icon size={20} className="sm:w-6 sm:h-6" aria-hidden="true" />
                     </div>
                     {index < steps.length - 1 && (
                       <div
@@ -313,12 +346,13 @@ export default function Register() {
                             ? "bg-blue-600"
                             : "bg-gray-200"
                         }`}
+                        aria-hidden="true"
                       />
                     )}
                   </div>
                 ))}
               </div>
-            </div>
+            </nav>
 
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6 px-4">
               {currentStep === 1
@@ -353,6 +387,7 @@ export default function Register() {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -372,12 +407,14 @@ export default function Register() {
                   <button
                     onClick={() => navigate("/login")}
                     className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    aria-label={t("ProceedToLogin")}
                   >
                     {t("ProceedToLogin")}
                   </button>
                   <button
                     onClick={() => navigate("/")}
                     className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                    aria-label={t("BackToHome")}
                   >
                     {t("BackToHome")}
                   </button>
@@ -391,8 +428,9 @@ export default function Register() {
                   onClick={handleGoogleSignIn}
                   disabled={isLoading}
                   className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-lg px-4 py-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-70"
+                  aria-label={t("ContinueWithGoogle")}
                 >
-                  <FaGoogle className="text-red-500" />
+                  <FaGoogle className="text-red-500" aria-hidden="true" />
                   {isLoading ? t("Loading") : t("ContinueWithGoogle")}
                 </button>
               </div>
@@ -400,9 +438,9 @@ export default function Register() {
 
             {currentStep === 1 && (
               <div className="relative flex items-center justify-center mb-6">
-                <div className="flex-grow border-t border-gray-300"></div>
+                <div className="flex-grow border-t border-gray-300" aria-hidden="true"></div>
                 <span className="mx-4 text-gray-500">{t("Or")}</span>
-                <div className="flex-grow border-t border-gray-300"></div>
+                <div className="flex-grow border-t border-gray-300" aria-hidden="true"></div>
               </div>
             )}
 
@@ -413,7 +451,7 @@ export default function Register() {
                 validateOnMount
               >
                 {({ errors, touched, isSubmitting, setFieldValue, values }) => (
-                  <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0">
+                  <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0" role="form" aria-label={t("RegistrationForm")}>
                     {currentStep === 1 && (
                       <div className="animate-fade-in">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -421,6 +459,8 @@ export default function Register() {
                             <Field
                               name="firstName"
                               type="text"
+                              aria-label={t("FirstName")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.firstName && touched.firstName
                                   ? "border-red-500"
@@ -445,6 +485,8 @@ export default function Register() {
                             <Field
                               name="lastName"
                               type="text"
+                              aria-label={t("LastName")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.lastName && touched.lastName
                                   ? "border-red-500"
@@ -470,6 +512,8 @@ export default function Register() {
                           <Field
                             name="email"
                             type="email"
+                            aria-label={t("Email")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.email && touched.email
                                 ? "border-red-500"
@@ -494,6 +538,8 @@ export default function Register() {
                           <Field
                             name="password"
                             type={showPassword ? "text" : "password"}
+                            aria-label={t("Password")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.password && touched.password
                                 ? "border-red-500"
@@ -510,12 +556,13 @@ export default function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? t("HidePassword") : t("ShowPassword")}
                             className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                           >
                             {showPassword ? (
-                              <EyeOff size={24} />
+                              <EyeOff size={24} aria-hidden="true" />
                             ) : (
-                              <Eye size={24} />
+                              <Eye size={24} aria-hidden="true" />
                             )}
                           </button>
                           {errors.password && touched.password && (
@@ -529,6 +576,8 @@ export default function Register() {
                           <Field
                             name="confirmPassword"
                             type={showPassword ? "text" : "password"}
+                            aria-label={t("ConfirmPassword")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.confirmPassword && touched.confirmPassword
                                 ? "border-red-500"
@@ -545,12 +594,13 @@ export default function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? t("HidePassword") : t("ShowPassword")}
                             className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                           >
                             {showPassword ? (
-                              <EyeOff size={24} />
+                              <EyeOff size={24} aria-hidden="true" />
                             ) : (
-                              <Eye size={24} />
+                              <Eye size={24} aria-hidden="true" />
                             )}
                           </button>
                           {errors.confirmPassword && touched.confirmPassword && (
@@ -564,6 +614,8 @@ export default function Register() {
                           <Field
                             name="phone"
                             type="tel"
+                            aria-label={t("Phone")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.phone && touched.phone
                                 ? "border-red-500"
@@ -594,6 +646,7 @@ export default function Register() {
                                 type="radio"
                                 name="gender"
                                 value="male"
+                                aria-label={t("Male")}
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
                               <span className="rtl:text-right">{t("Male")}</span>
@@ -603,6 +656,7 @@ export default function Register() {
                                 type="radio"
                                 name="gender"
                                 value="female"
+                                aria-label={t("Female")}
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
                               <span className="rtl:text-right">{t("Female")}</span>
@@ -623,6 +677,8 @@ export default function Register() {
                           <Field
                             name="dateOfBirth"
                             type="date"
+                            aria-label={t("DateOfBirth")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.dateOfBirth && touched.dateOfBirth
                                 ? "border-red-500"
@@ -650,6 +706,7 @@ export default function Register() {
                             <input
                               type="file"
                               accept="image/*"
+                              aria-label={t("UploadProfileImage")}
                               onChange={(event) => {
                                 const file = event.currentTarget.files[0];
                                 if (file) {
@@ -670,10 +727,10 @@ export default function Register() {
                               } focus:outline-none focus:border-blue-500`}
                             />
                             {filePreview && (
-                              <div className="h-16 w-16 rounded-full overflow-hidden">
+                              <div className="h-16 w-17 rounded-full overflow-hidden">
                                 <img
                                   src={filePreview}
-                                  alt="Preview"
+                                  alt={t("ProfileImagePreview")}
                                   className="h-full w-full object-cover"
                                 />
                               </div>
@@ -691,6 +748,7 @@ export default function Register() {
                             {({ field, form }) => (
                               <select
                                 {...field}
+                                aria-label={t("BloodType")}
                                 className={`peer w-full px-4 py-3 rounded-lg border ${
                                   errors.bloodType && touched.bloodType
                                     ? "border-red-500"
@@ -733,6 +791,8 @@ export default function Register() {
                             <Field
                               name="weight"
                               type="number"
+                              aria-label={t("WeightInKg")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.weight && touched.weight
                                   ? "border-red-500"
@@ -757,6 +817,8 @@ export default function Register() {
                             <Field
                               name="height"
                               type="number"
+                              aria-label={t("HeightInCm")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.height && touched.height
                                   ? "border-red-500"
@@ -782,6 +844,8 @@ export default function Register() {
                           <Field
                             name="medicalHistory"
                             as="textarea"
+                            aria-label={t("MedicalHistory")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.medicalHistory && touched.medicalHistory
                                 ? "border-red-500"
@@ -811,6 +875,8 @@ export default function Register() {
                             <Field
                               name="city"
                               type="text"
+                              aria-label={t("City")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.city && touched.city
                                   ? "border-red-500"
@@ -835,6 +901,8 @@ export default function Register() {
                             <Field
                               name="area"
                               type="text"
+                              aria-label={t("Area")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.area && touched.area
                                   ? "border-red-500"
@@ -860,6 +928,8 @@ export default function Register() {
                           <Field
                             name="street"
                             type="text"
+                            aria-label={t("Street")}
+                            aria-required="true"
                             className={`peer w-full px-4 py-3 rounded-lg border ${
                               errors.street && touched.street
                                 ? "border-red-500"
@@ -885,6 +955,8 @@ export default function Register() {
                             <Field
                               name="location"
                               type="text"
+                              aria-label={t("Location")}
+                              aria-required="true"
                               className={`peer w-full px-4 py-3 rounded-lg border ${
                                 errors.location && touched.location
                                   ? "border-red-500"
@@ -897,6 +969,7 @@ export default function Register() {
                               type="button"
                               onClick={() => getGeolocation(setFieldValue)}
                               className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                              aria-label={t("GetLocation")}
                             >
                               {t("GetLocation")}
                             </button>
@@ -923,6 +996,7 @@ export default function Register() {
                             type="button"
                             onClick={() => setCurrentStep(currentStep - 1)}
                             className="w-full bg-gray-100 text-gray-800 rounded-lg px-4 py-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                            aria-label={t("Back")}
                           >
                             {t("Back")}
                           </button>
@@ -931,10 +1005,11 @@ export default function Register() {
                           type="submit"
                           disabled={isSubmitting || isLoading}
                           className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                          aria-label={currentStep === 3 ? t("CompleteRegistration") : t("Next")}
                         >
                           {isLoading ? (
                             <span className="flex items-center justify-center">
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                               </svg>
@@ -957,6 +1032,7 @@ export default function Register() {
                         <Link
                           to="/login"
                           className="text-blue-600 hover:underline"
+                          aria-label={t("Login")}
                         >
                           {t("Login")}
                         </Link>

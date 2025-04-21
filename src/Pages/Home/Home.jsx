@@ -1,8 +1,8 @@
 import React from "react";
 import Style from "./Home.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
-import Background from '../../assets/home.webp';
-import Doctor from '../../assets/doctor_home.webp';
+import Background from "../../assets/home.webp";
+import Doctor from "../../assets/doctor_home.webp";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
@@ -48,9 +48,7 @@ export default function Home() {
                   {t("HomeDescription")}
                 </p>
                 <button className="px-5 py-3 flex items-center justify-start bg-white text-[#3454c1] mt-6 rounded-xl font-semibold text-xl">
-                  <Link to="/find_doctor">
-                    {t("BookNow")}
-                  </Link>
+                  <Link to="/find_doctor">{t("BookNow")}</Link>
                 </button>
               </div>
               {/* Image - Right Side */}
@@ -87,13 +85,13 @@ export default function Home() {
           {/* Services Heading */}
         </header>
       </main>
-      <div className="mt-40 pt-10 sm:mt-20 md:mt-10 lg:mt-20 xl:mt-20">
-        <UpcomingVisits/>
+      <div className="mt-77 pt-10 sm:mt-60 md:mt-10 lg:mt-20 xl:mt-20">
+        <UpcomingVisits />
       </div>
-      <HomeCard/>
-      <AdditionalServices/>
+      <HomeCard />
+      <AdditionalServices />
       <div className="mt-7">
-          <AskQuestion/>
+        <AskQuestion />
       </div>
     </>
   );
