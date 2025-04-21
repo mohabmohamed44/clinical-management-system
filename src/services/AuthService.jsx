@@ -26,7 +26,7 @@ export async function registerUser(auth, userData) {
         const storage = getStorage();
         
         // Create a storage reference
-        const storageRef = ref(storage, `profile_images/${user.uid}`);
+        const storageRef = ref(storage, `ProfileImages/${user.uid}`);
         
         // Upload the image (assuming profileImage is a base64 string)
         await uploadString(storageRef, userData.profileImage, 'data_url');
