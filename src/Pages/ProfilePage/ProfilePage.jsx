@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-
+  
   useEffect(() => {
     const fetchProfileData = async () => {
       setLoading(true);
@@ -43,7 +43,7 @@ const ProfilePage = () => {
               last_name: result.userData.last_name || "",
               phone: result.userData.phone || "Not set",
               date_of_birth: result.userData.date_of_birth || "Not specified",
-              image: result.userData.image || FaUser, 
+              image: result.userData.image || FaUser,
               addresses: address,
             });
           } else {
@@ -62,7 +62,9 @@ const ProfilePage = () => {
   }, [currentUser]);
 
   const handleEdit = (section) => {
-    setMessage(`Editing ${section} - This would connect to Supabase to update user data`);
+    setMessage(
+      `Editing ${section} - This would connect to Supabase to update user data`
+    );
   };
 
   if (loading) {
@@ -124,7 +126,7 @@ const ProfilePage = () => {
                 <div className="relative mb-4 md:mb-0 md:mr-6">
                   {profile.image ? (
                     <img
-                      src={profile.image || FaUser} 
+                      src={profile.image || FaUser}
                       alt="Profile"
                       className="w-16 h-16 rounded-full object-cover"
                       onError={(e) => {
@@ -140,7 +142,10 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="text-center md:text-left">
-                  <h3 className="text-lg font-medium">{profile.first_name || "No Name Set"} {profile.last_name || "No Name Set"}</h3>
+                  <h3 className="text-lg font-medium">
+                    {profile.first_name || "No Name Set"}{" "}
+                    {profile.last_name || "No Name Set"}
+                  </h3>
                   <p className="text-[#11319E]">
                     {profile.addresses.area || "No Area is Set"}
                   </p>
@@ -173,8 +178,9 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {[
-                    { label: "ID", value: profile.id },
+                    { label: "First Name", value: profile.first_name},
                     { label: "Last Name", value: profile.last_name },
+                    { label: "ID", value: profile.id },
                     { label: "Phone", value: profile.phone },
                     { label: "Date of Birth", value: profile.date_of_birth },
                   ].map((item, index) => (
