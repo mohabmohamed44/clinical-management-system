@@ -80,7 +80,7 @@ export default function Home() {
                   <source srcSet={DoctorFallback} type="image/webp" />
                   <img
                     src={DoctorFallback}
-                    className="w-full h-auto max-w-[330px] max-h-[330px] md:max-h-[350px] lg:max-h-[500px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl object-contain"
+                    className="w-full h-auto max-w-[350px] max-h-[350px] md:max-h-[350px] lg:max-h-[500px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl object-contain"
                     alt={t("Friendly doctor available for consultation")}
                     loading="eager"
                     width="500"

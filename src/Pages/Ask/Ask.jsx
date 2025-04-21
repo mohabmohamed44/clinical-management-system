@@ -103,6 +103,7 @@ const mutation = useMutation({
         description={"Ask medical questions to professionals"}
         name={"Ask Question"}
         type="website"
+        author={"Mohab Mohammed"}
         url={window.location.href}
       />
 
@@ -158,7 +159,7 @@ const mutation = useMutation({
 
                   {/* Gender Field */}
                   <div>
-                    <label className="block text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
+                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
                       <FaVenusMars className="text-[#1972EE]" />
                       Gender
                     </label>
@@ -185,7 +186,7 @@ const mutation = useMutation({
 
                   {/* Age Field */}
                   <div>
-                    <label className="block text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
+                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
                       <FaBirthdayCake className="text-[#1972EE]" />
                       Age
                     </label>

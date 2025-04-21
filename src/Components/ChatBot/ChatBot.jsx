@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, BotMessageSquare, MessageSquare, Send, UserRound, X } from 'lucide-react';
 import useModal from '../../hooks/useModal';
-import { FaUserMd } from 'react-icons/fa';
 
 export default function Chatbot() {
   const { isOpen, toggleModal } = useModal(false);
@@ -56,7 +55,7 @@ export default function Chatbot() {
 
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-[calc(3rem+1rem)] right-0 mr-4 bg-white p-4 rounded-xl border border-gray-100 w-[90vw] max-w-[390px] h-[400px] shadow-xl z-50 transition-all duration-300 overflow-hidden">
+        <div className="fixed bottom-[calc(3rem+1rem)] right-0 mr-4 bg-white p-4 rounded-xl border border-gray-100 w-[90vw] max-w-[390px] h-[400px] shadow-xl z-50 transition-all duration-300 overflow-hidden outline-0">
           {/* Heading with gradient background */}
           <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#11319E] to-[#2a43a0] p-4 rounded-t-xl">
             <h2 className="font-semibold text-base tracking-tight text-white">Delma Chatbot</h2>

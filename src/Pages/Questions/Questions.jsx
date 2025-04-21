@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { supabase } from "../../Config/Supabase";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserDataByFirebaseUID } from "../../services/AuthService";
+import MetaData from "../../Components/MetaData/MetaData";
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -71,6 +72,14 @@ const { data: questions, isLoading, isError, error, refetch } = useQuery({
   );
 
   return (
+    <>
+    <MetaData
+      title={"Questions Page | Medical System Health Care"}
+      description={"Questions page of Patients Asked for an Answer about Symptoms or Disease and more"}
+      keywords={"questions, medical, symptoms, specialities"}
+      author={"Mohab Mohammed"}
+
+    />
     <div className="min-h-screen bg-gray-50 pb-10">
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -195,5 +204,6 @@ const { data: questions, isLoading, isError, error, refetch } = useQuery({
         )}
       </div>
     </div>
+    </>
   );
 }
