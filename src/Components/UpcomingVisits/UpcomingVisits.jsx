@@ -284,11 +284,13 @@ export default function UpcomingVisits() {
                       </div>
                     )}
                   </div>
-
+                  {/* TODO:: make an Modal to update Data or another Data */}
                   <div className="mt-4 pt-3 border-t flex flex-col gap-2">
-                    <button className="w-full py-2 text-sm bg-[#11319E] text-white rounded hover:bg-blue-700">
+                    <button className="w-full py-2 text-sm bg-[#11319E] text-white rounded hover:bg-blue-700" role="button"
+                     aria-label="Reschedule Button">
                       Reschedule
                     </button>
+                    {/* TODO:: make a Link to Page Details for Clinic or Appointment or Hospital*/}
                     <button className="w-full py-2 text-sm border border-gray-300 rounded hover:bg-gray-50">
                       View Details
                     </button>

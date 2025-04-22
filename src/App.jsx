@@ -90,7 +90,7 @@ function App() {
           <LanguageProvider>
             <RouterProvider router={router} />
             <Toaster position="top-center" reverseOrder={false} />
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
           </LanguageProvider>
         </QueryClientProvider>
       </AuthProvider>

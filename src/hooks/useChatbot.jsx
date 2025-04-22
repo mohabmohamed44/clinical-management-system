@@ -1,73 +1,138 @@
 import { useState, useEffect, useRef } from 'react';
 import useModal from './useModal';
+import { getMedicalBotResponse, resetMedicalBotConversation } from '../utils/GeminiConfig';
 
-/**
- * Custom hook for ChatBot functionality
- * @returns {Object} ChatBot state and functions
- */
 export default function useChatBot() {
   const { isOpen, openModal, closeModal, toggleModal } = useModal(false);
   const messagesEndRef = useRef(null);
   
   const [messages, setMessages] = useState([
-    { sender: 'ai', content: 'Hi, how can I help you today?' }
+    { sender: 'ai', content: '{"type": "Message", "message": "Hello! Delma here, ready to assist with your health concerns."}' }
   ]);
   
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [questionCount, setQuestionCount] = useState(0);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (!isOpen) resetConversation();
+  }, [isOpen]);
+
+  const resetConversation = () => {
+    setMessages([
+      { sender: 'ai', content: '{"type": "Message", "message": "Hello! Delma here, ready to assist with your health concerns."}' }
+    ]);
+    resetMedicalBotConversation();
+    setQuestionCount(0);
   };
 
-  const handleSubmit = (e) => {
+  const cleanJsonResponse = (jsonString) => {
+    try {
+      // Step 1: Basic cleaning
+      let cleaned = jsonString
+        .replace(/^"+|"+$/g, '') // Remove surrounding quotes
+        .replace(/\\"/g, '"')     // Unescape quotes
+        .replace(/\\n/g, ' ')     // Replace newlines
+        .replace(/\\\\/g, '\\')   // Unescape backslashes
+        .trim();
+  
+      // Step 2: Remove JSON markdown formatting if present
+      cleaned = cleaned.replace(/```json/g, '').replace(/```/g, '').trim();
+  
+      // Step 3: Handle multiple nested JSON strings
+      let parseAttempts = 0;
+      while (parseAttempts < 3) {
+        try {
+          return JSON.parse(cleaned);
+        } catch (innerError) {
+          // If parsing fails, check for nested stringification
+          if (cleaned.startsWith('{') && cleaned.endsWith('}')) break;
+          cleaned = cleaned.replace(/^"{/, '{').replace(/}"$/, '}');
+          parseAttempts++;
+        }
+      }
+  
+      // Step 4: Validate JSON structure
+      if (!/^\s*\{.*\}\s*$/.test(cleaned)) {
+        throw new Error('Invalid JSON structure');
+      }
+  
+      // Step 5: Final parse attempt with error positions
+      const json = JSON.parse(cleaned);
+      
+      // Step 6: Validate required fields
+      if (!json.type || !json.message) {
+        throw new Error('Missing required fields');
+      }
+  
+      return json;
+    } catch (e) {
+      console.error('JSON parsing error:', e);
+      console.log('Original string:', jsonString);
+      console.log('Cleaned string:', cleaned);
+      
+      // Fallback: Extract message content
+      const messageMatch = jsonString.match(/"message":\s*"([^"]+)"/);
+      const fallbackMessage = messageMatch 
+        ? messageMatch[1].replace(/\\"/g, '"')
+        : 'I encountered an error processing your request';
+  
+      return {
+        type: "Message",
+        message: fallbackMessage
+      };
+    }
+  };
+
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-    
     if (!inputValue.trim()) return;
     
-    // Add user message
     const userMessage = { sender: 'user', content: inputValue.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
-    
-    // Simulate AI typing
     setIsTyping(true);
     
-    // Simulate AI response after a delay
-    setTimeout(() => {
+    try {
+      const rawResponse = await getMedicalBotResponse(inputValue.trim());
+      const parsedResponse = cleanJsonResponse(rawResponse);
+      
+      if (parsedResponse.type === "Question") {
+        setQuestionCount(prev => prev + 1);
+      }
+      
+      setMessages(prev => [...prev, { 
+        sender: 'ai', 
+        content: JSON.stringify(parsedResponse)
+      }]);
+      
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, { 
+        sender: 'ai', 
+        content: JSON.stringify({
+          type: "Message",
+          message: "Sorry, I encountered an error. Please try again."
+        })
+      }]);
+    } finally {
       setIsTyping(false);
-      setMessages(prev => [
-        ...prev,
-        { 
-          sender: 'ai', 
-          content: 'Thank you for your message. Our team will get back to you shortly.' 
-        }
-      ]);
-    }, 1500);
-  };
-
-  const clearChat = () => {
-    setMessages([
-      { sender: 'ai', content: 'Hi, how can I help you today?' }
-    ]);
+    }
   };
 
   return {
     isOpen,
-    openModal,
-    closeModal,
     toggleModal,
     messages,
     inputValue,
     setInputValue,
     handleSubmit,
-    clearChat,
     isTyping,
-    messagesEndRef
+    messagesEndRef,
+    questionCount
   };
-};
+}

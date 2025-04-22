@@ -2,17 +2,10 @@ import { FacebookAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "../Config/FirebaseConfig";
 
-// Get Facebook App ID from environment variables
-const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
-const FACEBOOK_APP_SECRET = import.meta.env.VITE_FACEBOOK_APP_SECRET;
-
-// Initialize Facebook provider with the App ID
 const provider = new FacebookAuthProvider();
-// You can configure the provider with custom parameters if needed
-provider.setCustomParameters({
-  'app_id': FACEBOOK_APP_ID,
-  'app_secret': FACEBOOK_APP_SECRET
-});
+// You can add scopes if needed
+provider.addScope('email');
+provider.addScope('public_profile');
 
 export const signInWithFacebook = async () => {
     try {
@@ -25,10 +18,10 @@ export const signInWithFacebook = async () => {
         const credentials = FacebookAuthProvider.credentialFromResult(result);
         const token = credentials?.accessToken;
 
-        // Get Firebase ID token (important for authentication with your backend)
+        // Get Firebase ID token
         const idToken = await user.getIdToken();
         
-        // success message if user logs in
+        // success message
         console.log('Facebook sign in Successful');
         toast.success("Facebook sign in Successful");
 
@@ -40,9 +33,6 @@ export const signInWithFacebook = async () => {
     } catch(error) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // the Auth credential type that was used
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        // error message if user fails to log in
         console.log('Facebook Sign in failed', errorMessage, errorCode);
         toast.error('Facebook sign in Failed', {
             duration: 2000,
