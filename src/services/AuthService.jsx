@@ -264,3 +264,75 @@ export async function getUserDataByFirebaseUID(firebaseUid) {
     };
   }
 }
+
+/**
+ * Get reviews for a specific doctor
+ * @param {string} doctorId - The doctor's ID
+ * @returns {Promise<Object>} - Reviews data and status
+ */
+export async function getDoctorReviews(doctorId) {
+  try {
+    const { data: reviews, error } = await supabase
+      .from('Reviews')
+      .select(`
+        id,
+        created_at,
+        review,
+        rate,
+        user_id,
+        Users (
+          first_name,
+          last_name,
+          image
+        )
+      `)
+      .eq('doctor_id', doctorId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      reviews
+    };
+  } catch (error) {
+    console.error('Error fetching doctor reviews:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Create a new review for a doctor
+ * @param {Object} reviewData - The review data
+ * @returns {Promise<Object>} - Result of the review creation
+ */
+export async function createDoctorReview(reviewData) {
+  try {
+    const { data, error } = await supabase
+      .from('Reviews')
+      .insert({
+        doctor_id: reviewData.doctorId,
+        user_id: reviewData.userId,
+        review: reviewData.review,
+        rate: reviewData.rate
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return {
+      success: true,
+      review: data
+    };
+  } catch (error) {
+    console.error('Error creating review:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}

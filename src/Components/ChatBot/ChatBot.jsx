@@ -37,7 +37,7 @@ export default function Chatbot() {
   return (
     <>
       <button
-        className="fixed bottom-6 right-6 inline-flex items-center justify-center text-sm font-medium border-none rounded-full w-16 h-16 bg-[#11319E] hover:bg-[#0e2a85] cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 p-0 z-50"
+        className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium border-none rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-[#11319E] hover:bg-[#0e2a85] cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 p-0 z-50"
         onClick={toggleModal}
         aria-expanded={isOpen}
         type="button"
@@ -46,7 +46,7 @@ export default function Chatbot() {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-20 right-0 mr-4 bg-white p-0 rounded-xl border border-gray-200 w-[95vw] max-w-[500px] h-[70vh] min-h-[500px] max-h-[700px] shadow-2xl z-50 transition-all duration-300 overflow-hidden outline-0">
+        <div className="fixed bottom-16 right-4 bg-white p-0 rounded-xl border border-gray-200 w-[90vw] sm:w-[95vw] md:w-[500px] h-[60vh] sm:h-[65vh] md:h-[70vh] min-h-[400px] max-h-[650px] shadow-2xl z-50 transition-all duration-300 overflow-hidden outline-0">
           <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#11319E] to-[#2a43a0] p-5 rounded-t-xl">
             <div className="flex items-center gap-3">
               <Bot className="h-6 w-6 text-white" />
@@ -73,7 +73,7 @@ export default function Chatbot() {
                 
                 <div className={`rounded-2xl px-4 py-3 max-w-[85%] ${
                   message.sender === 'ai' 
-                    ? 'bg-gray-200 text-gray-800' 
+                    ? 'bg-gray-200 text-[#00155D] ' 
                     : 'bg-[#11319E] text-white'
                 }`}>
                   <p className="leading-relaxed whitespace-pre-wrap break-words">

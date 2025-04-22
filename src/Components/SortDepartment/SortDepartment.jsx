@@ -1,49 +1,41 @@
 import React from "react";
 import Style from "./SortDepartment.module.css";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import {supabase} from "../../Config/Supabase";
 
 export default function SortDepartment({ onDepartmentSelect, selectedDepartment = 'all' }) {
   const { t } = useTranslation();
   
-  // Updated departments to match the ones in the doctor data
+  // Fetch specialties using React Query
+  const { data: specialties, isLoading, isError } = useQuery({
+    queryKey: ['specialties'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('Specialties')
+        .select('specialty', { distinct: true })
+        .order('specialty', { ascending: true });
+
+      if (error) throw new Error(error.message);
+      return data;
+    }
+  });
+
+  // Format departments including "All" option
   const departments = [
     { id: 'all', name: 'All' },
-    { id: 'Cardiology', name: 'Cardiology' },
-    { id: 'Neurology', name: 'Neurology' },
-    { id: 'Orthopedics', name: 'Orthopedics' },
-    { id: 'Pediatrics', name: 'Pediatrics' },
-    { id: 'Dermatology', name: 'Dermatology' },
-    { id: 'Ophthalmology', name: 'Ophthalmology' },
-    { id: 'Gynecology', name: 'Gynecology' },
-    { id: 'Urology', name: 'Urology'},
-    { id: 'Dentistry', name: 'Dentistry'},
-    { id: 'Emergency Medicine', name: 'Emergency Medicine'},
-    { id: 'Psychiatry', name: 'Psychiatry'},
-    { id: 'Gastroenterology', name: 'Gastroenterology'},
-    { id: 'Endocrinology', name: 'Endocrinology'},
-    { id: 'Pulmonology', name: 'Pulmonology'},
-    { id: 'Rheumatology', name: 'Rheumatology'},
-    { id: 'Hematology', name: 'Hematology'},
-    { id: 'Oncology', name: 'Oncology'},
-    { id: 'Nephrology', name: 'Nephrology'},
-    { id: 'Infectious Disease', name: 'Infectious Disease'},
-    { id: 'Anesthesiology', name: 'Anesthesiology'},
-    { id: 'Radiology', name: 'Radiology'},
-    { id: 'Pathology', name: 'Pathology'},
-    { id: 'Plastic Surgery', name: 'Plastic Surgery'},
-    { id: 'General Surgery', name: 'General Surgery'},
-    { id: 'Vascular Surgery', name: 'Vascular Surgery'},
-    { id: 'Thoracic Surgery', name: 'Thoracic Surgery'},
-    { id: 'Neurosurgery', name: 'Neurosurgery'},
-    { id: 'Orthopedic Surgery', name: 'Orthopedic Surgery'},
-    { id: 'Pediatric Surgery', name: 'Pediatric Surgery'},
+    ...(specialties || []).map(spec => ({
+      id: spec.specialty,
+      name: spec.specialty
+    }))
   ];
 
   const handleDepartmentClick = (departmentId) => {
-    if (onDepartmentSelect) {
-      onDepartmentSelect(departmentId);
-    }
+    onDepartmentSelect?.(departmentId);
   };
+
+  if (isLoading) return <div className="text-center py-4">Loading specialties...</div>;
+  if (isError) return <div className="text-center py-4 text-red-500">Error loading specialties</div>;
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8">

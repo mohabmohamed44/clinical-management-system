@@ -47,7 +47,8 @@ const fetchAppointments = async (filters, userId) => {
     .order("date", { ascending: false });
 
   if (filters.status) query = query.eq("status", filters.status);
-  if (filters.payment_method) query = query.eq("payment_method", filters.payment_method);
+  if (filters.payment_method)
+    query = query.eq("payment_method", filters.payment_method);
   if (filters.type) query = query.eq("type", filters.type);
 
   if (filters.location === "clinic") {
@@ -93,7 +94,7 @@ export default function AppointmentsPage() {
     queryKey: ["appointments", filters, currentUser?.uid],
     queryFn: () => fetchAppointments(filters, currentUser?.uid),
     staleTime: 5 * 60 * 1000,
-    enabled: !!currentUser?.uid
+    enabled: !!currentUser?.uid,
   });
 
   const resetFilters = () => {
@@ -110,15 +111,25 @@ export default function AppointmentsPage() {
 
   const getStatusBadge = (status) => {
     const statusStyles = {
-      completed: { color: "bg-green-100 text-green-800", icon: <FaCheckCircle /> },
+      completed: {
+        color: "bg-green-100 text-green-800",
+        icon: <FaCheckCircle />,
+      },
       pending: { color: "bg-yellow-100 text-yellow-800", icon: <FaClock /> },
       cancelled: { color: "bg-red-100 text-red-800", icon: <FaTimesCircle /> },
-      confirmed: { color: "bg-blue-100 text-blue-800", icon: <FaCheckCircle /> },
+      confirmed: {
+        color: "bg-blue-100 text-blue-800",
+        icon: <FaCheckCircle />,
+      },
     };
 
     const normalizedStatus = (status || "").toLowerCase();
     return (
-      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${statusStyles[normalizedStatus]?.color || "bg-gray-100 text-gray-800"}`}>
+      <span
+        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
+          statusStyles[normalizedStatus]?.color || "bg-gray-100 text-gray-800"
+        }`}
+      >
         {statusStyles[normalizedStatus]?.icon}
         <span className="capitalize">{normalizedStatus}</span>
       </span>
@@ -137,7 +148,13 @@ export default function AppointmentsPage() {
   );
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" };
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -150,8 +167,13 @@ export default function AppointmentsPage() {
   if (!currentUser) {
     return (
       <div className="text-center py-8">
-        <div className="text-xl font-semibold mb-4">Please login to view appointments</div>
-        <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+        <div className="text-xl font-semibold mb-4">
+          Please login to view appointments
+        </div>
+        <Link
+          to="/login"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+        >
           Login Now
         </Link>
       </div>
@@ -186,14 +208,18 @@ export default function AppointmentsPage() {
 
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">My Appointments</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+            My Appointments
+          </h1>
 
           {/* Filters Section */}
           <div className="bg-white p-4 md:p-6 rounded-lg shadow mb-6 border-2 border-[#1972EE]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <FaFilter className="text-[#00155D]" />
-                <h2 className="text-base md:text-lg font-semibold text-[#00155D]">Filter Appointments</h2>
+                <h2 className="text-base md:text-lg font-semibold text-[#00155D]">
+                  Filter Appointments
+                </h2>
               </div>
               <button
                 onClick={resetFilters}
@@ -205,29 +231,46 @@ export default function AppointmentsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
               <div>
-                <label className="block text-xs text-blue-700 mb-1">Status</label>
+                <label className="block text-xs text-blue-700 mb-1">
+                  Status
+                </label>
                 <select
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.status}
-                  onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, status: e.target.value }))
+                  }
                 >
                   <option value="">All Statuses</option>
-                  {["Completed", "Pending", "Cancelled", "Confirmed"].map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
+                  {["Completed", "Pending", "Cancelled", "Confirmed"].map(
+                    (option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    )
+                  )}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs text-blue-700 mb-1">Payment</label>
+                <label className="block text-xs text-blue-700 mb-1">
+                  Payment
+                </label>
                 <select
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.payment_method}
-                  onChange={(e) => setFilters(prev => ({ ...prev, payment_method: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      payment_method: e.target.value,
+                    }))
+                  }
                 >
                   <option value="">All Payments</option>
-                  {["Visa", "Cash"].map(option => (
-                    <option key={option} value={option}>{option}</option>
+                  {["Visa", "Cash"].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -237,21 +280,32 @@ export default function AppointmentsPage() {
                 <select
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.type}
-                  onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, type: e.target.value }))
+                  }
                 >
                   <option value="">All Types</option>
-                  {["Completed", "Upcoming"].map(option => (
-                    <option key={option} value={option}>{option}</option>
+                  {["Completed", "Upcoming"].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs text-blue-700 mb-1">Location</label>
+                <label className="block text-xs text-blue-700 mb-1">
+                  Location
+                </label>
                 <select
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.location}
-                  onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      location: e.target.value,
+                    }))
+                  }
                 >
                   <option value="">All Locations</option>
                   <option value="clinic">Clinic</option>
@@ -265,7 +319,12 @@ export default function AppointmentsPage() {
                   type="date"
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.startDate}
-                  onChange={(e) => setFilters(prev => ({ ...prev, startDate: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      startDate: e.target.value,
+                    }))
+                  }
                 />
               </div>
 
@@ -275,7 +334,9 @@ export default function AppointmentsPage() {
                   type="date"
                   className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   value={filters.endDate}
-                  onChange={(e) => setFilters(prev => ({ ...prev, endDate: e.target.value }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({ ...prev, endDate: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -286,38 +347,66 @@ export default function AppointmentsPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Doctor</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Date & Time</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Payment</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Type</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Location</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">Patient</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Doctor
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Date & Time
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Payment
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Type
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Location
+                  </th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
+                    Patient
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {appointments?.length > 0 ? (
-                  appointments.map(appointment => (
-                    <tr key={appointment.id} className="hover:bg-blue-50 transition-colors">
+                  appointments.map((appointment) => (
+                    <tr
+                      key={appointment.id}
+                      className="hover:bg-blue-50 transition-colors"
+                    >
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <Link to={`/appointments/${appointment.id}`} className="flex items-center gap-3">
+                        <Link
+                          to={`/appointments/${appointment.id}`}
+                          className="flex items-center gap-3"
+                        >
                           <img
-                            src={appointment.Doctors?.image || "/default-avatar.png"}
+                            src={
+                              appointment.Doctors?.image ||
+                              "/default-avatar.png"
+                            }
                             alt="Doctor"
                             className="w-9 h-9 rounded-full object-cover"
                           />
                           <div>
                             <div className="font-medium text-gray-900">
-                              {appointment.Doctors?.first_name} {appointment.Doctors?.last_name}
+                              {appointment.Doctors?.first_name}{" "}
+                              {appointment.Doctors?.last_name}
                             </div>
-                            <div className="text-sm text-[#667198]">{appointment.Doctors?.specialty}</div>
+                            <div className="text-sm text-[#667198]">
+                              {appointment.Doctors?.specialty}
+                            </div>
                           </div>
                         </Link>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
                         {formatDate(appointment.date)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">{getStatusBadge(appointment.status)}</td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {getStatusBadge(appointment.status)}
+                      </td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         {getPaymentMethod(appointment.payment_method)}
                       </td>
@@ -344,9 +433,15 @@ export default function AppointmentsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-[#667198]">
+                    <td
+                      colSpan="7"
+                      className="px-6 py-4 text-center text-[#667198]"
+                    >
                       No appointments found.{" "}
-                      <Link to="/book" className="text-blue-500 hover:underline">
+                      <Link
+                        to="/book"
+                        className="text-blue-500 hover:underline"
+                      >
                         Book an appointment
                       </Link>
                     </td>
