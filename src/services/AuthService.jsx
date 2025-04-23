@@ -293,13 +293,14 @@ export async function getDoctorReviews(doctorId) {
 
     return {
       success: true,
-      reviews
+      reviews: reviews || []
     };
   } catch (error) {
     console.error('Error fetching doctor reviews:', error);
     return {
       success: false,
-      error: error.message
+      error: error.message,
+      reviews: []  // Always return an empty array for consistent structure
     };
   }
 }
@@ -311,18 +312,41 @@ export async function getDoctorReviews(doctorId) {
  */
 export async function createDoctorReview(reviewData) {
   try {
+    console.log("Creating review with data:", reviewData);
+    
+    // First get the Supabase user ID using Firebase UID
+    const { data: userData, error: userError } = await supabase
+      .from('Users')
+      .select('id')
+      .eq('uid', reviewData.userId)
+      .single();
+
+    if (userError) {
+      throw new Error(`Failed to get user: ${userError.message}`);
+    }
+
+    if (!userData) {
+      throw new Error('User not found');
+    }
+
     const { data, error } = await supabase
       .from('Reviews')
       .insert({
         doctor_id: reviewData.doctorId,
-        user_id: reviewData.userId,
+        user_id: userData.id, // Using the Supabase user ID instead of Firebase UID
         review: reviewData.review,
         rate: reviewData.rate
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase error:", error);
+      throw new Error(`Failed to create review: ${error.message}`);
+    }
+
+    // Update the doctor's average rating
+    await updateDoctorRating(reviewData.doctorId);
 
     return {
       success: true,
@@ -332,7 +356,43 @@ export async function createDoctorReview(reviewData) {
     console.error('Error creating review:', error);
     return {
       success: false,
-      error: error.message
+      error: error.message || "Failed to create review"
     };
+  }
+}
+
+/**
+ * Update a doctor's average rating when a new review is added
+ * @param {string} doctorId - The doctor's ID
+ */
+async function updateDoctorRating(doctorId) {
+  try {
+    // Get all reviews for this doctor
+    const { data: reviews, error: reviewsError } = await supabase
+      .from('Reviews')
+      .select('rate')
+      .eq('doctor_id', doctorId);
+    
+    if (reviewsError) throw reviewsError;
+    
+    // Calculate new average rating
+    const totalReviews = reviews.length;
+    const totalRating = reviews.reduce((sum, review) => sum + (review.rate || 0), 0);
+    const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+    
+    // Update the doctor's rating
+    const { error: updateError } = await supabase
+      .from('Doctors')
+      .update({
+        rate: averageRating,
+        rate_count: totalReviews
+      })
+      .eq('id', doctorId);
+    
+    if (updateError) throw updateError;
+    
+    console.log(`Updated doctor ${doctorId} rating to ${averageRating} (${totalReviews} reviews)`);
+  } catch (error) {
+    console.error('Error updating doctor rating:', error);
   }
 }

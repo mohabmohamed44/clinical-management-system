@@ -193,7 +193,7 @@ export default function UpcomingVisits() {
   }
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="w-full bg-white rounded-lg shadow-md overflow-hidden mt-20">
       <div className="bg-[#11319E] text-white p-4 flex justify-between items-center">
         <h2 className="text-lg font-bold flex items-center">
           <Calendar className="mr-2 w-5 h-5" />

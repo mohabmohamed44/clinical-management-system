@@ -99,7 +99,7 @@ export default function FindDoctor() {
               <figure className="mt-auto flex justify-center items-center w-full lg:w-1/2">
                 <img
                   src={Doctor}
-                  className="w-full h-auto max-w-[320px] md:max-h-[350px] object-contain"
+                  className="w-full h-auto max-w-[320px] md:max-h-[4000px] object-contain"
                   alt="Doctor"
                   loading="lazy"
                 />
