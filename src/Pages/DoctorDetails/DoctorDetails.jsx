@@ -153,16 +153,18 @@ export default function DoctorDetails() {
     return typeof day === "number" && day >= 0 && day < 7 ? days[day] : day;
   };
 
+  // Update the time format function
   const formatTime = (timeString) => {
     if (!timeString) return "";
     try {
+      // Handle format "HH:MM:SS"
       const [hours, minutes] = timeString.split(":");
       const hour = parseInt(hours, 10);
       const period = hour >= 12 ? "PM" : "AM";
       const formattedHour = hour % 12 || 12;
       return `${formattedHour}:${minutes} ${period}`;
     } catch {
-      return "Invalid time";
+      return timeString;
     }
   };
 
@@ -207,7 +209,7 @@ export default function DoctorDetails() {
         <div className="w-full absolute right-0 left-0">
           <div className="h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full right-0 left-0 z-50">
             <div className="container mx-auto p-2 h-full md:flex md:justify-end md:items-start">
-              <div className="max-w-xl text-left mt-4 px-4 md:px-0 md:lg:xl:mr-112 md:lg:xl:pr-30 py-7">
+              <div className="max-w-xl text-left mt-4 px-4 md:px-0 lg:mr-100 md:xl:mr-112 md:lg:xl:pr-30 py-7">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white">
                   Dr. {data.first_name} {data.last_name}
                 </h1>
@@ -253,7 +255,7 @@ export default function DoctorDetails() {
                 </div>
 
                 <div className="p-6 space-y-6">
-                  {/* Doctor Fee */}
+                  {/* Doctor Fee
                   <div>
                     <h3 className="font-semibold text-lg mb-3">
                       Consultation Fee
@@ -261,7 +263,7 @@ export default function DoctorDetails() {
                     <p className="text-2xl font-bold text-blue-800">
                       {data.fee ? `${data.fee} EGP` : "Not specified"}
                     </p>
-                  </div>
+                  </div> */}
 
                   {/* Contact Info */}
                   <div>
@@ -372,7 +374,7 @@ export default function DoctorDetails() {
                         </div>
                       )}
 
-                      {/* Work Times */}
+                      {/* Working Hours Section */}
                       {data.clinic.work_times && (
                         <div className="flex items-center gap-2">
                           <FaClock className="text-blue-600" />
@@ -380,14 +382,21 @@ export default function DoctorDetails() {
                             <p className="font-medium">Working Hours</p>
                             <div className="mt-1 space-y-1">
                               {Array.isArray(data.clinic.work_times) ? (
-                                data.clinic.work_times.map((timeSlot, index) => (
-                                  <div key={index} className="text-xs text-gray-600">
-                                    <span className="font-medium">{formatDay(timeSlot.day)}: </span>
-                                    {timeSlot.from && timeSlot.to ? (
-                                      `${formatTime(timeSlot.from)} - ${formatTime(timeSlot.to)}`
-                                    ) : (
-                                      "Not available"
-                                    )}
+                                data.clinic.work_times.map((slot, index) => (
+                                  <div key={index} className="text-xs text-gray-600 flex justify-between items-center">
+                                    <span className="font-medium w-20">{slot.day}:</span>
+                                    <span className="text-md">
+                                      {slot.start && slot.end ? (
+                                        <span>
+                                          {formatTime(slot.start)} - {formatTime(slot.end)}
+                                          <span className="text-blue-500 ml-2">
+                                            ({slot.duration} min/visit)
+                                          </span>
+                                        </span>
+                                      ) : (
+                                        "Not available"
+                                      )}
+                                    </span>
                                   </div>
                                 ))
                               ) : (
@@ -501,7 +510,7 @@ export default function DoctorDetails() {
                     value={newReview}
                     onChange={(e) => setNewReview(e.target.value)}
                     placeholder="How was your experience with this doctor?"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0"
                     rows="3"
                     required
                   />

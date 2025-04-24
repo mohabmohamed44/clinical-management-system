@@ -47,11 +47,11 @@ export default function FindDoctor() {
       setFilteredDoctors(doctors);
     } else {
       const filtered = doctors.filter(doctor => 
-        doctor.specialty.toLowerCase() === selectedDepartment.toLowerCase()
+      t(doctor.specialty.toLowerCase()) === t(selectedDepartment.toLowerCase())
       );
       setFilteredDoctors(filtered);
     }
-  }, [selectedDepartment, doctors]);
+    }, [selectedDepartment, doctors, t]);
 
   // Loading and error states
   if (isLoading) return (
@@ -121,7 +121,7 @@ export default function FindDoctor() {
           <h2 className="text-3xl font-bold text-center mb-8 text-[#274760]">
             {selectedDepartment === 'all' 
               ? 'Our Medical Specialists' 
-              : `${selectedDepartment} Specialists`}
+              : `${t(selectedDepartment)} Specialists`}
           </h2>
           
           {filteredDoctors.length > 0 ? (
@@ -131,7 +131,7 @@ export default function FindDoctor() {
                   key={doctor.id}
                   id={doctor.id}
                   name={`${doctor.first_name} ${doctor.last_name}`}
-                  specialty={doctor.specialty}
+                  specialty={t(doctor.specialty)}
                   description={doctor.description}
                   image={doctor.image}
                   phone={doctor.phone}

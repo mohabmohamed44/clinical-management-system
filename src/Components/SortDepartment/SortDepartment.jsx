@@ -2,12 +2,11 @@ import React from "react";
 import Style from "./SortDepartment.module.css";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import {supabase} from "../../Config/Supabase";
+import { supabase } from "../../Config/Supabase";
 
 export default function SortDepartment({ onDepartmentSelect, selectedDepartment = 'all' }) {
   const { t } = useTranslation();
   
-  // Fetch specialties using React Query
   const { data: specialties, isLoading, isError } = useQuery({
     queryKey: ['specialties'],
     queryFn: async () => {
@@ -21,12 +20,12 @@ export default function SortDepartment({ onDepartmentSelect, selectedDepartment 
     }
   });
 
-  // Format departments including "All" option
+  // Translated departments
   const departments = [
-    { id: 'all', name: 'All' },
+    { id: 'all', name: t('All') }, // Translated "All"
     ...(specialties || []).map(spec => ({
       id: spec.specialty,
-      name: spec.specialty
+      name: t(spec.specialty) // Translate each specialty
     }))
   ];
 

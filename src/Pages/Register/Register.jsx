@@ -415,19 +415,6 @@ export default function Register() {
             )}
 
             {currentStep === 1 && (
-              <div className="flex justify-center mb-6">
-                <button
-                  onClick={handleGoogleSignIn}
-                  disabled={isLoading}
-                  className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-300 rounded-lg px-4 py-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-70"
-                >
-                  <FaGoogle className="text-red-500" />
-                  {isLoading ? t("Loading") : t("ContinueWithGoogle")}
-                </button>
-              </div>
-            )}
-
-            {currentStep === 1 && (
               <div className="relative flex items-center justify-center mb-6">
                 <div className="flex-grow border-t border-gray-300"></div>
                 <span className="mx-4 text-gray-500">{t("Or")}</span>
