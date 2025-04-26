@@ -3,12 +3,15 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Eye, EyeOff, MapPin, UserCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import MetaData from "../../Components/MetaData/MetaData";
-import Doctor from "../../assets/doctor-register.webp";
+import MetaData from "@components/MetaData/MetaData";
+import Doctor from "@assets/doctor-register.webp";
 import { Link, useNavigate } from "react-router-dom";
 import { FaHeartbeat, FaGoogle } from "react-icons/fa";
 import { getAuth } from "firebase/auth";
-import { registerUser, storeGoogleUserInSupabase } from "../../services/AuthService";
+import {
+  registerUser,
+  storeGoogleUserInSupabase,
+} from "../../services/AuthService";
 import { supabase } from "../../Config/Supabase";
 
 const initialValues = {
@@ -55,14 +58,20 @@ export default function Register() {
     dateOfBirth: Yup.string().required(t("DateOfBirthRequired")),
     profileImage: Yup.string().optional(), // Optional field
     bloodType: Yup.string().required(t("BloodTypeRequired")),
-    weight: Yup.string()  // Changed from number to string to match AuthService
+    weight: Yup.string() // Changed from number to string to match AuthService
       .required(t("WeightRequired"))
-      .test('is-positive', t("WeightMustBePositive"), 
-        value => !value || parseFloat(value) > 0),
-    height: Yup.string()  // Changed from number to string to match AuthService
+      .test(
+        "is-positive",
+        t("WeightMustBePositive"),
+        (value) => !value || parseFloat(value) > 0
+      ),
+    height: Yup.string() // Changed from number to string to match AuthService
       .required(t("HeightRequired"))
-      .test('is-positive', t("HeightMustBePositive"), 
-        value => !value || parseFloat(value) > 0),
+      .test(
+        "is-positive",
+        t("HeightMustBePositive"),
+        (value) => !value || parseFloat(value) > 0
+      ),
     medicalHistory: Yup.string().required(t("MedicalHistoryRequired")),
   });
 
@@ -87,46 +96,6 @@ export default function Register() {
     { number: 3, icon: MapPin, label: t("AddressInfo") },
   ];
 
-  // Handle Google Sign-in
-  const handleGoogleSignIn = async () => {
-    setError(null);
-    setIsLoading(true);
-    
-    try {
-      // Import GoogleAuthProvider and signInWithPopup dynamically to reduce bundle size
-      const { GoogleAuthProvider, signInWithPopup } = await import("firebase/auth");
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      
-      // The signed-in user info
-      const user = result.user;
-
-      // Create a clean user object that matches what AuthService expects
-      // with proper data formatting
-      const userData = {
-        uid: user.uid,
-        displayName: user.displayName ? user.displayName.trim() : "",
-        email: user.email ? user.email.trim() : "",
-        photoURL: user.photoURL || ""
-        // photoURL will be truncated in AuthService if needed
-      };
-      
-      // Store Google user in Supabase
-      const supabaseResult = await storeGoogleUserInSupabase(userData);
-      
-      if (supabaseResult.success) {
-        setRegistrationSuccess(true);
-        setCurrentStep(4);
-      } else {
-        throw new Error(supabaseResult.error);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Upload profile image to Supabase Storage
   const uploadProfileImage = async (file) => {
     if (!file) return null;
@@ -139,11 +108,13 @@ export default function Register() {
         reader.onload = () => {
           // Check if the base64 string is too large
           const base64String = reader.result;
-          // If image is too large (larger than ~700KB when encoded), 
+          // If image is too large (larger than ~700KB when encoded),
           // we'll need to resize or compress it
           // Firebase Auth has a limit of ~1024 characters for photoURL
           if (base64String.length > 500000) {
-            console.warn("Image is too large, it may cause issues with storage.");
+            console.warn(
+              "Image is too large, it may cause issues with storage."
+            );
             // For now, we'll still return it and let AuthService truncate if needed
           }
           resolve(base64String);
@@ -211,8 +182,8 @@ export default function Register() {
           city: values.city ? values.city.trim() : "",
           area: values.area ? values.area.trim() : "",
           street: values.street ? values.street.trim() : "",
-          location: values.location ? values.location.trim() : ""
-          // Note: In AuthService, these fields will be converted to JSON string 
+          location: values.location ? values.location.trim() : "",
+          // Note: In AuthService, these fields will be converted to JSON string
           // using JSON.stringify to create the addresses object
         };
 
@@ -220,6 +191,11 @@ export default function Register() {
 
         if (result.success) {
           setRegistrationSuccess(true);
+          // Add a small delay before redirecting
+          setTimeout(() => {
+            navigate("/login");
+          }, 1500); // 1.5 second delay to show success message
+          setCurrentStep(4);
           setCurrentStep(4);
         } else {
           throw new Error(result.error);
@@ -242,62 +218,58 @@ export default function Register() {
   };
 
   const getGeolocation = async (setFieldValue) => {
-    const getPosition = () => new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        resolve,
-        reject,
-        {
+    const getPosition = () =>
+      new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
           enableHighAccuracy: true,
           timeout: 5000,
-          maximumAge: 0
-        }
-      );
-    });
-  
+          maximumAge: 0,
+        });
+      });
+
     const getAddress = async (latitude, longitude) => {
       try {
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
           {
             headers: {
-              'User-Agent': 'Your-App-Name' // Required by Nominatim usage policy
-            }
+              "User-Agent": "Your-App-Name", // Required by Nominatim usage policy
+            },
           }
         );
-        
-        if (!response.ok) throw new Error('Network response was not ok');
-        
+
+        if (!response.ok) throw new Error("Network response was not ok");
+
         const data = await response.json();
         return data.display_name || `${latitude}, ${longitude}`;
       } catch (error) {
-        console.error('Error getting address:', error);
+        console.error("Error getting address:", error);
         return `${latitude}, ${longitude}`;
       }
     };
-  
+
     try {
       if (!navigator.geolocation) {
         throw new Error(t("GeolocationNotSupported"));
       }
-  
+
       const position = await getPosition();
       const { latitude, longitude } = position.coords;
       const address = await getAddress(latitude, longitude);
       setFieldValue("location", address);
-      
     } catch (error) {
       console.error("Error getting location:", error);
-      
+
       // If we have coordinates but address fetch failed
-      if (error.message !== 'Network response was not ok') {
+      if (error.message !== "Network response was not ok") {
         alert(t("GeolocationFailed"));
       }
-      
+
       // If coordinates were obtained but address lookup failed
       if (error instanceof GeolocationPositionError) {
-        const fallback = error.coords 
+        const fallback = error.coords
           ? `${error.coords.latitude}, ${error.coords.longitude}`
-          : '';
+          : "";
         setFieldValue("location", fallback);
       }
     }
@@ -397,19 +369,9 @@ export default function Register() {
                 <p className="text-gray-600 mb-6">
                   {t("AccountCreatedSuccessfully")}
                 </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    {t("ProceedToLogin")}
-                  </button>
-                  <button
-                    onClick={() => navigate("/")}
-                    className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
-                  >
-                    {t("BackToHome")}
-                  </button>
+                <p className="text-blue-600">{t("RedirectingToLogin")}...</p>
+                <div className="mt-4">
+                  <div className="w-8 h-8 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-auto"></div>
                 </div>
               </div>
             )}
@@ -569,11 +531,12 @@ export default function Register() {
                               <Eye size={24} />
                             )}
                           </button>
-                          {errors.confirmPassword && touched.confirmPassword && (
-                            <div className="text-red-500 text-sm mt-1 rtl:text-right">
-                              {errors.confirmPassword}
-                            </div>
-                          )}
+                          {errors.confirmPassword &&
+                            touched.confirmPassword && (
+                              <div className="text-red-500 text-sm mt-1 rtl:text-right">
+                                {errors.confirmPassword}
+                              </div>
+                            )}
                         </div>
 
                         <div className="relative mt-5">
@@ -612,7 +575,9 @@ export default function Register() {
                                 value="male"
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
-                              <span className="rtl:text-right">{t("Male")}</span>
+                              <span className="rtl:text-right">
+                                {t("Male")}
+                              </span>
                             </label>
                             <label className="flex items-center gap-2">
                               <Field
@@ -621,7 +586,9 @@ export default function Register() {
                                 value="female"
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
-                              <span className="rtl:text-right">{t("Female")}</span>
+                              <span className="rtl:text-right">
+                                {t("Female")}
+                              </span>
                             </label>
                           </div>
                           {errors.gender && touched.gender && (
@@ -670,7 +637,10 @@ export default function Register() {
                                 const file = event.currentTarget.files[0];
                                 if (file) {
                                   setSelectedFile(file);
-                                  setFieldValue("profileImage", "pending-upload");
+                                  setFieldValue(
+                                    "profileImage",
+                                    "pending-upload"
+                                  );
 
                                   const reader = new FileReader();
                                   reader.onloadend = () => {
@@ -714,7 +684,10 @@ export default function Register() {
                                 } focus:outline-none focus:border-blue-500 rtl:text-right`}
                                 value={field.value || ""}
                                 onChange={(e) =>
-                                  form.setFieldValue("bloodType", e.target.value)
+                                  form.setFieldValue(
+                                    "bloodType",
+                                    e.target.value
+                                  )
                                 }
                               >
                                 <option value="" disabled>
@@ -950,9 +923,25 @@ export default function Register() {
                         >
                           {isLoading ? (
                             <span className="flex items-center justify-center">
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
                               </svg>
                               {t("Loading")}
                             </span>

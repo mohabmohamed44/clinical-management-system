@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bot, BotMessageSquare, Send, UserRound, X } from 'lucide-react';
-import useChatBot from '../../hooks/useChatbot';
+import useChatBot from '@hooks/useChatbot';
 
 export default function Chatbot() {
   const {

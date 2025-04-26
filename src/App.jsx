@@ -5,39 +5,39 @@ import { AuthProvider } from "./Lib/Context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "./Lib/Context/LanguageContext";
 import "./App.css";
-import Login from "./Pages/Login/Login";
-import Layout from "./Pages/Layout/Layout";
-import Register from "./Pages/Register/Register";
-import Home from "./Pages/Home/Home";
-import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
-import ResetCode from "./Pages/ResetCode/ResetCode";
-import UpdatePassword from "./Pages/UpdatePassword/UpdatePassword";
-import NotFound from "./Pages/NotFound/NotFound";
-import AllDone from "./Pages/AllDone/AllDone";
-import Contact from "./Pages/Contact/Contact";
-import Appointments from "./Pages/Appointments/Appointments";
-import FindDoctor from "./Pages/FindDoctor/FindDoctor";
-import Blog from "./Pages/Blog/Blog";
-import About from "./Pages/About/About";
-import PricingPlan from "./Pages/PricingPlan/PricingPlan";
-import Departments from "./Pages/Departments/Departments";
-import Offers from "./Pages/Offers/Offers";
-import Book from "./Pages/Book/Book";
-import DoctorDetails from "./Pages/DoctorDetails/DoctorDetails";
-import Clinics from "./Pages/Clinics/Clinics";
-import ClinicDetails from "./Pages/ClinicDetails/ClinicDetails";
-import AppointmentDetails from './Pages/AppointmentDetails/AppointmentDetails';
-import Hospitals from "./Pages/hospitals/hospitals";
-import ProfilePage from "./Pages/ProfilePage/ProfilePage";
-import HospitalsDetails from "./Pages/HospitalsDetails/HospitalsDetails";
-import DepartmentDetails from "./Pages/DepartmentDetails/DepartmentDetails";
+import Login from "@pages/Login/Login";
+import Layout from "@pages/Layout/Layout";
+import Register from "@pages/Register/Register";
+import Home from "@pages/Home/Home";
+import ForgotPassword from "@pages/ForgotPassword/ForgotPassword";
+import ResetCode from "@pages/ResetCode/ResetCode";
+import UpdatePassword from "@pages/UpdatePassword/UpdatePassword";
+import NotFound from "@pages/NotFound/NotFound";
+import AllDone from "@pages/AllDone/AllDone";
+import Contact from "@pages/Contact/Contact";
+import Appointments from "@pages/Appointments/Appointments";
+import FindDoctor from "@pages/FindDoctor/FindDoctor";
+import Blog from "@pages/Blog/Blog";
+import About from "@pages/About/About";
+import PricingPlan from "@pages/PricingPlan/PricingPlan";
+import Departments from "@pages/Departments/Departments";
+import Offers from "@pages/Offers/Offers";
+import Book from "@pages/Book/Book";
+import DoctorDetails from "@pages/DoctorDetails/DoctorDetails";
+import Clinics from "@pages/Clinics/Clinics";
+import ClinicDetails from "@pages/ClinicDetails/ClinicDetails";
+import AppointmentDetails from '@pages/AppointmentDetails/AppointmentDetails';
+import Hospitals from "@pages/hospitals/hospitals";
+import ProfilePage from "@pages/ProfilePage/ProfilePage";
+import HospitalsDetails from "@pages/HospitalsDetails/HospitalsDetails";
+import DepartmentDetails from "@pages/DepartmentDetails/DepartmentDetails";
 import PrivateRoute from './routes/PrivateRoute/PrivateRoute';
 import PublicRoute from './routes/PublicRoute/PublicRoute';
-import Labs from './Pages/Labs/Labs';
-import LabDetails from './Pages/LabDetails/LabDetails';
-import Ask from "./Pages/Ask/Ask";
-import Questions from "./Pages/Questions/Questions";
-import QuestionDetails from './Pages/QuestionDetails/QuestionDetails';
+import Labs from '@pages/Labs/Labs';
+import LabDetails from '@pages/LabDetails/LabDetails';
+import Ask from "@pages/Ask/Ask";
+import Questions from "@pages/Questions/Questions";
+import QuestionDetails from '@pages/QuestionDetails/QuestionDetails';
 // React Query Client
 const queryClient = new QueryClient();
 
@@ -58,7 +58,6 @@ const router = createBrowserRouter([
       { path: "appointments", element: <PrivateRoute><Appointments /></PrivateRoute> },
       { path: "find_doctor", element: <PrivateRoute><FindDoctor /></PrivateRoute> },
       { path: "departments", element: <PrivateRoute><Departments /></PrivateRoute> },
-      { path: "/departments/:id", element: <PrivateRoute><DepartmentDetails /></PrivateRoute> },
       { path: "clinics", element: <PrivateRoute><Clinics /></PrivateRoute> },
       { path: "/clinics/:id", element: <PrivateRoute><ClinicDetails /></PrivateRoute> },
       { path: "/hospitals/:id", element: <PrivateRoute><HospitalsDetails /></PrivateRoute> },
@@ -76,13 +75,13 @@ const router = createBrowserRouter([
       { path: "ask-question", element: <PrivateRoute><Ask/></PrivateRoute>},
       { path: "questions", element: <PrivateRoute><Questions/></PrivateRoute> },
       { path: "questions/:id", element: <PrivateRoute><QuestionDetails/></PrivateRoute>},
+      { path: "/departments/:specialty/doctors", element: <PrivateRoute><DepartmentDetails /></PrivateRoute> },
       { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },
 ]);
 
 function App() {
-  // Browser router
   return (
     <>
       <AuthProvider>

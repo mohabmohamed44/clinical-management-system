@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../Config/Supabase";
 import { useParams } from "react-router-dom";
@@ -42,7 +42,6 @@ const fetchAppointment = async (appointmentId) => {
 
 export default function AppointmentDetails() {
   const { id } = useParams();
-
   const {
     data: appointment,
     isLoading,

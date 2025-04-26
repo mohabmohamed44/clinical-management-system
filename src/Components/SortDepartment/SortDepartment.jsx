@@ -12,8 +12,9 @@ export default function SortDepartment({ onDepartmentSelect, selectedDepartment 
     queryFn: async () => {
       const { data, error } = await supabase
         .from('Specialties')
-        .select('specialty', { distinct: true })
-        .order('specialty', { ascending: true });
+        .select('specialty')
+        .order('specialty')
+        .eq('type', 'Doctor')
 
       if (error) throw new Error(error.message);
       return data;

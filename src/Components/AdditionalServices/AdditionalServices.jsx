@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Clock, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, ChevronLeft, ChevronRight, Clock, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from '../../Config/Supabase';
 
@@ -180,7 +180,7 @@ export default function AdditionalServices() {
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-xl font-bold text-gray-900">{offer.title}</h3>
                       <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="w-4 h-4 mr-1" />
+                        <Calendar className="w-4 h-4 mr-1" />
                         {formatTime(offer.start_date)} - {formatTime(offer.end_date)}
                       </div>
                     </div>

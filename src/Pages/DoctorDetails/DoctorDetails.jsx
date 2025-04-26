@@ -18,6 +18,7 @@ import {
   FaMoneyBillWave,
   FaClinicMedical,
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 export default function DoctorDetails() {
   const auth = getAuth();
@@ -25,6 +26,7 @@ export default function DoctorDetails() {
   const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(5);
   const { id } = useParams();
+  const { t } = useTranslation();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["doctor", id],
@@ -214,7 +216,7 @@ export default function DoctorDetails() {
                   Dr. {data.first_name} {data.last_name}
                 </h1>
                 <h2 className="text-lg sm:text-xl mb-2 text-white">
-                  {data.specialty}
+                  {t(data.specialty)}
                 </h2>
                 <div className="flex items-center text-white mb-2">
                   <div className="flex">
@@ -250,8 +252,8 @@ export default function DoctorDetails() {
                   loading="lazy"
                 />
 
-                <div className="bg-[#3182CE] text-white py-3 px-4 text-center text-lg font-semibold">
-                  {data.specialty} Department
+                <div className="bg-[#3454CE] text-white py-3 px-4 text-center text-lg font-semibold">
+                  {t(data.specialty)} Department
                 </div>
 
                 <div className="p-6 space-y-6">
@@ -427,10 +429,10 @@ export default function DoctorDetails() {
                       {data.info.education.map((edu, index) => (
                         <div key={index} className="bg-gray-50 p-4 rounded-lg">
                           <h4 className="font-semibold text-blue-800">
-                            {edu.degree || "Medical Degree"}
+                            <li className="text-xl">{edu.degree || "Medical Degree"}</li>
                           </h4>
-                          <p className="text-sm">
-                            {edu.university || "University of Medicine"}
+                          <p className="text-xl">
+                            <li>{edu.university || "University of Medicine"}</li>
                           </p>
                         </div>
                       ))}
@@ -444,7 +446,7 @@ export default function DoctorDetails() {
 
                 {/* Experience Section */}
                 <div>
-                  <h3 className="text-lg sm:text-xl font-semibold mb-4">
+                  <h3 className="text-lg sm:text-3xl font-semibold mb-4">
                     Experience
                   </h3>
                   {data.info.experience?.length > 0 ? (

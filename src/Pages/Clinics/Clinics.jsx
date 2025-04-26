@@ -5,7 +5,6 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaClock,
-  FaMoneyBillWave,
   FaStar,
   FaUserMd,
 } from "react-icons/fa";

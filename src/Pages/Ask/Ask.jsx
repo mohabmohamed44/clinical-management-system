@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../Config/Supabase";
 import { getAuth } from "firebase/auth";
+import { useTranslation } from "react-i18next";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import MetaData from "../../Components/MetaData/MetaData";
@@ -30,7 +31,7 @@ const QuestionSchema = Yup.object().shape({
 export default function AskQuestionForm() {
   const navigate = useNavigate();
   const auth = getAuth();
-
+  const { t } = useTranslation();
   const { data: specialties, isLoading: specialtiesLoading } = useQuery({
     queryKey: ["Specialties"],
     queryFn: async () => {
@@ -145,8 +146,8 @@ const mutation = useMutation({
                     >
                       <option value="" disabled>Select Specialty</option>
                       {specialties?.map((spec) => (
-                        <option key={spec.specialty} value={spec.specialty}>
-                          {spec.specialty}
+                        <option key={spec.specialty} value={t(spec.specialty)}>
+                          {t(spec.specialty)}
                         </option>
                       ))}
                     </Field>
