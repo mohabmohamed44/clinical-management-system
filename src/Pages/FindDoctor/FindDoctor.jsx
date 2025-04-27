@@ -8,11 +8,18 @@ import SortDepartment from "../../Components/SortDepartment/SortDepartment";
 import DoctorCard from "../../Components/DoctorCard/DoctorCard";
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
+import FilterDoctors from "../../Components/filterDoctors/filterDoctors";
 
 export default function FindDoctor() {
   const { t } = useTranslation();
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [activeFilters, setActiveFilters] = useState({
+    rating: '',
+    gender: '',
+    location: '',
+    priceRange: ''
+  });
 
   // Fetch doctors using TanStack Query
   const { data: doctors, isLoading, isError, error } = useQuery({
@@ -39,19 +46,48 @@ export default function FindDoctor() {
     }
   });
 
-  // Filter doctors when department changes
+  // Update useEffect to handle filters more precisely
   useEffect(() => {
     if (!doctors) return;
     
-    if (selectedDepartment === 'all') {
-      setFilteredDoctors(doctors);
-    } else {
-      const filtered = doctors.filter(doctor => 
-      t(doctor.specialty.toLowerCase()) === t(selectedDepartment.toLowerCase())
+    let filtered = [...doctors];
+    
+    // Department filter
+    if (selectedDepartment !== 'all') {
+      filtered = filtered.filter(doctor => 
+        t(doctor.specialty?.toLowerCase() || '') === t(selectedDepartment.toLowerCase())
       );
-      setFilteredDoctors(filtered);
     }
-    }, [selectedDepartment, doctors, t]);
+
+    // Rating filter
+    if (activeFilters.rating) {
+      filtered = filtered.filter(doctor => 
+        doctor.rate >= parseInt(activeFilters.rating)
+      );
+    }
+
+    // Gender filter
+    if (activeFilters.gender) {
+      filtered = filtered.filter(doctor => 
+        doctor.gender?.toLowerCase() === activeFilters.gender.toLowerCase()
+      );
+    }
+
+    // Location filter - Add null check
+    if (activeFilters.location) {
+      filtered = filtered.filter(doctor => 
+        doctor.address && typeof doctor.address === 'string' && 
+        doctor.address.toLowerCase().includes(activeFilters.location.toLowerCase())
+      );
+    }
+
+    setFilteredDoctors(filtered);
+  }, [selectedDepartment, doctors, t, activeFilters]);
+
+  // Handler for filter changes
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+  };
 
   // Loading and error states
   if (isLoading) return (
@@ -124,6 +160,11 @@ export default function FindDoctor() {
               : `${t(selectedDepartment)} Specialists`}
           </h2>
           
+          {/* Add FilterDoctors component */}
+          <div className="mb-8">
+            <FilterDoctors onFilterChange={handleFilterChange} />
+          </div>
+
           {filteredDoctors.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDoctors.map(doctor => (

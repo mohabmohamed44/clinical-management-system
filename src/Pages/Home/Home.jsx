@@ -50,7 +50,7 @@ export default function Home() {
             aria-label="Main introduction section"
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
-              <div className="text-[#ffffff] max-w-lg sm:mt-30 mt-20 md:mt-50 text-center lg:text-left order-1 lg:order-1">
+              <div className="text-[#ffffff] max-w-lg sm:mt-30 mt-15 md:mt-50 text-center lg:text-left order-1 lg:order-1">
                 <h1
                   className="text-3xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
                   role="heading"
