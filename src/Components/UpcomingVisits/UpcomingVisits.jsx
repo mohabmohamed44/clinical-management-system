@@ -247,7 +247,7 @@ export default function UpcomingVisits() {
                       <img 
                         src={visit.doctor_photo} 
                         alt={visit.doctor_name}
-                        className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-100"
+                        className="w-12 h-12 md:w-16 md:h-16 rounded-full object-contain border-2 border-blue-100"
                       />
                       <div>
                         <h3 className="font-bold text-base md:text-lg line-clamp-1">{visit.doctor_name}</h3>
