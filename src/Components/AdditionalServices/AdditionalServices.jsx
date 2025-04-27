@@ -313,7 +313,7 @@ export default function AdditionalServices() {
 
   // Calculate discount amount
   const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
-    if (!discountPercentage) return originalPrice;
+    if (!discountPercentage) return originalPrice; // if there's no discount, return original price
     const discountAmount = (originalPrice * discountPercentage) / 100;
     return originalPrice - discountAmount;
   };
