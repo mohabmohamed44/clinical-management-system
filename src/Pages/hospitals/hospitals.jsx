@@ -75,7 +75,7 @@ export default function Hospitals() {
               <img
                 src={hospital.image || "/default-hospital.jpg"}
                 alt={hospital.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-48 object-contain"
               />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">
