@@ -7,7 +7,6 @@ import Logo from "../../assets/logo.webp";
 import footerBg from "../../assets/Frame.webp";
 
 export default function Footer() {
-
   const currentYear = new Date().getFullYear();
 
   const { t, i18n } = useTranslation();
@@ -157,7 +156,7 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link 
+                  <Link
                     to="/about"
                     className="text-white hover:lg:text-white transition-colors"
                   >
@@ -175,14 +174,19 @@ export default function Footer() {
               <p className="text-white text-lg font-medium mb-4">
                 {t("GetAdviceFromOurExperts")}
               </p>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="email"
                   placeholder="example@email.com"
-                  className="flex-1 px-4 py-2 rounded-lg bg-white border border-sky-200 focus:outline-none focus:border-sky-400"
+                  className="w-full sm:flex-1 px-4 py-2 rounded-lg bg-white border border-sky-200 focus:outline-none focus:border-sky-400"
                 />
-                <button className="px-6 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  {t("Submit")} {isRTL ? <MoveLeft className="inline ml-2" /> : <MoveRight className="inline ml-2" />}
+                <button className="w-full sm:w-auto px-6 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  {t("Submit")}{" "}
+                  {isRTL ? (
+                    <MoveLeft className="inline ml-2" />
+                  ) : (
+                    <MoveRight className="inline ml-2" />
+                  )}
                 </button>
               </div>
             </div>
@@ -209,11 +213,13 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <p>{t("CopyRights")} {t(currentYear)}</p>
+              <p>
+                {t("CopyRights")} {t(currentYear)}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </footer>
   );
-};
+}

@@ -1,8 +1,9 @@
 import { Link, useParams } from "react-router-dom";
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { supabase } from "../../Config/Supabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuth } from "firebase/auth";
+import { PiGraduationCapBold } from "react-icons/pi";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
 import { DNA } from "react-loader-spinner";
@@ -17,6 +18,7 @@ import {
   FaClock,
   FaMoneyBillWave,
   FaClinicMedical,
+  FaBriefcaseMedical,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
@@ -65,6 +67,7 @@ export default function DoctorDetails() {
         `
         )
         .eq("id", id)
+        .order("id", { ascending: true })
         .single();
 
       if (doctorError) throw doctorError;
@@ -78,10 +81,10 @@ export default function DoctorDetails() {
     },
   });
 
-  const { 
-    data: reviewsData, 
+  const {
+    data: reviewsData,
     refetch: refetchReviews,
-    isLoading: reviewsLoading
+    isLoading: reviewsLoading,
   } = useQuery({
     queryKey: ["doctorReviews", id],
     queryFn: () => getDoctorReviews(id),
@@ -100,7 +103,7 @@ export default function DoctorDetails() {
         doctorId: id,
         userId: auth.currentUser.uid,
         review: newReview,
-        rate: rating
+        rate: rating,
       });
 
       if (!result.success) {
@@ -109,13 +112,13 @@ export default function DoctorDetails() {
 
       setNewReview("");
       setRating(5);
-      
+
       // Force refetch reviews
       await refetchReviews();
-      
+
       // Also invalidate doctor data to update ratings
       queryClient.invalidateQueries(["doctor", id]);
-      
+
       toast.success("Review submitted successfully!");
     } catch (error) {
       console.error("Review submission error:", error);
@@ -211,7 +214,7 @@ export default function DoctorDetails() {
         <div className="w-full absolute right-0 left-0">
           <div className="h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full right-0 left-0 z-50">
             <div className="container mx-auto p-2 h-full md:flex md:justify-end md:items-start">
-              <div className="max-w-xl text-left mt-4 px-4 md:px-0 lg:mr-100 md:xl:mr-112 md:lg:xl:pr-30 py-7">
+              <div className="max-w-xl text-left mt-4 px-4 md:px-0 lg:mr-100 md:lg:xl:mr-100 md:lg:xl:pr-30 py-7">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white">
                   Dr. {data.first_name} {data.last_name}
                 </h1>
@@ -306,7 +309,9 @@ export default function DoctorDetails() {
                         <div>
                           <p className="font-medium">Contact Numbers</p>
                           <div className="flex flex-wrap gap-2">
-                            {data.clinic.phones && Array.isArray(data.clinic.phones) && data.clinic.phones.length > 0 ? (
+                            {data.clinic.phones &&
+                            Array.isArray(data.clinic.phones) &&
+                            data.clinic.phones.length > 0 ? (
                               data.clinic.phones.map((phone, index) => (
                                 <a
                                   key={index}
@@ -385,12 +390,18 @@ export default function DoctorDetails() {
                             <div className="mt-1 space-y-1">
                               {Array.isArray(data.clinic.work_times) ? (
                                 data.clinic.work_times.map((slot, index) => (
-                                  <div key={index} className="text-xs text-gray-600 flex justify-between items-center">
-                                    <span className="font-medium w-20">{slot.day}:</span>
+                                  <div
+                                    key={index}
+                                    className="text-xs text-gray-600 flex justify-between items-center"
+                                  >
+                                    <span className="font-medium w-20">
+                                      {slot.day}:
+                                    </span>
                                     <span className="text-md">
                                       {slot.start && slot.end ? (
                                         <span>
-                                          {formatTime(slot.start)} - {formatTime(slot.end)}
+                                          {formatTime(slot.start)} -{" "}
+                                          {formatTime(slot.end)}
                                           <span className="text-blue-500 ml-2">
                                             ({slot.duration} min/visit)
                                           </span>
@@ -421,18 +432,22 @@ export default function DoctorDetails() {
               <div className="bg-white rounded-lg p-6 sm:p-8 shadow space-y-8">
                 {/* Education Section */}
                 <div>
-                  <h3 className="text-lg sm:text-3xl font-semibold mb-4">
-                    Education
+                  <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
+                    <PiGraduationCapBold size={24} className="text-blue-800" /> Education
                   </h3>
                   {data.info.education?.length > 0 ? (
                     <div className="space-y-4">
                       {data.info.education.map((edu, index) => (
                         <div key={index} className="bg-gray-50 p-4 rounded-lg">
                           <h4 className="font-semibold text-blue-800">
-                            <li className="text-xl">{edu.degree || "Medical Degree"}</li>
+                            <li className="text-xl">
+                              {edu.degree || "Medical Degree"}
+                            </li>
                           </h4>
                           <p className="text-xl">
-                            <li>{edu.university || "University of Medicine"}</li>
+                            <li>
+                              {edu.university || "University of Medicine"}
+                            </li>
                           </p>
                         </div>
                       ))}
@@ -446,17 +461,17 @@ export default function DoctorDetails() {
 
                 {/* Experience Section */}
                 <div>
-                  <h3 className="text-lg sm:text-3xl font-semibold mb-4">
-                    Experience
+                  <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
+                    <FaBriefcaseMedical size={24} className="text-blue-800" /> Experience
                   </h3>
                   {data.info.experience?.length > 0 ? (
                     <div className="space-y-4">
                       {data.info.experience.map((exp, index) => (
                         <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <p className="font-medium">
+                          <p className="font-medium text-sm md:text-lg">
                             {exp.years || "Several"} years of experience
                           </p>
-                          <p className="text-sm">
+                          <p className="text-sm md:text-lg">
                             Handled{" "}
                             {exp.cases_handled?.toLocaleString() || "numerous"}{" "}
                             cases
@@ -555,14 +570,13 @@ export default function DoctorDetails() {
                                   {renderStars(Math.round(review.rate || 0))}
                                 </div>
                                 <span className="text-xs text-gray-500">
-                                  {new Date(review.created_at).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                    }
-                                  )}
+                                  {new Date(
+                                    review.created_at
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
                                 </span>
                               </div>
                             </div>

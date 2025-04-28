@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import useModal from './useModal';
+import { useTranslation } from 'react-i18next';
 import { getMedicalBotResponse, resetMedicalBotConversation } from '../utils/GeminiConfig';
-
 export default function useChatBot() {
+  const { t } = useTranslation();
   const { isOpen, openModal, closeModal, toggleModal } = useModal(false);
   const messagesEndRef = useRef(null);
   
   const [messages, setMessages] = useState([
-    { sender: 'ai', content: '{"type": "Message", "message": "Hello! Delma here, ready to assist with your health concerns."}' }
+    { sender: 'ai', content: JSON.stringify({ type: "Message", message: t("ChatbotMessage") }) }
   ]);
   
   const [inputValue, setInputValue] = useState('');
@@ -24,7 +25,7 @@ export default function useChatBot() {
 
   const resetConversation = () => {
     setMessages([
-      { sender: 'ai', content: '{"type": "Message", "message": "Hello! Delma here, ready to assist with your health concerns."}' }
+      { sender: 'ai', content: JSON.stringify({ type: "Message", message: t("ChatbotMessage") }) }
     ]);
     resetMedicalBotConversation();
     setQuestionCount(0);

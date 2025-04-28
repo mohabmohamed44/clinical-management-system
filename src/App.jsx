@@ -76,6 +76,7 @@ const router = createBrowserRouter([
       { path: "questions", element: <PrivateRoute><Questions/></PrivateRoute> },
       { path: "questions/:id", element: <PrivateRoute><QuestionDetails/></PrivateRoute>},
       { path: "/departments/:specialty/doctors", element: <PrivateRoute><DepartmentDetails /></PrivateRoute> },
+      { path: "/find_doctor/:specialty/doctors/:id", element: <PrivateRoute><DoctorDetails /></PrivateRoute> },
       { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },

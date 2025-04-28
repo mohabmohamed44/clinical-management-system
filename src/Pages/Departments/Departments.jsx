@@ -348,9 +348,10 @@ export default function Departments() {
   return (
     <>
       <MetaData
-        title="Medical Professionals"
+        title="Departments | Medical Professionals"
         description="Browse our team of qualified doctors"
         keywords="doctors, medical specialists, healthcare professionals"
+        author={"Mohab Mohammed"}
       />
 
       <main className="w-full object-cover h-screen">
@@ -407,7 +408,7 @@ export default function Departments() {
             <li className="flex items-center">
               <ChevronRight className="text-[#3454c1]" />
             </li>
-            <li className="text-gray-700 font-medium">{t("Doctors")}</li>
+            <li className="text-gray-700 font-medium">{t("Departments")}</li>
           </ol>
         </div>
       </nav>
@@ -454,8 +455,7 @@ export default function Departments() {
               {t("Specialized in")} {t(doctor.specialty)}
             </p>
 
-            <Link
-              to={`/departments/${t(doctor.specialty)}/doctors`}
+            <Link to={`/departments/${doctor.specialty}/doctors`} 
               className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300"
             >
               {t("View Doctors")}
