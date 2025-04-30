@@ -42,11 +42,12 @@ export default function Navbar() {
           
           {/* Navigation links - only visible on lg screens and up */}
           <div className="hidden lg:flex ml-6 space-x-4 lg:space-x-6">
-            <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("FindDoctor")}</NavLink>
+            <NavLink to="/find_doctor" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Doctors")}</NavLink>
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("pricing")}</NavLink>
             <NavLink to="/clinics" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Clinics")}</NavLink>
+            <NavLink to="/labs" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Labs")}</NavLink>
             <NavLink to="/hospitals" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Hospitals")}</NavLink>
             <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Contact")}</NavLink>
           </div>
@@ -139,12 +140,13 @@ export default function Navbar() {
       {/* Mobile Menu - visible below lg screens when menu is open */}
       <div className={`lg:hidden bg-white transition-all duration-300 ease-in-out ${navbarOpen ? "max-h-screen py-4" : "max-h-0 py-0 overflow-hidden"}`}>
         <div className="flex flex-col items-start px-4 space-y-4">
-          <NavLink to="/find_doctor" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("FindDoctor")}</NavLink>
+          <NavLink to="/find_doctor" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Doctors")}</NavLink>
           <NavLink to="/about" className="w-full py-2 text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/departments" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>
           <NavLink to="/clinics" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Clinics")}</NavLink>
           <NavLink to="/hospitals" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Hospitals")}</NavLink>
           <NavLink to="/pricing" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("pricing")}</NavLink>
+          <NavLink to="/labs" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Labs")}</NavLink>
           <NavLink to="/contact" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Contact")}</NavLink>
           
           {/* Authentication Dropdown for Mobile */}

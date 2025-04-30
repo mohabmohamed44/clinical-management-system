@@ -41,7 +41,7 @@ const resources = {
       DepartmentsHeading: "Get to Know Available Departments",
       DepartmentsDescription:
         "All medical departments at Dalma Healthcare Center are equipped with the latest technology and the best medical staff",
-      FindDoctor: "Find Doctor",
+      Doctors: "Doctors",
       Offers: "Offers",
       FieldLength: "Each field must be 1 character",
       Contact: "Contact Us",
@@ -413,7 +413,7 @@ const resources = {
       phoneNumberRequired: "الرقم الموبايل مطلوب",
       WeAreHappy: "نحن سعداء جدا لرؤيتك مرة اخرى!",
       Home: "الصفحة الرئيسية",
-      FindDoctor: "ابحث عن طبيب",
+      Doctors: "ابحث عن طبيب",
       searchway: "ابحث عن طبيبك عن طريق التخصص أو الاسم",
       NotFound: "الصفحة غير موجودة",
       NotFoundDescription: "الصفحة التي تبحث عنها غير موجودة.",
