@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Banner from "../../assets/banner_img.png";
+import Banner from "../../assets/banner_img.webp";
 import Image from "../../assets/div-1.webp";
 import { useTranslation } from "react-i18next";
 import PriceCards from "../../Components/PriceCards/PriceCards";

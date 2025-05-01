@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import MetaData from "../../Components/MetaData/MetaData";
-import Background from "../../assets/background.png";
-import Doctor from "../../assets/find_doctor.png";
+import Background from "../../assets/background.webp";
+import Doctor from "../../assets/find_doctor.webp";
 import { useTranslation } from "react-i18next";
 import SortDepartment from "../../Components/SortDepartment/SortDepartment";
 import DoctorCard from "../../Components/DoctorCard/DoctorCard";

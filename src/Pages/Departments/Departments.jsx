@@ -301,7 +301,7 @@ import { useTranslation } from "react-i18next";
 import { FaUserMd } from "react-icons/fa";
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import MetaData from "../../Components/MetaData/MetaData";
-import Doc from "../../assets/doc.png";
+import Doc from "../../assets/doc.webp";
 import Image from "../../assets/div-1.webp";
 import Logo from "../../assets/logo.webp";
 

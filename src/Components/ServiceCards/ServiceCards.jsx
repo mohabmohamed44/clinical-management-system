@@ -1,6 +1,6 @@
 import React from "react";
 import { BadgeCheck, UsersRound, Hospital, HandHeart } from "lucide-react";
-import doctorImage from "../../assets/doctor-image.png";
+import doctorImage from "../../assets/doctor-image.webp";
 import { useTranslation } from "react-i18next";
 
 export default function _ServiceCards() {

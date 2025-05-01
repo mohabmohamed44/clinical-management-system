@@ -142,7 +142,7 @@ export default function HospitalsDetails() {
                 <img
                   src={hospital.image || "/default-hospital.jpg"}
                   alt={hospital.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
@@ -157,11 +157,17 @@ export default function HospitalsDetails() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-600">
                       <FaMapMarkerAlt className="text-blue-600" />
-                      <p><span className="font-medium">City:</span> {hospitalDetails.city}</p>
+                      <p>
+                        <span className="font-medium">City:</span>{" "}
+                        {hospitalDetails.city}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
                       <FaMapMarkerAlt className="text-blue-600" />
-                      <p><span className="font-medium">Government:</span> {hospitalDetails.government}</p>
+                      <p>
+                        <span className="font-medium">Government:</span>{" "}
+                        {hospitalDetails.government}
+                      </p>
                     </div>
                     {address && (
                       <div className="flex items-center gap-2 text-gray-600">
@@ -169,8 +175,12 @@ export default function HospitalsDetails() {
                         <p>
                           <span className="font-medium">Address:</span>
                           {address.streat && <span> {address.streat}</span>}
-                          {address.building && <span>, Building {address.building}</span>}
-                          {address.floor && <span>, Floor {address.floor}</span>}
+                          {address.building && (
+                            <span>, Building {address.building}</span>
+                          )}
+                          {address.floor && (
+                            <span>, Floor {address.floor}</span>
+                          )}
                           {address.sgin && <span>, {address.sgin}</span>}
                         </p>
                       </div>
@@ -183,23 +193,34 @@ export default function HospitalsDetails() {
                   <h2 className="text-xl font-semibold text-gray-700">
                     Contact Details
                   </h2>
-                  {hospitalDetails.phones && hospitalDetails.phones.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <FaPhone className="text-blue-600" />
-                        <div className="space-y-1">
-                          {hospitalDetails.phones.map((phone, index) => (
-                            <div key={index} className="flex items-center gap-2">
-                              <span className="font-medium">Phone {index + 1}:</span>
-                              <a href={`tel:${phone}`} className="hover:text-blue-600">
-                                {phone}
-                              </a>
-                            </div>
-                          ))}
+                  {hospitalDetails.phones &&
+                    hospitalDetails.phones.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <FaPhone className="text-blue-600" />
+                          <div className="space-y-1">
+                            {hospitalDetails.phones.map((phone, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2"
+                              >
+                                <span className="font-medium">
+                                  Phone {index + 1}:
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    (window.location.href = `tel:${phone}`)
+                                  }
+                                  className="hover:text-blue-600 cursor-pointer"
+                                >
+                                  {phone}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
 
                 <div className="space-y-3">
