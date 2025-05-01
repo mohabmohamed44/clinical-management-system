@@ -165,7 +165,7 @@ export default function LabDetails() {
           <img
             src={lab.laboratory?.image || "/placeholder-lab.jpg"}
             alt={lab.laboratory?.name}
-            className="w-full h-80 object-cover"
+            className="w-full h-full object-cover"
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = "/placeholder-lab.jpg";
