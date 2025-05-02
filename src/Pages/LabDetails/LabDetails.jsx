@@ -158,13 +158,13 @@ export default function LabDetails() {
     />
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-xl mx-auto">
-        <h1 className="text-[#005d] mb-5 font-semibold text-2xl md:text-3xl">
+        <h1 className="text-[#005d] mb-5 font-semibold text-2xl md:text-3xl" role="heading" aria-level="1">
           Lab Details - {lab.city} Branch
         </h1>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-hidden" role="article">
           <img
             src={lab.laboratory?.image || "/placeholder-lab.jpg"}
-            alt={lab.laboratory?.name}
+            alt={`${lab.laboratory?.name || 'Laboratory'} facility in ${lab.city}, ${lab.government}`}
             className="w-full h-full object-cover"
             onError={(e) => {
               e.target.onerror = null;
@@ -172,24 +172,30 @@ export default function LabDetails() {
             }}
           />
           <div className="p-6">
-            <h1 className="text-3xl font-bold mb-2">{lab.laboratory?.name || 'Unknown Lab'}</h1>
-            <div className="flex items-center text-gray-600 mb-4">
-              <MapPin size={16} className="mr-1 text-blue-600"/>
+            <h1 className="text-3xl font-bold mb-2" role="heading" aria-level="1">
+              {lab.laboratory?.name || 'Unknown Lab'}
+            </h1>
+            <div className="flex items-center text-gray-600 mb-4" role="contentinfo" aria-label="Laboratory location">
+              <MapPin size={16} className="mr-1 text-blue-600" aria-hidden="true"/>
               <span>{lab.city}, {lab.government} Branch</span>
             </div>
-            <p className="text-gray-600 mb-6">{lab.laboratory?.description || 'No description available'}</p>
+            <p className="text-gray-600 mb-6" role="description">
+              {lab.laboratory?.description || 'No description available'}
+            </p>
 
             {otherLocations.length > 0 && (
-              <div className="mb-6 bg-blue-50 p-4 rounded-lg">
-                <h2 className="text-lg font-semibold mb-2">Other Branches</h2>
-                <div className="grid grid-cols-2 gap-2">
+              <div className="mb-6 bg-blue-50 p-4 rounded-lg" role="region" aria-label="Other laboratory branches">
+                <h2 className="text-lg font-semibold mb-2" role="heading" aria-level="2">Other Branches</h2>
+                <div className="grid grid-cols-2 gap-2" role="list">
                   {otherLocations.map((location) => (
                     <Link
                       key={`location-${location.id}`}
                       to={`/labs/${location.id}`}
                       className="text-blue-600 hover:underline bg-white p-2 rounded flex items-center"
+                      role="listitem"
+                      aria-label={`Visit ${location.city}, ${location.government} branch`}
                     >
-                      <MapPin size={14} className="mr-1" />
+                      <MapPin size={14} className="mr-1" aria-hidden="true"/>
                       {location.city}, {location.government}
                     </Link>
                   ))}

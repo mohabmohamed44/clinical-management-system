@@ -19,7 +19,7 @@ export default function Home() {
   const { t } = useTranslation();
   
   return (
-    <>
+    <div role="region" aria-label="Home page content">
       <MetaData
         title={`${t("Home")} - Medical Platform`}
         description="Book appointments with qualified healthcare professionals and manage your medical needs"
@@ -27,10 +27,10 @@ export default function Home() {
         author="Mohab Mohammed"
       />
       
-      <main className="w-full object-cover h-screen" role="main">
-        <header className="absolute top-0 left-0 w-full h-screen">
+      <main className="w-full object-cover h-screen" role="main" aria-labelledby="main-heading">
+        <header className="absolute top-0 left-0 w-full h-screen" role="banner">
           {/* Optimized background image with responsive sources */}
-          <picture>
+          <picture aria-hidden="true">
             <source srcSet={Background} type="image/avif" />
             <source srcSet={BackgroundFallback} type="image/webp" />
             <img
@@ -47,34 +47,42 @@ export default function Home() {
 
           <section
             className="relative z-10 h-full px-6 md:px-10 max-w-screen-xl mx-auto"
-            aria-label="Main introduction section"
+            aria-labelledby="section-heading"
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               <div className="text-[#ffffff] max-w-lg sm:mt-30 mt-15 md:mt-50 text-center lg:text-left order-1 lg:order-1">
                 <h1
+                  id="main-heading"
                   className="text-3xl text-start rtl:text-start sm:text-4xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center"
-                  role="heading"
-                  aria-level="1"
+                  tabIndex="0"
                 >
                   {t("Home")}
                 </h1>
-                <p className={`${Style.text}`} aria-label="Platform description">
+                <p 
+                  className={`${Style.text}`} 
+                  tabIndex="0"
+                  aria-label={t("HomeDescription")}
+                >
                   {t("HomeDescription")}
                 </p>
                 <div className="flex justify-start">
-                <Link 
-                  to="/find_doctor"
-                  className="px-8 py-4 block bg-white text-[#2342a1] mt-6 rounded-xl font-semibold text-xl hover:bg-blue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-w-[150px] text-center"
-                  aria-label={t("BookNow")}
-                  role="button"
-                >
-                  {t("BookNow")}
-                </Link>
+                  <Link 
+                    to="/find_doctor"
+                    className="px-8 py-4 block bg-white text-[#2342a1] mt-6 rounded-xl font-semibold text-xl hover:bg-blue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-w-[150px] text-center"
+                    aria-label={t("Book appointment with a doctor")}
+                    role="button"
+                    tabIndex="0"
+                  >
+                    {t("BookNow")}
+                  </Link>
                 </div>
               </div>
 
               {/* Optimized doctor image with responsive sources */}
-              <figure className="mt-auto lg:mt-auto flex justify-center w-full lg:w-1/2 order-2 lg:order-2">
+              <figure 
+                className="mt-auto lg:mt-auto flex justify-center w-full lg:w-1/2 order-2 lg:order-2"
+                aria-label="Doctor illustration"
+              >
                 <picture>
                   <source srcSet={Doctor} type="image/avif" />
                   <source srcSet={DoctorFallback} type="image/webp" />
@@ -92,30 +100,58 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="relative z-30 transform translate-y-[-80%]">
-            <SearchCard aria-label="Doctor search interface" />
+          <div 
+            className="relative z-30 transform translate-y-[-80%]"
+            role="search"
+            aria-label="Search for doctors"
+          >
+            <SearchCard />
           </div>
         </header>
       </main>
 
       {/* Lazy loaded components with suspense */}
-      <div className="mt-50 pt-10 sm:mt-50 md:mt-10 lg:mt-20 xl:mt-20 px-4 md:px-8 lg:px-12 py-10">
-        <Suspense fallback={<div>Loading appointments...</div>}>
-          <UpcomingVisits aria-label="Your upcoming appointments" />
+      <div 
+        className="mt-50 pt-10 sm:mt-50 md:mt-10 lg:mt-20 xl:mt-20 px-4 md:px-8 lg:px-12 py-10"
+        role="complementary"
+        aria-label="Upcoming appointments section"
+      >
+        <Suspense 
+          fallback={
+            <div role="status" aria-live="polite">Loading appointments...</div>
+          }
+        >
+          <UpcomingVisits />
         </Suspense>
       </div>
 
-      <HomeCard aria-label="Our medical services" />
+      <section role="region" aria-label="Medical services overview">
+        <HomeCard />
+      </section>
 
-      <Suspense fallback={<div>Loading services...</div>}>
-        <AdditionalServices aria-label="Additional health services" />
-      </Suspense>
-
-      <div className="mt-7 px-4 md:px-8 lg:px-12">
-        <Suspense fallback={<div>Loading question form...</div>}>
-          <AskQuestion aria-label="Have questions? Ask here" />
+      <section role="region" aria-label="Additional services">
+        <Suspense 
+          fallback={
+            <div role="status" aria-live="polite">Loading services...</div>
+          }
+        >
+          <AdditionalServices />
         </Suspense>
-      </div>
-    </>
+      </section>
+
+      <section 
+        className="mt-7 px-4 md:px-8 lg:px-12"
+        role="region" 
+        aria-label="Questions and support"
+      >
+        <Suspense 
+          fallback={
+            <div role="status" aria-live="polite">Loading question form...</div>
+          }
+        >
+          <AskQuestion />
+        </Suspense>
+      </section>
+    </div>
   );
 }

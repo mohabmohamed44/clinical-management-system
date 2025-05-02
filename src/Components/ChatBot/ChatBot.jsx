@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Bot, BotMessageSquare, Send, UserRound, X, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import useChatBot from '@hooks/useChatbot';
-import { supabase } from '../../Config/Supabase'; // Adjust path accordingly
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Bot,
+  BotMessageSquare,
+  Send,
+  UserRound,
+  X,
+  ArrowRight,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import useChatBot from "@hooks/useChatbot";
+import { supabase } from "../../Config/Supabase";
 
 export default function Chatbot() {
   const {
@@ -13,7 +20,7 @@ export default function Chatbot() {
     setInputValue,
     handleSubmit,
     isTyping,
-    messagesEndRef
+    messagesEndRef,
   } = useChatBot();
 
   const [doctors, setDoctors] = useState([]);
@@ -23,14 +30,14 @@ export default function Chatbot() {
   const fetchSpecialties = async () => {
     try {
       const { data, error } = await supabase
-        .from('Specialties')
-        .select('specialty')
-        .order('specialty');
+        .from("Specialties")
+        .select("specialty")
+        .order("specialty");
 
       if (error) throw error;
-      setSpecialties(data?.map(s => s.specialty) || []);
+      setSpecialties(data?.map((s) => s.specialty) || []);
     } catch (err) {
-      console.error('Error fetching specialties:', err.message);
+      console.error("Error fetching specialties:", err.message);
       setSpecialties([]);
     }
   };
@@ -43,15 +50,15 @@ export default function Chatbot() {
   // Updated specialty extraction function
   const extractSpecialty = (message) => {
     if (!message || !specialties.length) return null;
-    
+
     // Convert message to lowercase for case-insensitive matching
     const lowerMessage = message.toLowerCase();
-    
+
     // Find the first matching specialty
-    const found = specialties.find(specialty => 
+    const found = specialties.find((specialty) =>
       lowerMessage.includes(specialty.toLowerCase())
     );
-    
+
     return found || null;
   };
 
@@ -59,26 +66,26 @@ export default function Chatbot() {
   const fetchDoctors = async (message) => {
     try {
       const specialty = extractSpecialty(message);
-      
+
       if (!specialty) {
-        console.log('No specialty found in message');
+        console.log("No specialty found in message");
         return;
       }
 
-      console.log('Searching for specialty:', specialty);
-      
+      console.log("Searching for specialty:", specialty);
+
       const { data, error } = await supabase
-        .from('Doctors')
-        .select('id, first_name, last_name, image, specialty, rate')
-        .ilike('specialty', `%${specialty}%`)
-        .order('rate', { ascending: false }) // Sort by highest rate first
+        .from("Doctors")
+        .select("id, first_name, last_name, image, specialty, rate")
+        .ilike("specialty", `%${specialty}%`)
+        .order("rate", { ascending: false }) // Sort by highest rate first
         .limit(4);
 
       if (error) throw error;
       setDoctors(data || []);
-      console.log('Doctors fetched:', data);
+      console.log("Doctors fetched:", data);
     } catch (err) {
-      console.error('Error fetching doctors:', err.message);
+      console.error("Error fetching doctors:", err.message);
       setDoctors([]);
     }
   };
@@ -89,10 +96,10 @@ export default function Chatbot() {
 
     const lastMessage = messages[messages.length - 1];
 
-    if (lastMessage?.sender === 'ai') {
+    if (lastMessage?.sender === "ai") {
       try {
         let messageContent;
-        if (typeof lastMessage.content === 'string') {
+        if (typeof lastMessage.content === "string") {
           const parsed = JSON.parse(lastMessage.content);
           messageContent = parsed.message;
         } else {
@@ -100,13 +107,13 @@ export default function Chatbot() {
         }
 
         if (messageContent) {
-          console.log('Processing AI message:', messageContent);
+          console.log("Processing AI message:", messageContent);
           fetchDoctors(messageContent);
         }
       } catch (e) {
         // If JSON parsing fails, try to use the content directly
         if (lastMessage.content) {
-          console.log('Processing raw message:', lastMessage.content);
+          console.log("Processing raw message:", lastMessage.content);
           fetchDoctors(lastMessage.content);
         }
       }
@@ -116,12 +123,12 @@ export default function Chatbot() {
   const formatMessage = (content) => {
     try {
       let cleaned = content
-        .replace(/^"+|"+$/g, '')
+        .replace(/^"+|"+$/g, "")
         .replace(/\\"/g, '"')
-        .replace(/\\n/g, ' ')
+        .replace(/\\n/g, " ")
         .trim();
 
-      if (cleaned.startsWith('{') && cleaned.endsWith('}')) {
+      if (cleaned.startsWith("{") && cleaned.endsWith("}")) {
         const parsed = JSON.parse(cleaned);
         return parsed.message || content;
       }
@@ -140,20 +147,27 @@ export default function Chatbot() {
         aria-expanded={isOpen}
         type="button"
       >
-        {isOpen ? <X className="text-white w-6 h-6" /> : <BotMessageSquare className="text-white w-6 h-6" />}
+        {isOpen ? (
+          <X className="text-white w-6 h-6" />
+        ) : (
+          <BotMessageSquare className="text-white w-6 h-6" />
+        )}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-16 right-4 bg-white p-0 rounded-xl border border-gray-200 w-[90vw] sm:w-[95vw] md:w-[500px] h-[60vh] sm:h-[65vh] md:h-[70vh] min-h-[400px] max-h-[650px] shadow-2xl z-50 transition-all duration-300 overflow-hidden outline-0">
-          
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#11319E] to-[#2a43a0] p-5 rounded-t-xl">
             <div className="flex items-center gap-3">
               <Bot className="h-6 w-6 text-white" />
               <div>
-                <h2 className="font-semibold text-lg tracking-tight text-white">Delma Medical Bot</h2>
-                <p className="text-sm text-gray-200 leading-3 mt-1">Your AI healthcare assistant</p>
+                <h2 className="font-semibold text-lg tracking-tight text-white">
+                  Delma Medical Bot
+                </h2>
+                <p className="text-sm text-gray-200 leading-3 mt-1">
+                  Your AI healthcare assistant
+                </p>
               </div>
             </div>
           </div>
@@ -164,10 +178,10 @@ export default function Chatbot() {
               <div
                 key={index}
                 className={`flex gap-3 my-4 text-gray-700 text-sm sm:text-base ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  message.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                {message.sender === 'ai' && (
+                {message.sender === "ai" && (
                   <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8 mt-1">
                     <div className="rounded-full bg-[#eef2ff] border border-[#11319E]/20 p-1.5">
                       <Bot className="h-5 w-5 text-[#11319E]" />
@@ -177,9 +191,9 @@ export default function Chatbot() {
 
                 <div
                   className={`rounded-2xl px-4 py-3 max-w-[85%] ${
-                    message.sender === 'ai'
-                      ? 'bg-gray-200 text-[#00155D]'
-                      : 'bg-[#11319E] text-white'
+                    message.sender === "ai"
+                      ? "bg-gray-200 text-[#00155D]"
+                      : "bg-[#11319E] text-white"
                   }`}
                 >
                   <p className="leading-relaxed whitespace-pre-wrap break-words">
@@ -187,7 +201,7 @@ export default function Chatbot() {
                   </p>
                 </div>
 
-                {message.sender === 'user' && (
+                {message.sender === "user" && (
                   <span className="relative flex shrink-0 overflow-hidden rounded-full w-8 h-8 mt-1">
                     <div className="rounded-full bg-[#11319E]/10 border border-[#11319E]/20 p-1.5">
                       <UserRound className="h-5 w-5 text-[#11319E]" />
@@ -200,8 +214,10 @@ export default function Chatbot() {
             {/* Doctor Suggestions Grid */}
             {doctors.length > 0 && (
               <div className="mt-4">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">Recommended Doctors:</h3>
-                <div className="grid grid-cols-2 gap-3">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">
+                  Recommended Doctors:
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {doctors.map((doc, idx) => (
                     <Link
                       to={`/find_doctor/${doc.id}`}
@@ -210,7 +226,7 @@ export default function Chatbot() {
                     >
                       <div className="flex-shrink-0 w-14 h-14 rounded-full overflow-hidden border-2 border-blue-50 mr-3">
                         <img
-                          src={doc.image || 'default-doctor-avatar.png'}
+                          src={doc.image || "default-doctor-avatar.png"}
                           alt={`${doc.first_name} ${doc.last_name}`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
@@ -219,10 +235,14 @@ export default function Chatbot() {
                         <h3 className="font-medium text-[#11319E] text-sm truncate group-hover:text-blue-700 transition-colors">
                           Dr. {doc.first_name} {doc.last_name}
                         </h3>
-                        <p className="text-xs text-gray-600 truncate">{doc.specialty}</p>
+                        <p className="text-xs text-gray-600 truncate">
+                          {doc.specialty}
+                        </p>
                         <div className="flex items-center mt-1">
                           <span className="text-amber-500 text-xs">★</span>
-                          <span className="ml-1 text-xs font-medium">{doc.rate}</span>
+                          <span className="ml-1 text-xs font-medium">
+                            {doc.rate}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -254,7 +274,10 @@ export default function Chatbot() {
 
           {/* Input Form */}
           <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200">
-            <form className="flex items-center gap-3 w-full" onSubmit={handleSubmit}>
+            <form
+              className="flex items-center gap-3 w-full"
+              onSubmit={handleSubmit}
+            >
               <input
                 className="flex h-12 w-full rounded-full border border-gray-300 px-5 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#11319E] focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 text-gray-900"
                 placeholder="Describe your symptoms or ask a question..."

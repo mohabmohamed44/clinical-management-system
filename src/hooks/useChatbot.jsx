@@ -32,60 +32,100 @@ export default function useChatBot() {
   };
 
   const cleanJsonResponse = (jsonString) => {
+    // Early safety check
+    if (!jsonString || typeof jsonString !== 'string') {
+      return { type: "Message", message: "I encountered an error processing your request" };
+    }
+
+    let cleaned = '';
     try {
-      // Step 1: Basic cleaning
-      let cleaned = jsonString
-        .replace(/^"+|"+$/g, '') // Remove surrounding quotes
-        .replace(/\\"/g, '"')     // Unescape quotes
-        .replace(/\\n/g, ' ')     // Replace newlines
-        .replace(/\\\\/g, '\\')   // Unescape backslashes
+      // Step 1: Basic cleaning and remove potential markdown code blocks
+      cleaned = jsonString
+        .replace(/```json|```/g, '') // Remove markdown code blocks
         .trim();
-  
-      // Step 2: Remove JSON markdown formatting if present
-      cleaned = cleaned.replace(/```json/g, '').replace(/```/g, '').trim();
-  
-      // Step 3: Handle multiple nested JSON strings
-      let parseAttempts = 0;
-      while (parseAttempts < 3) {
+      
+      // Try to detect if we're dealing with escaped JSON within JSON
+      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         try {
-          return JSON.parse(cleaned);
-        } catch (innerError) {
-          // If parsing fails, check for nested stringification
-          if (cleaned.startsWith('{') && cleaned.endsWith('}')) break;
-          cleaned = cleaned.replace(/^"{/, '{').replace(/}"$/, '}');
-          parseAttempts++;
+          // This might be a JSON string inside another JSON string
+          cleaned = JSON.parse(cleaned);
+        } catch (e) {
+          // Not a valid JSON string, continue with original
         }
       }
-  
-      // Step 4: Validate JSON structure
-      if (!/^\s*\{.*\}\s*$/.test(cleaned)) {
+      
+      // Additional cleaning if still a string
+      if (typeof cleaned === 'string') {
+        cleaned = cleaned
+          .replace(/\\"/g, '"')     // Unescape quotes
+          .replace(/\\n/g, ' ')     // Replace newlines
+          .replace(/\\\\/g, '\\');  // Unescape backslashes
+      }
+
+      // Now parse the cleaned string if it's still a string
+      let parsedJson;
+      if (typeof cleaned === 'string') {
+        try {
+          parsedJson = JSON.parse(cleaned);
+        } catch (e) {
+          // If parsing fails, this might be a plain message, not JSON
+          return {
+            type: "Message",
+            message: cleaned || "I encountered an error processing your request"
+          };
+        }
+      } else {
+        // If cleaned is already an object (from earlier parsing)
+        parsedJson = cleaned;
+      }
+
+      // Validate required fields
+      if (parsedJson && parsedJson.type && parsedJson.message) {
+        return parsedJson;
+      } else if (parsedJson) {
+        // If we have valid JSON but missing required fields
+        return {
+          type: "Message",
+          message: JSON.stringify(parsedJson)
+        };
+      } else {
         throw new Error('Invalid JSON structure');
       }
-  
-      // Step 5: Final parse attempt with error positions
-      const json = JSON.parse(cleaned);
-      
-      // Step 6: Validate required fields
-      if (!json.type || !json.message) {
-        throw new Error('Missing required fields');
-      }
-  
-      return json;
     } catch (e) {
       console.error('JSON parsing error:', e);
       console.log('Original string:', jsonString);
       console.log('Cleaned string:', cleaned);
       
-      // Fallback: Extract message content
-      const messageMatch = jsonString.match(/"message":\s*"([^"]+)"/);
-      const fallbackMessage = messageMatch 
-        ? messageMatch[1].replace(/\\"/g, '"')
-        : 'I encountered an error processing your request';
-  
-      return {
-        type: "Message",
-        message: fallbackMessage
-      };
+      // Fallback: Try to extract message content using regex
+      try {
+        // First attempt: Look for message in JSON format
+        const messageMatch = typeof cleaned === 'string' && cleaned.match(/"message"\s*:\s*"([^"]+)"/);
+        if (messageMatch) {
+          return {
+            type: "Message",
+            message: messageMatch[1].replace(/\\"/g, '"')
+          };
+        }
+        
+        // Return cleaned string as message if it's not empty
+        if (cleaned && typeof cleaned === 'string' && cleaned.trim().length > 0) {
+          return {
+            type: "Message",
+            message: cleaned.trim()
+          };
+        }
+        
+        // Final fallback
+        return {
+          type: "Message",
+          message: "I encountered an error processing your request"
+        };
+      } catch (fallbackError) {
+        return {
+          type: "Message",
+          message: "I encountered an error processing your request"
+        };
+      }
     }
   };
 
@@ -100,6 +140,9 @@ export default function useChatBot() {
     
     try {
       const rawResponse = await getMedicalBotResponse(inputValue.trim());
+      // Safety check for rawResponse
+      if (!rawResponse) throw new Error("Empty response received");
+      
       const parsedResponse = cleanJsonResponse(rawResponse);
       
       if (parsedResponse.type === "Question") {
