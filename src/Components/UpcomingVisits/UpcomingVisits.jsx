@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, User, Phone, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, MapPin, Phone, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import Doctor from "../../assets/doctor_home.webp";
+import useModal from '../../hooks/useModal';
+import RescheduleModal from '../RescheduleModal/RescheduleModal';
 
 export default function UpcomingVisits() {
   const [visits, setVisits] = useState([]);
@@ -9,6 +11,7 @@ export default function UpcomingVisits() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [screenSize, setScreenSize] = useState('large');
   const [cardsPerView, setCardsPerView] = useState(3);
+  const { isOpen, modalData, openModal, closeModal } = useModal();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -151,6 +154,13 @@ export default function UpcomingVisits() {
     setCurrentIndex(newIndex);
   };
 
+  const handleReschedule = (updatedVisit) => {
+    setVisits(visits.map(visit => 
+      visit.id === updatedVisit.id ? updatedVisit : visit
+    ));
+    // Here you would typically make an API call to update the visit
+  };
+
   if (loading) {
     return (
       <div className="w-full p-6 flex justify-center items-center">
@@ -287,7 +297,10 @@ export default function UpcomingVisits() {
                     
                     {/* Buttons stacked vertically on all screen sizes */}
                     <div className="mt-4 pt-3 border-t flex flex-col space-y-2">
-                      <button className="w-full px-3 py-1.5 text-sm bg-[#11319E] text-white rounded hover:bg-blue-700 transition-colors">
+                      <button 
+                        className="w-full px-3 py-1.5 text-sm bg-[#11319E] text-white rounded hover:bg-blue-700 transition-colors"
+                        onClick={() => openModal(visit)}
+                      >
                         Reschedule
                       </button>
                       <button className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors">
@@ -353,6 +366,12 @@ export default function UpcomingVisits() {
           </div>
         </div>
       )}
+      <RescheduleModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        visitData={modalData}
+        onReschedule={handleReschedule}
+      />
     </div>
   );
 }
