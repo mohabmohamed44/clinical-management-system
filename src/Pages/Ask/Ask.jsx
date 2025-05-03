@@ -92,7 +92,7 @@ const mutation = useMutation({
   };
 
   if (specialtiesLoading) return (
-    <div className="flex items-center justify-start h-screen">
+    <div className="flex items-center justify-center h-screen">
       <DNA width={90} height={90} ariaLabel="loading" />
     </div>
   );
