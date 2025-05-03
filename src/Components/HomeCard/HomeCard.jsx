@@ -88,8 +88,10 @@ export default function HomeCard() {
                   isRTL ? 'flex-row-reverse' : ''
                 }`}
               >
-                <span className={isRTL ? 'mr-2' : 'ml-2'}>+</span>
                 {t('ShowDoctors')}
+                <span className={isRTL ? 'mr-2' : 'ml-2'}>
+                  <ArrowIcon className="h-5 w-5" />
+                </span>
               </Link>
             </div>
           ))}

@@ -75,7 +75,6 @@ export default function RescheduleModal({ isOpen, onClose, visitData, onReschedu
               type="date"
               id="date"
               name="date"
-              required
               min={new Date().toISOString().split('T')[0]}
               value={formik.values.date}
               onChange={formik.handleChange}
@@ -99,7 +98,6 @@ export default function RescheduleModal({ isOpen, onClose, visitData, onReschedu
               type="time"
               id="time"
               name="time"
-              required
               value={formik.values.time}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

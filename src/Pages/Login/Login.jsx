@@ -18,16 +18,16 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Initialize cookies for storing user authentication data
+  // Initialize cookies
   const [userCookie, setUserCookie] = useCookies("user", null, {
-    expires: 7, // 7 days
+    expires: 7,
     path: "/",
   });
 
   const [tokenCookie, setTokenCookie] = useCookies("authToken", null, {
     expires: 7,
     path: "/",
-    secure: process.env.NODE_ENV === "production", // Only use secure in production
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
 
@@ -122,11 +122,10 @@ export default function Login() {
     <>
       <MetaData
         title="Login to Your Account | Secure Access"
-        description="Securely login to your account. Access your personalized dashboard with our safe and encrypted login system. Supporting both email and social login options."
-        keywords="login, secure login, account access, user authentication, sign in, social login, medical portal access"
+        description="Securely login to your account."
+        keywords="login, secure login, account access"
         author="Mohab Mohammed"
-        ogTitle="Login to Your Account | Secure Access"
-        ogDescription="Access to delma Medical System. Quick login with email or social accounts."
+        ogTitle="Login to Your Account"
         canonical={window.location.href}
         language={i18n.language}
       />
@@ -137,33 +136,38 @@ export default function Login() {
         role="main"
         aria-labelledby="login-title"
       >
-        {/* Left side - Image */}
+        {/* Image Section - Hidden on mobile */}
         <div className="lg:w-1/2 lg:pr-8 mb-8 lg:mb-0 h-full hidden lg:flex items-center justify-center">
           <img
             src={heroImage}
             alt="Healthcare professionals working together"
-            className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto md:rtl:pl-6"
+            className="rounded-xl max-w-[600px] max-h-[700px] object-cover w-full h-auto"
             loading="lazy"
             width="600"
             height="700"
+            role="img"
+            aria-labelledby="image-description"
           />
+          <span id="image-description" className="sr-only">
+            {t("Healthcare professionals collaborating in a modern medical facility")}
+          </span>
         </div>
 
-        {/* Right side - Form */}
-        <div className="lg:w-1/2 w-full max-w-md">
+        {/* Form Section - Responsive Adjustments */}
+        <div className="lg:w-1/2 w-full max-w-md mx-4">
           <div
-            className="bg-white rounded-2xl p-8 shadow-sm"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-sm"
             role="region"
             aria-label="Login form"
           >
             <h1
               id="login-title"
-              className="text-3xl font-bold text-center mb-2"
+              className="text-2xl md:text-3xl font-bold text-center mb-2"
               tabIndex="0"
             >
               {t("Hello")}!
             </h1>
-            <p className="text-gray-600 text-center mb-8" tabIndex="0">
+            <p className="text-gray-600 text-center mb-6 md:mb-8" tabIndex="0">
               {t("WeAreHappy")}
             </p>
 
@@ -181,81 +185,66 @@ export default function Login() {
               }}
             >
               {({ errors, touched, isSubmitting }) => (
-                <Form className="space-y-6" noValidate>
-                  {/* Email Field */}
+                <Form className="space-y-4 md:space-y-6" noValidate>
+                  {/* Email Input */}
                   <div className="relative">
                     <Field
                       id="email"
                       name="email"
                       type="email"
-                      className={`peer w-full px-4 py-3 rounded-lg border ${
+                      className={`peer w-full px-4 py-3 text-base md:text-md rounded-lg border ${
                         errors.email && touched.email
                           ? "border-red-500"
                           : "border-gray-300"
-                      } focus:outline-none focus:border-blue-500 placeholder-transparent ${
-                        isRTL ? "placeholder:rtl" : "placeholder:ltr"
-                      }`}
+                      } focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-transparent`}
                       placeholder={t("email")}
                       aria-required="true"
-                      aria-invalid={
-                        errors.email && touched.email ? "true" : "false"
-                      }
-                      aria-describedby={
-                        errors.email && touched.email
-                          ? "email-error"
-                          : undefined
-                      }
+                      aria-invalid={!!(errors.email && touched.email)}
+                      aria-describedby="email-error"
                       autoComplete="email"
                     />
                     <label
                       htmlFor="email"
                       className={`absolute ${
                         isRTL ? "right-4" : "left-4"
-                      } -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500`}
+                      } -top-2.5 bg-white px-1 text-sm md:text-md text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500`}
                     >
                       {t("email")}
                     </label>
                     {errors.email && touched.email && (
                       <div
                         id="email-error"
-                        className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left"
+                        className="text-red-500 text-sm mt-1 rtl:text-right ltr:text-left"
                         role="alert"
+                        aria-live="polite"
                       >
                         {errors.email}
                       </div>
                     )}
                   </div>
 
-                  {/* Password Field */}
+                  {/* Password Input */}
                   <div className="relative">
                     <Field
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      className={`peer w-full px-4 py-3 rounded-lg border ${
+                      className={`peer w-full px-4 py-3 text-base md:text-md rounded-lg border ${
                         errors.password && touched.password
                           ? "border-red-500"
                           : "border-gray-300"
-                      } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12 ${
-                        isRTL ? "placeholder:rtl" : "placeholder:ltr"
-                      }`}
+                      } focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder-transparent pr-12`}
                       placeholder={t("password")}
                       aria-required="true"
-                      aria-invalid={
-                        errors.password && touched.password ? "true" : "false"
-                      }
-                      aria-describedby={
-                        errors.password && touched.password
-                          ? "password-error"
-                          : undefined
-                      }
+                      aria-invalid={!!(errors.password && touched.password)}
+                      aria-describedby="password-error"
                       autoComplete="current-password"
                     />
                     <label
                       htmlFor="password"
                       className={`absolute ${
                         isRTL ? "right-4" : "left-4"
-                      } -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500`}
+                      } -top-2.5 bg-white px-1 text-sm md:text-md text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500`}
                     >
                       {t("password")}
                     </label>
@@ -264,9 +253,9 @@ export default function Login() {
                       onClick={() => setShowPassword(!showPassword)}
                       className={`absolute ${
                         isRTL ? "left-3" : "right-3"
-                      } top-3 text-gray-400 hover:text-gray-600`}
+                      } top-3 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1`}
                       aria-label={
-                        showPassword ? "Hide password" : "Show password"
+                        showPassword ? t("HidePassword") : t("ShowPassword")
                       }
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -274,8 +263,9 @@ export default function Login() {
                     {errors.password && touched.password && (
                       <div
                         id="password-error"
-                        className="text-red-500 text-md mt-1 rtl:text-right ltr:text-left"
+                        className="text-red-500 text-sm mt-1 rtl:text-right ltr:text-left"
                         role="alert"
+                        aria-live="polite"
                       >
                         {errors.password}
                       </div>
@@ -283,26 +273,32 @@ export default function Login() {
                   </div>
 
                   {/* Forgot Password Link */}
-                  <div className={`text-${isRTL ? "left" : "right"}`}>
+                  <div className={`text-${isRTL ? "left" : "right"} mb-4`}>
                     <Link
                       to="/forgot_password"
-                      className="text-blue-500 hover:text-blue-600 text-lg font-medium"
-                      aria-label="Forgot password? Click to reset"
+                      className="text-blue-500 hover:text-blue-600 text-sm md:text-md font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                      aria-label={t("ForgotPasswordAria")}
                     >
                       {t("ForgotPassword")}
                     </Link>
                   </div>
 
-                  {/* Login Button */}
+                  {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full bg-[#11319e] text-white py-3 rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg"
+                    className="w-full bg-[#11319e] text-white py-3 px-4 rounded-lg hover:bg-blue-800 transition-colors font-medium text-md md:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     disabled={isSubmitting}
                     aria-busy={isSubmitting}
                   >
                     {isSubmitting ? (
                       <div className="flex justify-center items-center">
-                        <TailSpin color="#fff" width="24px" height="24px" />
+                        <TailSpin
+                          color="#fff"
+                          width="24"
+                          height="24"
+                          aria-label={t("Loading")}
+                          role="status"
+                        />
                       </div>
                     ) : (
                       t("Login")
@@ -310,13 +306,13 @@ export default function Login() {
                   </button>
 
                   {/* Signup Link */}
-                  <div className="text-center text-gray-800 text-lg">
+                  <div className="text-center text-gray-800 text-sm md:text-md">
                     <p>
                       {t("NoAccount")}{" "}
                       <Link
                         to="/register"
-                        className="text-blue-500 hover:text-blue-600 font-bold"
-                        aria-label="Sign up for a new account"
+                        className="text-blue-500 hover:text-blue-600 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                        aria-label={t("SignupAria")}
                       >
                         {t("Signup")}
                       </Link>
@@ -324,12 +320,12 @@ export default function Login() {
                   </div>
 
                   {/* Divider */}
-                  <div className="relative" role="separator" aria-label="or">
+                  <div className="relative my-6" role="separator">
                     <div className="absolute inset-0 flex items-center">
                       <div className="w-full border-t border-gray-300"></div>
                     </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-white text-gray-500">
+                    <div className="relative flex justify-center">
+                      <span className="px-2 bg-white text-gray-500 text-sm">
                         {t("Or")}
                       </span>
                     </div>
@@ -339,36 +335,32 @@ export default function Login() {
                   <div className="space-y-3">
                     <button
                       type="button"
-                      className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      aria-label="Login with Google"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 md:px-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm md:text-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                       onClick={handleGoogleLogin}
+                      aria-label={t("LoginWithGoogleAria")}
                     >
                       <img
                         src="https://www.google.com/favicon.ico"
-                        alt=""
-                        className="w-5 h-5"
+                        alt="Google logo"
+                        className="w-4 h-4 md:w-5 md:h-5"
                         role="presentation"
                       />
-                      <span className="font-medium">
-                        {t("LoginWithGoogle")}
-                      </span>
+                      {t("LoginWithGoogle")}
                     </button>
 
                     <button
                       type="button"
-                      className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      aria-label="Login with Facebook"
+                      className="w-full flex items-center justify-center gap-2 px-3 py-2 md:px-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm md:text-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                       onClick={handleFacebookLogin}
+                      aria-label={t("LoginWithFacebookAria")}
                     >
                       <img
                         src="https://www.facebook.com/favicon.ico"
-                        alt=""
-                        className="w-5 h-5"
+                        alt="Facebook logo"
+                        className="w-4 h-4 md:w-5 md:h-5"
                         role="presentation"
                       />
-                      <span className="font-medium">
-                        {t("LoginWithFacebook")}
-                      </span>
+                      {t("LoginWithFacebook")}
                     </button>
                   </div>
                 </Form>

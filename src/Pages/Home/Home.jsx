@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
+import FindMedicine from "../../Components/FindMedicine/FindMedicine";
 
 // Lazy load non-critical components
 const UpcomingVisits = lazy(() => import("../../Components/UpcomingVisits/UpcomingVisits"));
@@ -151,6 +152,11 @@ export default function Home() {
         >
           <AskQuestion />
         </Suspense>
+      </section>
+      <section className="mt-7 px-4 md:px-8 lg:px-12">
+          <Suspense fallback={<div role="status" aria-live="polite">Loading question form...</div>}>
+          <FindMedicine/>
+          </Suspense>
       </section>
     </div>
   );
