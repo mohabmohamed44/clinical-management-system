@@ -92,7 +92,7 @@ const mutation = useMutation({
   };
 
   if (specialtiesLoading) return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-start h-screen">
       <DNA width={90} height={90} ariaLabel="loading" />
     </div>
   );
@@ -108,9 +108,9 @@ const mutation = useMutation({
         url={window.location.href}
       />
 
-      <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+      <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-8">
+        <div className="max-w-4xl mx-auto w-full">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
             Ask a Medical Question
           </h1>
 
@@ -126,19 +126,18 @@ const mutation = useMutation({
             onSubmit={(values) => mutation.mutate(values)}
           >
             {({ isSubmitting, errors, touched }) => (
-              <Form className="bg-white p-4 md:p-6 rounded-lg">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                  {/* Specialty Field - Fixed key warning */}
-                  <div className="md:col-span-2">
-                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
+              <Form className="p-3 sm:p-4 md:p-6 rounded-lg w-full">
+                <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                  {/* Specialty Field */}
+                  <div className="w-full">
+                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
                       <FaStethoscope className="text-[#1972EE]" />
                       Specialty
                     </label>
                     <Field
                       as="select"
                       name="speciality"
-                      className={`w-full outline-0 px-4 py-3 border-2 ${
+                      className={`w-full outline-0 px-4 py-2 sm:py-3 border-2 text-center appearance-none ${
                         errors.speciality && touched.speciality
                           ? "border-red-500"
                           : "border-[#1972EE]"
@@ -154,69 +153,72 @@ const mutation = useMutation({
                     <ErrorMessage
                       name="speciality"
                       component="div"
-                      className="text-red-500 text-sm mt-1"
+                      className="text-red-500 text-sm mt-1 text-center"
                     />
                   </div>
 
-                  {/* Gender Field */}
-                  <div>
-                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
-                      <FaVenusMars className="text-[#1972EE]" />
-                      Gender
-                    </label>
-                    <Field
-                      as="select"
-                      name="gender"
-                      className={`w-full outline-0 px-4 py-3 border-2 ${
-                        errors.gender && touched.gender
-                          ? "border-red-500"
-                          : "border-[#1972EE]"
-                      } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
-                    >
-                      <option value="Choose" disabled>Select Gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </Field>
-                    <ErrorMessage
-                      name="gender"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
+                  {/* Gender and Age Fields Container */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {/* Gender Field */}
+                    <div>
+                      <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
+                        <FaVenusMars className="text-[#1972EE]" />
+                        Gender
+                      </label>
+                      <Field
+                        as="select"
+                        name="gender"
+                        className={`w-full outline-0 px-4 py-2 sm:py-3 border-2 text-center appearance-none ${
+                          errors.gender && touched.gender
+                            ? "border-red-500"
+                            : "border-[#1972EE]"
+                        } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
+                      >
+                        <option value="Choose" disabled>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                      </Field>
+                      <ErrorMessage
+                        name="gender"
+                        component="div"
+                        className="text-red-500 text-sm mt-1 text-center"
+                      />
+                    </div>
+
+                    {/* Age Field */}
+                    <div>
+                      <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
+                        <FaBirthdayCake className="text-[#1972EE]" />
+                        Age
+                      </label>
+                      <Field
+                        type="number"
+                        name="age"
+                        className={`w-full outline-0 px-4 py-2 sm:py-3 border-2 text-center ${
+                          errors.age && touched.age
+                            ? "border-red-500"
+                            : "border-[#1972EE]"
+                        } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
+                      />
+                      <ErrorMessage
+                        name="age"
+                        component="div"
+                        className="text-red-500 text-sm mt-1 text-center"
+                      />
+                    </div>
                   </div>
 
-                  {/* Age Field */}
-                  <div>
-                    <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center gap-2">
-                      <FaBirthdayCake className="text-[#1972EE]" />
-                      Age
-                    </label>
-                    <Field
-                      type="number"
-                      name="age"
-                      className={`w-full outline-0 px-4 py-3 border-2 ${
-                        errors.age && touched.age
-                          ? "border-red-500"
-                          : "border-[#1972EE]"
-                      } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
-                    />
-                    <ErrorMessage
-                      name="age"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Question Field */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-[#00155D] mb-2">
+                  {/* Question Fields */}
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-[#00155D] mb-2 text-start">
                       Your Question
                     </label>
                     <Field
                       name="question"
                       as="textarea"
-                      rows=" outline-03"
-                      className={`w-full px-4 py-3 border-2 ${
+                      rows="3"
+                      className={`w-full px-4 py-2 sm:py-3 border-2 ${
                         errors.question && touched.question
                           ? "border-red-500"
                           : "border-[#1972EE]"
@@ -226,20 +228,20 @@ const mutation = useMutation({
                     <ErrorMessage
                       name="question"
                       component="div"
-                      className="text-red-500 text-sm mt-1"
+                      className="text-red-500 text-sm mt-1 text-center"
                     />
                   </div>
 
                   {/* Details Field */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-[#00155D] mb-2">
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-[#00155D] mb-2 text-start">
                       Detailed Information
                     </label>
                     <Field
                       name="question_details"
                       as="textarea"
-                      rows=" outline-05"
-                      className={`w-full px-4 py-3 border-2 ${
+                      rows="5"
+                      className={`w-full px-4 py-2 sm:py-3 border-2 ${
                         errors.question_details && touched.question_details
                           ? "border-red-500"
                           : "border-[#1972EE]"
@@ -249,24 +251,23 @@ const mutation = useMutation({
                     <ErrorMessage
                       name="question_details"
                       component="div"
-                      className="text-red-500 text-sm mt-1"
+                      className="text-red-500 text-sm mt-1 text-center"
                     />
                   </div>
                 </div>
 
-
-                <div className="mt-6 flex justify-end gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                   <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="px-6 py-2 border-2 border-[#00155D] text-[#00155D] rounded-md hover:bg-gray-50"
+                    className="px-6 py-2 border-2 border-[#00155D] text-[#00155D] rounded-md hover:bg-gray-50 w-full sm:w-auto"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={mutation.isPending}
-                    className="px-6 py-2 bg-[#1972EE] text-white rounded-md hover:bg-[#00155D] disabled:bg-gray-400"
+                    className="px-6 py-2 bg-[#1972EE] text-white rounded-md hover:bg-[#00155D] disabled:bg-gray-400 w-full sm:w-auto"
                   >
                     {mutation.isPending ? "Submitting..." : "Submit Question"}
                   </button>
