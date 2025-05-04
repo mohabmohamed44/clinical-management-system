@@ -80,34 +80,34 @@ const { data: questions, isLoading, isError, error, refetch } = useQuery({
       author={"Mohab Mohammed"}
 
     />
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-gray-50 pb-6 sm:pb-10">
       <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">My Questions</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Questions</h1>
             </div>
             
             {currentUser && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 {currentUser.photoURL ? (
                   <img 
                     src={currentUser.photoURL} 
                     alt="Profile" 
-                    className="w-10 h-10 rounded-full border-2 border-gray-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-gray-200"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-                    <span className="text-white font-medium">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span className="text-white text-sm sm:text-base font-medium">
                       {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0) || "U"}
                     </span>
                   </div>
                 )}
-                <div className="hidden md:block">
-                  <div className="text-gray-800 font-medium">
+                <div className="hidden sm:block">
+                  <div className="text-gray-800 text-sm sm:text-base font-medium">
                     {currentUser.displayName || "User"}
                   </div>
-                  <div className="text-sm text-gray-500">{currentUser.email}</div>
+                  <div className="text-xs sm:text-sm text-gray-500">{currentUser.email}</div>
                 </div>
               </div>
             )}
@@ -115,16 +115,16 @@ const { data: questions, isLoading, isError, error, refetch } = useQuery({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-4 sm:mt-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
             Your Questions ({questions?.length || 0})
           </h2>
           <button
             onClick={() => navigate("/ask-question")}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center"
+            className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md transition-colors flex items-center justify-center sm:justify-start"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Ask New Question
@@ -132,33 +132,33 @@ const { data: questions, isLoading, isError, error, refetch } = useQuery({
         </div>
 
         {questions?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {questions.map(question => (
               <Link 
                 to={`/questions/${question.id}`} 
                 key={question.id}
                 className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden flex flex-col h-full border border-gray-100"
               >
-                <div className="p-5 flex-grow">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                <div className="p-3 sm:p-5 flex-grow">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
+                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">
                       {question.speciality}
                     </span>
                     <span className="text-xs text-gray-500">
                       {new Date(question.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
                     {question.question}
                   </h3>
-                  <p className="text-gray-600 text-sm line-clamp-3 mb-3">
+                  <p className="text-xs sm:text-sm text-gray-600 line-clamp-3 mb-3">
                     {question.question_details}
                   </p>
                 </div>
                 <div className="bg-gray-50 px-5 py-3 border-t border-gray-100 flex justify-between items-center">
                   <div className="flex items-center">
                     <span className="text-sm text-gray-600">
-                      {question.gender}, {question.age} years
+                      {`${question.gender}, ${question.age}`} years
                     </span>
                   </div>
                   <div>

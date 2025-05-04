@@ -368,8 +368,8 @@ export default function Departments() {
             aria-label="Doctor Information"
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
-              <div className="text-[#ffffff] max-w-lg mt-10 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1">
-                <h2 className="text-2xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-15 justify-center">
+              <div className="text-[#ffffff] max-w-lg mt-20 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1">
+                <h2 className="text-2xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-20 justify-center">
                   {t("DepartmentsHeading")}
                 </h2>
                 <p className="text-lg mt-4">{t("DepartmentsDescription")}</p>
