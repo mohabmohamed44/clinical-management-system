@@ -233,7 +233,7 @@ export default function Register() {
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
           {
             headers: {
-              "User-Agent": "Your-App-Name", // Required by Nominatim usage policy
+              "User-Agent": "clinical-management-system", // Required by Nominatim usage policy
             },
           }
         );

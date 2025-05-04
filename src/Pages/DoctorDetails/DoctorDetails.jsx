@@ -56,7 +56,7 @@ export default function DoctorDetails() {
             id,
             government,
             city,
-            street,
+            address,
             phones,
             work_times,
             rate,
@@ -88,7 +88,7 @@ export default function DoctorDetails() {
   } = useQuery({
     queryKey: ["doctorReviews", id],
     queryFn: () => getDoctorReviews(id),
-    enabled: !!id, // Only run query if id is available
+    enabled: !!id,
   });
 
   const handleSubmitReview = async (e) => {
@@ -112,13 +112,8 @@ export default function DoctorDetails() {
 
       setNewReview("");
       setRating(5);
-
-      // Force refetch reviews
       await refetchReviews();
-
-      // Also invalidate doctor data to update ratings
       queryClient.invalidateQueries(["doctor", id]);
-
       toast.success("Review submitted successfully!");
     } catch (error) {
       console.error("Review submission error:", error);
@@ -141,28 +136,9 @@ export default function DoctorDetails() {
       ));
   };
 
-  const formatDay = (day) => {
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    if (typeof day === "string") {
-      const foundDay = days.find((d) => d.toLowerCase() === day.toLowerCase());
-      return foundDay || day;
-    }
-    return typeof day === "number" && day >= 0 && day < 7 ? days[day] : day;
-  };
-
-  // Update the time format function
   const formatTime = (timeString) => {
     if (!timeString) return "";
     try {
-      // Handle format "HH:MM:SS"
       const [hours, minutes] = timeString.split(":");
       const hour = parseInt(hours, 10);
       const period = hour >= 12 ? "PM" : "AM";
@@ -171,6 +147,38 @@ export default function DoctorDetails() {
     } catch {
       return timeString;
     }
+  };
+
+  const formatAddress = (addressData) => {
+    if (typeof addressData === "string") return addressData;
+
+    if (Array.isArray(addressData)) {
+      return addressData.map((item, index) => {
+        const parts = [];
+        if (item.street) parts.push(item.street);
+        if (item.building) parts.push(`Building ${item.building}`);
+        if (item.floor) parts.push(`Floor ${item.floor}`);
+        if (item.sgin) parts.push(item.sgin);
+
+        return (
+          <div key={index} className="mb-1">
+            {parts.join(", ")}
+          </div>
+        );
+      });
+    }
+
+    if (addressData && typeof addressData === "object") {
+      const parts = [];
+      if (addressData.street) parts.push(addressData.street);
+      if (addressData.building) parts.push(`Building ${addressData.building}`);
+      if (addressData.floor) parts.push(`Floor ${addressData.floor}`);
+      if (addressData.sgin) parts.push(addressData.sgin);
+
+      return parts.join(", ");
+    }
+
+    return "Address not available";
   };
 
   const getReviewAuthor = (review) => {
@@ -203,7 +211,7 @@ export default function DoctorDetails() {
         author="Mohab Mohammed"
       />
 
-      <div className="w-full object-cover min-h-screen p-4 sm:p-6 lg:p-8">
+      <div className="w-full object-cover min-h-screen p-4 sm:p-6 lg:p-4">
         <div className="flex justify-start">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">
             Doctor Details
@@ -213,7 +221,7 @@ export default function DoctorDetails() {
         {/* Doctor Profile Header */}
         <div className="w-full absolute right-0 left-0">
           <div className="h-[250px] sm:h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col md:flex-row md:items-start md:justify-between">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col md:flex-row md:items-start md:justify-between">
               <div className="max-w-full md:max-w-xl text-left mt-4 py-4 md:py-7">
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-white">
                   Dr. {data.first_name} {data.last_name}
@@ -242,28 +250,29 @@ export default function DoctorDetails() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
             {/* Left Column - Doctor Info */}
             <div className="md:col-span-4">
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <div className="bg-white rounded shadow">
                 <div className="relative w-full pt-[100%]">
                   <img
-                    src={data.image || "https://placehold.co/400x400/0A2357/FFFFFF.png"}
+                    src={
+                      data.image ||
+                      "https://placehold.co/400x400/0A2357/FFFFFF.png"
+                    }
                     alt={`Dr. ${data.first_name} ${data.last_name}`}
-                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    className="absolute top-0 left-0 w-full h-full object-cover rounded-md"
                     loading="lazy"
                   />
                 </div>
-                
+
+                {/* Specialty Section */}
+                <div className="bg-[#11319E] p-4">
+                  <h3 className="text-white text-xl font-semibold text-center">
+                    {t(data.specialty)} Department
+                  </h3>
+                </div>
+
                 {/* Clinic Information Section */}
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                  {/* Doctor Fee
-                  <div>
-                    <h3 className="font-semibold text-lg mb-3">
-                      Consultation Fee
-                    </h3>
-                    <p className="text-2xl font-bold text-blue-800">
-                      {data.fee ? `${data.fee} EGP` : "Not specified"}
-                    </p>
-                  </div> */}
-
+                  
                   {/* Contact Info */}
                   <div>
                     <h3 className="font-semibold text-lg mb-3">Contact Info</h3>
@@ -285,15 +294,17 @@ export default function DoctorDetails() {
                         <FaMapMarkerAlt className="text-blue-600" />
                         <div>
                           <p className="font-medium">Location</p>
-                          <p className="text-sm text-gray-600">
-                            {[
-                              data.clinic.government,
-                              data.clinic.city,
-                              data.clinic.street,
-                            ]
-                              .filter(Boolean)
-                              .join(", ")}
-                          </p>
+                          <div className="text-sm text-gray-600">
+                            {data.clinic.government && (
+                              <p>{data.clinic.government}</p>
+                            )}
+                            {data.clinic.city && <p>{data.clinic.city}</p>}
+                            {data.clinic.address && (
+                              <div className="mt-1">
+                                {formatAddress(data.clinic.address)}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
 
@@ -423,25 +434,22 @@ export default function DoctorDetails() {
 
             {/* Right Column - Details */}
             <div className="md:col-span-8">
-              <div className="bg-white rounded-lg p-4 sm:p-6 lg:p-8 shadow-lg space-y-6 sm:space-y-8">
+              <div className="bg-white rounded-lg p-8 shadow-8 shadow space-y-6 sm:space-y-8">
                 {/* Education & Experience sections */}
                 <div>
                   <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
-                    <PiGraduationCapBold size={24} className="text-blue-800" /> Education
+                    <PiGraduationCapBold size={24} className="text-blue-800" />{" "}
+                    Education
                   </h3>
                   {data.info.education?.length > 0 ? (
                     <div className="space-y-4">
                       {data.info.education.map((edu, index) => (
                         <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-blue-800">
-                            <li className="text-xl">
-                              {edu.degree || "Medical Degree"}
-                            </li>
+                          <h4 className="font-semibold text-blue-800 text-xl">
+                            {edu.degree || "Medical Degree"}
                           </h4>
-                          <p className="text-xl">
-                            <li>
-                              {edu.university || "University of Medicine"}
-                            </li>
+                          <p className="text-lg">
+                            {edu.university || "University of Medicine"}
                           </p>
                         </div>
                       ))}
@@ -456,7 +464,8 @@ export default function DoctorDetails() {
                 {/* Experience Section */}
                 <div>
                   <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
-                    <FaBriefcaseMedical size={24} className="text-blue-800" /> Experience
+                    <FaBriefcaseMedical size={24} className="text-blue-800" />{" "}
+                    Experience
                   </h3>
                   {data.info.experience?.length > 0 ? (
                     <div className="space-y-4">
@@ -484,7 +493,7 @@ export default function DoctorDetails() {
                 <Link
                   to={`/book/${data.id}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl font-semibold text-white 
-                  bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                  bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow transition-all duration-200"
                 >
                   Book Appointment
                   <svg
@@ -500,93 +509,98 @@ export default function DoctorDetails() {
                     />
                   </svg>
                 </Link>
+
+                {/* Reviews Section */}
               </div>
+              <div className="mt-6 sm:m shadow rounded-lg p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-4">
+                    Patient Reviews
+                  </h3>
 
-              {/* Reviews Section */}
-              <div className="mt-6 sm:mt-8 bg-white shadow-lg rounded-lg p-4 sm:p-6">
-                <h3 className="text-lg sm:text-xl font-semibold mb-4">
-                  Patient Reviews
-                </h3>
-
-                {/* Review Form */}
-                <form onSubmit={handleSubmitReview} className="mb-6 bg-gray-50 p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">Share Your Experience</h4>
-                  <div className="flex flex-wrap items-center mb-4 gap-2">
-                    <span className="text-sm sm:text-base">Rating:</span>
-                    <div className="flex">{renderStars(rating, true)}</div>
-                  </div>
-                  <textarea
-                    value={newReview}
-                    onChange={(e) => setNewReview(e.target.value)}
-                    placeholder="How was your experience with this doctor?"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
-                    rows="3"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                  {/* Review Form */}
+                  <form
+                    onSubmit={handleSubmitReview}
+                    className="mb-6 bg-gray-50 p-4 rounded-lg"
                   >
-                    Submit Review
-                  </button>
-                </form>
+                    <h4 className="font-medium mb-2">Share Your Experience</h4>
+                    <div className="flex flex-wrap items-center mb-4 gap-2">
+                      <span className="text-sm sm:text-base">Rating:</span>
+                      <div className="flex">{renderStars(rating, true)}</div>
+                    </div>
+                    <textarea
+                      value={newReview}
+                      onChange={(e) => setNewReview(e.target.value)}
+                      placeholder="How was your experience with this doctor?"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
+                      rows="3"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                    >
+                      Submit Review
+                    </button>
+                  </form>
 
-                {/* Reviews List */}
-                {reviewsLoading ? (
-                  <div className="flex justify-center py-4">
-                    <DNA height={40} width={40} ariaLabel="loading-reviews" />
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {reviewsData?.reviews && reviewsData.reviews.length > 0 ? (
-                      reviewsData.reviews.map((review) => (
-                        <div
-                          key={review.id}
-                          className="bg-gray-50 p-4 rounded-lg"
-                        >
-                          <div className="flex items-center mb-2">
-                            <img
-                              src={
-                                review.Users?.image ||
-                                "https://placehold.co/50x50/0A2357/FFFFFF.png"
-                              }
-                              alt="User"
-                              className="w-10 h-10 rounded-full mr-3"
-                            />
-                            <div>
-                              <p className="font-medium">
-                                {getReviewAuthor(review)}
-                              </p>
-                              <div className="flex items-center">
-                                <div className="flex mr-2">
-                                  {renderStars(Math.round(review.rate || 0))}
+                  {/* Reviews List */}
+                  {reviewsLoading ? (
+                    <div className="flex justify-center py-4">
+                      <DNA height={40} width={40} ariaLabel="loading-reviews" />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {reviewsData?.reviews &&
+                      reviewsData.reviews.length > 0 ? (
+                        reviewsData.reviews.map((review) => (
+                          <div
+                            key={review.id}
+                            className="bg-gray-50 p-4 rounded-lg"
+                          >
+                            <div className="flex items-center mb-2">
+                              <img
+                                src={
+                                  review.Users?.image ||
+                                  "https://placehold.co/50x50/0A2357/FFFFFF.png"
+                                }
+                                alt="User"
+                                className="w-10 h-10 rounded-full mr-3"
+                              />
+                              <div>
+                                <p className="font-medium">
+                                  {getReviewAuthor(review)}
+                                </p>
+                                <div className="flex items-center">
+                                  <div className="flex mr-2">
+                                    {renderStars(Math.round(review.rate || 0))}
+                                  </div>
+                                  <span className="text-xs text-gray-500">
+                                    {new Date(
+                                      review.created_at
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}
+                                  </span>
                                 </div>
-                                <span className="text-xs text-gray-500">
-                                  {new Date(
-                                    review.created_at
-                                  ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                  })}
-                                </span>
                               </div>
                             </div>
+                            <p className="text-gray-600">{review.review}</p>
                           </div>
-                          <p className="text-gray-600">{review.review}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">
-                        No reviews yet. Be the first to share your experience!
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
+                        ))
+                      ) : (
+                        <p className="text-gray-500">
+                          No reviews yet. Be the first to share your experience!
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
             </div>
           </div>
         </div>
+        
       </div>
     </>
   );
