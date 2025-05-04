@@ -203,33 +203,33 @@ export default function DoctorDetails() {
         author="Mohab Mohammed"
       />
 
-      <div className="w-full object-cover min-h-screen">
+      <div className="w-full object-cover min-h-screen p-4 sm:p-6 lg:p-8">
         <div className="flex justify-start">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 px-4 sm:px-0">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">
             Doctor Details
           </h2>
         </div>
 
         {/* Doctor Profile Header */}
         <div className="w-full absolute right-0 left-0">
-          <div className="h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full right-0 left-0 z-50">
-            <div className="container mx-auto p-2 h-full md:flex md:justify-end md:items-start">
-              <div className="max-w-xl text-left mt-4 px-4 md:px-0 lg:mr-100 md:lg:xl:mr-100 md:lg:xl:pr-30 py-7">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white">
+          <div className="h-[250px] sm:h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col md:flex-row md:items-start md:justify-between">
+              <div className="max-w-full md:max-w-xl text-left mt-4 py-4 md:py-7">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-white">
                   Dr. {data.first_name} {data.last_name}
                 </h1>
-                <h2 className="text-lg sm:text-xl mb-2 text-white">
+                <h2 className="text-md sm:text-lg md:text-xl mb-2 text-white">
                   {t(data.specialty)}
                 </h2>
                 <div className="flex items-center text-white mb-2">
-                  <div className="flex">
+                  <div className="flex space-x-1">
                     {renderStars(Math.round(data.rate || 0))}
                   </div>
-                  <span className="ml-2 text-sm">
+                  <span className="ml-2 text-xs sm:text-sm">
                     ({data.rate_count?.toLocaleString() || 0} reviews)
                   </span>
                 </div>
-                <p className="text-white text-sm sm:text-base">
+                <p className="text-white text-sm sm:text-base md:text-lg line-clamp-3 md:line-clamp-none">
                   {data.info?.about || "Experienced medical professional"}
                 </p>
               </div>
@@ -238,28 +238,22 @@ export default function DoctorDetails() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:mt-68 mt-65 md:mt-32 relative z-10">
-          <div className="grid md:grid-cols-12 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-[200px] sm:mt-[250px] md:mt-[300px] relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
             {/* Left Column - Doctor Info */}
             <div className="md:col-span-4">
-              <div className="bg-white rounded-lg overflow-hidden shadow transform translate-y-0">
-                <img
-                  src={
-                    data.image ||
-                    "https://placehold.co/400x400/0A2357/FFFFFF.png"
-                  }
-                  alt={`Dr. ${data.first_name} ${data.last_name}`}
-                  className="w-full h-64 sm:h-80 object-cover"
-                  width={400}
-                  height={400}
-                  loading="lazy"
-                />
-
-                <div className="bg-[#3454CE] text-white py-3 px-4 text-center text-lg font-semibold">
-                  {t(data.specialty)} Department
+              <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+                <div className="relative w-full pt-[100%]">
+                  <img
+                    src={data.image || "https://placehold.co/400x400/0A2357/FFFFFF.png"}
+                    alt={`Dr. ${data.first_name} ${data.last_name}`}
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
-
-                <div className="p-6 space-y-6">
+                
+                {/* Clinic Information Section */}
+                <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   {/* Doctor Fee
                   <div>
                     <h3 className="font-semibold text-lg mb-3">
@@ -428,9 +422,9 @@ export default function DoctorDetails() {
             </div>
 
             {/* Right Column - Details */}
-            <div className="md:col-span-8 mt-10 md:mt-40">
-              <div className="bg-white rounded-lg p-6 sm:p-8 shadow space-y-8">
-                {/* Education Section */}
+            <div className="md:col-span-8">
+              <div className="bg-white rounded-lg p-4 sm:p-6 lg:p-8 shadow-lg space-y-6 sm:space-y-8">
+                {/* Education & Experience sections */}
                 <div>
                   <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
                     <PiGraduationCapBold size={24} className="text-blue-800" /> Education
@@ -489,14 +483,13 @@ export default function DoctorDetails() {
                 {/* Book Now Button */}
                 <Link
                   to={`/book/${data.id}`}
-                  className="inline-flex items-center justify-center px-8 py-4 text-xl font-semibold text-white 
-                  bg-[#11319E] hover:bg-[#0d2a8a] rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 
-                  transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl font-semibold text-white 
+                  bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   Book Appointment
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="ml-3 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                    className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -508,32 +501,31 @@ export default function DoctorDetails() {
                   </svg>
                 </Link>
               </div>
-              <div className="mt-10 shadow rounded-lg p-6">
+
+              {/* Reviews Section */}
+              <div className="mt-6 sm:mt-8 bg-white shadow-lg rounded-lg p-4 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-semibold mb-4">
                   Patient Reviews
                 </h3>
 
                 {/* Review Form */}
-                <form
-                  onSubmit={handleSubmitReview}
-                  className="mb-6 bg-gray-50 p-4 rounded-lg"
-                >
+                <form onSubmit={handleSubmitReview} className="mb-6 bg-gray-50 p-4 rounded-lg">
                   <h4 className="font-medium mb-2">Share Your Experience</h4>
-                  <div className="flex items-center mb-4">
-                    <span className="mr-2">Rating:</span>
+                  <div className="flex flex-wrap items-center mb-4 gap-2">
+                    <span className="text-sm sm:text-base">Rating:</span>
                     <div className="flex">{renderStars(rating, true)}</div>
                   </div>
                   <textarea
                     value={newReview}
                     onChange={(e) => setNewReview(e.target.value)}
                     placeholder="How was your experience with this doctor?"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
                     rows="3"
                     required
                   />
                   <button
                     type="submit"
-                    className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                   >
                     Submit Review
                   </button>
