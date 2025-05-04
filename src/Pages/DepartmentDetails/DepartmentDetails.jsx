@@ -131,12 +131,12 @@ export default function DepartmentDetails() {
             >
               <div className="flex flex-col lg:flex-row items-center justify-between h-full">
                 <div
-                  className="text-white max-w-lg mt-15 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1"
+                  className="text-white max-w-lg md:mt-40 xl:mt-10 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1"
                   data-content="department-intro"
                 >
                   <h2
                     id="department-heading"
-                    className="text-2xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-10 justify-center"
+                    className="text-2xl sm:text-5xl leading-14 rtl:leading-13 items-start font-bold mt-10 justify-center"
                     data-heading="department"
                   >
                     {t(specialty)} {t("DepartmentDetailsHeading")}
@@ -150,9 +150,9 @@ export default function DepartmentDetails() {
                     src={Doc}
                     className="w-full 
                             h-auto
-                            max-w-[300px]
-                            max-h-[300px]
-                            md:max-h-[350px]
+                            max-w-[350px]
+                            max-h-[350px]
+                            md:max-h-[400px]
                             lg:max-h-[500px]
                             sm:max-w-md
                             md:max-w-md
