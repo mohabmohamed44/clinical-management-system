@@ -289,9 +289,12 @@ export default function Offers() {
                       )}
                     </div>
 
-                    <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
-                      <Link to="/book">{t("BookNow")}</Link>
-                    </button>
+                    <Link 
+                      to={`/offers/${offer.id}`}
+                      className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors block text-center"
+                    >
+                      {t("BookNow")}
+                    </Link>
                   </div>
                 </div>
               );

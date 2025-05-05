@@ -39,6 +39,7 @@ import Ask from "@pages/Ask/Ask";
 import Questions from "@pages/Questions/Questions";
 import QuestionDetails from '@pages/QuestionDetails/QuestionDetails';
 import FindMedicine from "@pages/FindMedicine/FindMedicine";
+import OfferDetails from "@pages/OfferDetails/OfferDetails";
 // React Query Client
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
       { path: "blog", element: <PrivateRoute><Blog /></PrivateRoute> },
       { path: "pricing", element: <PrivateRoute><PricingPlan /></PrivateRoute> },
       { path: "offers", element: <PrivateRoute><Offers /></PrivateRoute> },
+      { path: "/offers/:id", element: <PrivateRoute><OfferDetails /></PrivateRoute> },
       { path: "book", element: <PrivateRoute><Book /></PrivateRoute> },
       { path: "find_doctor/:id", element: <PrivateRoute><DoctorDetails /></PrivateRoute> },
       { path: "labs", element: <PrivateRoute><Labs /></PrivateRoute> },
