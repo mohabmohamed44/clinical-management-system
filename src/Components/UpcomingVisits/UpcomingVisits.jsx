@@ -184,7 +184,7 @@ export default function UpcomingVisits() {
   }
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md mt-20 overflow-hidden">
+    <div className="w-full bg-white rounded-lg shadowP mt-20 overflow-hidden">
       {/* Header */}
       <div className="bg-[#11319E] text-white p-4 rounded-t-lg flex items-center justify-between">
         <h2 className="text-lg md:text-xl font-bold flex items-center">

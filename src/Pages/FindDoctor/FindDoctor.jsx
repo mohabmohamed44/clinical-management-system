@@ -9,80 +9,74 @@ import DoctorCard from "../../Components/DoctorCard/DoctorCard";
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
 import FilterDoctors from "../../Components/filterDoctors/filterDoctors";
+import { useSearchParams } from "react-router-dom";
 
 export default function FindDoctor() {
   const { t } = useTranslation();
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedDepartment, setSelectedDepartment] = useState(
+    searchParams.get("specialty") || "all"
+  );
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [activeFilters, setActiveFilters] = useState({
-    rating: '',
-    gender: '',
-    location: '',
-    priceRange: ''
-  });
-
-  // Fetch doctors using TanStack Query
+  
   const { data: doctors, isLoading, isError, error } = useQuery({
-    queryKey: ['doctors'],
+    queryKey: ['doctors', searchParams.toString()],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('Doctors')
-        .select(`
-          id,
-          first_name,
-          last_name,
-          phone,
-          rate_count,
-          rate,
-          gender,
-          image,
-          specialty,
-          address
-        `)
-        .order('rate', { ascending: false });
+      const specialty = searchParams.get("specialty");
+      const location = searchParams.get("location");
 
-      if (error) throw new Error(error.message);
+      let query = supabase.from("Doctors").select(`
+        id, first_name, last_name, phone, rate_count, rate, 
+        gender, image, specialty, address
+      `);
+
+      if (specialty) {
+        query = query.ilike("specialty", `%${specialty}%`);
+      }
+
+      const { data, error } = await query.order("rate", { ascending: false });
+      if (error) throw error;
+
+      // Location filtering
+      if (location) {
+        return data.filter(doctor => {
+          try {
+            const address = typeof doctor.address === "string" 
+              ? JSON.parse(doctor.address)
+              : doctor.address;
+            
+            const searchLocation = location.toLowerCase();
+            
+            if (Array.isArray(address)) {
+              return address.some(addr => 
+                addr?.city?.toLowerCase().includes(searchLocation)
+              );
+            }
+            return address?.city?.toLowerCase().includes(searchLocation);
+          } catch (e) {
+            return false;
+          }
+        });
+      }
+      
       return data;
     }
   });
 
-  // Update useEffect to handle filters more precisely
   useEffect(() => {
-    if (!doctors) return;
-    
-    let filtered = [...doctors];
-    
-    // Department filter
-    if (selectedDepartment !== 'all') {
-      filtered = filtered.filter(doctor => 
-        t(doctor.specialty?.toLowerCase() || '') === t(selectedDepartment.toLowerCase())
-      );
-    }
+    setFilteredDoctors(doctors || []);
+  }, [doctors]);
 
-    // Rating filter
-    if (activeFilters.rating) {
-      filtered = filtered.filter(doctor => 
-        doctor.rate >= parseInt(activeFilters.rating)
-      );
+  const handleDepartmentSelect = (departmentId) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (departmentId === "all") {
+      newParams.delete("specialty");
+    } else {
+      newParams.set("specialty", departmentId);
     }
-
-    // Gender filter
-    if (activeFilters.gender) {
-      filtered = filtered.filter(doctor => 
-        doctor.gender?.toLowerCase() === activeFilters.gender.toLowerCase()
-      );
-    }
-
-    // Location filter - Add null check
-    if (activeFilters.location) {
-      filtered = filtered.filter(doctor => 
-        doctor.address && typeof doctor.address === 'string' && 
-        doctor.address.toLowerCase().includes(activeFilters.location.toLowerCase())
-      );
-    }
-
-    setFilteredDoctors(filtered);
-  }, [selectedDepartment, doctors, t, activeFilters]);
+    setSearchParams(newParams);
+    setSelectedDepartment(departmentId);
+  };
 
   // Handler for filter changes
   const handleFilterChange = (filters) => {
@@ -90,17 +84,17 @@ export default function FindDoctor() {
   };
 
   // Loading and error states
-  if (isLoading) return (
-    <div className="flex items-center justify-center h-screen">
-      <DNA height={90} width={80} ariaLabel="loading-doctors" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <DNA height={90} width={80} ariaLabel="loading-doctors" />
+      </div>
+    );
 
-  if (isError) return (
-    <div className="text-red-500 text-center py-8">
-      Error: {error.message}
-    </div>
-  );
+  if (isError)
+    return (
+      <div className="text-red-500 text-center py-8">Error: {error.message}</div>
+    );
 
   return (
     <>
@@ -142,9 +136,9 @@ export default function FindDoctor() {
               </figure>
             </div>
             <div className="mt-10">
-              <SortDepartment 
-                onDepartmentSelect={setSelectedDepartment} 
-                selectedDepartment={selectedDepartment} 
+              <SortDepartment
+                onDepartmentSelect={setSelectedDepartment}
+                selectedDepartment={selectedDepartment}
               />
             </div>
           </section>
@@ -155,20 +149,19 @@ export default function FindDoctor() {
       <div className="min-h-screen bg-gray-50 p-8 mt-screen">
         <div className="max-w-7xl mx-auto pt-16">
           <h2 className="text-3xl font-bold text-center mb-8 text-[#274760]">
-            {selectedDepartment === 'all' 
-              ? 'Our Medical Specialists' 
+            {selectedDepartment === "all"
+              ? "Our Medical Specialists"
               : `${t(selectedDepartment)} Specialists`}
           </h2>
-          
-          {/* Add FilterDoctors component */}
+
           <div className="mb-8">
             <FilterDoctors onFilterChange={handleFilterChange} />
           </div>
 
           {filteredDoctors.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredDoctors.map(doctor => (
-                <DoctorCard 
+              {filteredDoctors.map((doctor) => (
+                <DoctorCard
                   key={doctor.id}
                   id={doctor.id}
                   name={`${doctor.first_name} ${doctor.last_name}`}
@@ -186,7 +179,7 @@ export default function FindDoctor() {
           ) : (
             <div className="text-center py-16">
               <p className="text-xl text-[#274760]">
-                No doctors found in this department. Please try another category.
+                {t("No doctors found matching your criteria")}
               </p>
             </div>
           )}

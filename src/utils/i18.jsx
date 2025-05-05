@@ -128,6 +128,7 @@ const resources = {
       thankYou:
         "Thank you for registering. You can now log in to your account.",
       goToLogin: "Go to Log In",
+      SelectSpecialty: "Select a specialty",
       back: "Back",
       FindMedicine: "Find Medicine",
       SelectBloodType: "select blood type",

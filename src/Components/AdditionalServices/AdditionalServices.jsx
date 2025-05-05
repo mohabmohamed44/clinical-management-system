@@ -386,13 +386,13 @@ export default function AdditionalServices() {
     fetchOffers();
     // Set initial visible items
     updateVisibleItems();
-    
+
     // Add event listener for window resize
-    window.addEventListener('resize', updateVisibleItems);
-    
+    window.addEventListener("resize", updateVisibleItems);
+
     // Clean up
     return () => {
-      window.removeEventListener('resize', updateVisibleItems);
+      window.removeEventListener("resize", updateVisibleItems);
     };
   }, []);
 
@@ -495,17 +495,19 @@ export default function AdditionalServices() {
         <div className="overflow-hidden" ref={carouselRef}>
           <div
             className="flex transition-transform duration-300"
-            style={{ 
-              transform: `translateX(-${currentIndex * (100 / visibleItems)}%)` 
+            style={{
+              transform: `translateX(-${currentIndex * (100 / visibleItems)}%)`,
             }}
           >
             {offers.map((offer) => (
               <div
                 key={offer.id}
                 className={`flex-none px-3 pb-4 ${
-                  visibleItems === 1 ? 'w-full' : 
-                  visibleItems === 2 ? 'w-1/2' : 
-                  'w-1/3'
+                  visibleItems === 1
+                    ? "w-full"
+                    : visibleItems === 2
+                    ? "w-1/2"
+                    : "w-1/3"
                 }`}
               >
                 <div className="bg-white rounded-xl shadow hover:shadow-md h-full flex flex-col">
@@ -577,9 +579,12 @@ export default function AdditionalServices() {
                       </div>
                     </div>
 
-                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors">
+                    <Link
+                      to={`/offers/${offer.id}`}
+                      className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors block text-center"
+                    >
                       {t("BookNow")}
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
