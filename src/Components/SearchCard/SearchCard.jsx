@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import Logo from '../../assets/logo.webp'
 import { supabase } from "../../Config/Supabase";
-import { Listbox } from "@headlessui/react";
+import { Listbox, ListboxButton, ListboxOptions } from "@headlessui/react";
 
 export default function SearchCard() {
   const { t, i18n } = useTranslation();
@@ -97,10 +97,10 @@ export default function SearchCard() {
                     isRTL ? "text-right" : "text-left"
                   }`}
                 >
-                  {t("Specialty")}
+                  {t("specialty")}
                 </Listbox.Label>
                 <div className="relative">
-                  <Listbox.Button className="relative w-full cursor-pointer rounded-md bg-white py-3 pl-4 pr-10 text-left shadow-sm border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
+                  <ListboxButton className="relative w-full cursor-pointer rounded-md bg-white py-3 pl-4 pr-10 text-left shadow-sm border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
                     <span className="block truncate">
                       {formik.values.specialty ? (
                         <div className="flex items-center">
@@ -114,7 +114,7 @@ export default function SearchCard() {
                               isRTL ? "mr-3" : "ml-3"
                             }`}
                           >
-                            {formik.values.specialty.name}
+                            {t(formik.values.specialty.name)}
                           </span>
                         </div>
                       ) : (
@@ -129,11 +129,11 @@ export default function SearchCard() {
                         aria-hidden="true"
                       />
                     </span>
-                  </Listbox.Button>
+                  </ListboxButton>
 
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {specialties.map((specialty) => (
-                      <Listbox.Option
+                      <ListboxOptions
                         key={specialty.id}
                         value={specialty}
                         className={({ active, selected }) =>
@@ -158,13 +158,13 @@ export default function SearchCard() {
                                 selected ? "font-semibold" : "font-normal"
                               }`}
                             >
-                              {specialty.name}
+                              {t(specialty.name)}
                             </span>
                           </div>
                         )}
-                      </Listbox.Option>
+                      </ListboxOptions>
                     ))}
-                  </Listbox.Options>
+                  </ListboxOptions>
                 </div>
               </Listbox>
               {formik.touched.specialty && formik.errors.specialty && (
