@@ -15,7 +15,7 @@ export default function Layout() {
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-gray-50"> 
       {!hideRoutes.includes(location.pathname) && <Navbar/>}
       <main className="flex-1">
-        <div className="mx-auto px-4 sm:px-6 py-10 max-w-screen-xl">
+        <div className="mx-auto px-4 sm:px-6 py-10 max-w-screen-2xl">
           <Outlet />
         </div>
       </main>

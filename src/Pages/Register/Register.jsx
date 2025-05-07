@@ -292,7 +292,7 @@ export default function Register() {
           />
         </div>
 
-        <div className="w-full lg:w-full max-w-lg">
+        <div className="w-full lg:w-full max-w-4xl ">
           <div className="bg-white rounded-2xl shadow mb-6 p-8 mt-14">
             <div className="flex justify-center mb-6 px-4 sm:px-0">
               <div className="flex items-center flex-wrap sm:flex-nowrap">
@@ -376,14 +376,6 @@ export default function Register() {
               </div>
             )}
 
-            {currentStep === 1 && (
-              <div className="relative flex items-center justify-center mb-6">
-                <div className="flex-grow border-t border-gray-300"></div>
-                <span className="mx-4 text-gray-500">{t("Or")}</span>
-                <div className="flex-grow border-t border-gray-300"></div>
-              </div>
-            )}
-
             {currentStep < 4 && (
               <Formik
                 initialValues={initialValues}
@@ -391,7 +383,7 @@ export default function Register() {
                 validateOnMount
               >
                 {({ errors, touched, isSubmitting, setFieldValue, values }) => (
-                  <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0">
+                  <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0 max-w-4xl">
                     {currentStep === 1 && (
                       <div className="animate-fade-in">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -399,7 +391,7 @@ export default function Register() {
                             <Field
                               name="firstName"
                               type="text"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.firstName && touched.firstName
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -423,7 +415,7 @@ export default function Register() {
                             <Field
                               name="lastName"
                               type="text"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.lastName && touched.lastName
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -448,7 +440,7 @@ export default function Register() {
                           <Field
                             name="email"
                             type="email"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.email && touched.email
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -472,11 +464,11 @@ export default function Register() {
                           <Field
                             name="password"
                             type={showPassword ? "text" : "password"}
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.password && touched.password
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
+                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-16`}
                             placeholder={t("Password")}
                           />
                           <label
@@ -507,11 +499,11 @@ export default function Register() {
                           <Field
                             name="confirmPassword"
                             type={showPassword ? "text" : "password"}
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.confirmPassword && touched.confirmPassword
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-12`}
+                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-16`}
                             placeholder={t("ConfirmPassword")}
                           />
                           <label
@@ -543,7 +535,7 @@ export default function Register() {
                           <Field
                             name="phone"
                             type="tel"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.phone && touched.phone
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -606,11 +598,11 @@ export default function Register() {
                           <Field
                             name="dateOfBirth"
                             type="date"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.dateOfBirth && touched.dateOfBirth
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 rtl:text-right`}
+                            } focus:outline-none focus:border-blue-500`}
                           />
                           <label
                             htmlFor="dateOfBirth"
@@ -649,7 +641,7 @@ export default function Register() {
                                   reader.readAsDataURL(file);
                                 }
                               }}
-                              className={`w-full px-4 py-2 rounded-lg border ${
+                              className={`w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.profileImage && touched.profileImage
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -677,7 +669,7 @@ export default function Register() {
                             {({ field, form }) => (
                               <select
                                 {...field}
-                                className={`peer w-full px-4 py-3 rounded-lg border ${
+                                className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                   errors.bloodType && touched.bloodType
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -722,7 +714,7 @@ export default function Register() {
                             <Field
                               name="weight"
                               type="number"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.weight && touched.weight
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -746,7 +738,7 @@ export default function Register() {
                             <Field
                               name="height"
                               type="number"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.height && touched.height
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -771,7 +763,7 @@ export default function Register() {
                           <Field
                             name="medicalHistory"
                             as="textarea"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.medicalHistory && touched.medicalHistory
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -800,7 +792,7 @@ export default function Register() {
                             <Field
                               name="city"
                               type="text"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.city && touched.city
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -824,7 +816,7 @@ export default function Register() {
                             <Field
                               name="area"
                               type="text"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.area && touched.area
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -849,7 +841,7 @@ export default function Register() {
                           <Field
                             name="street"
                             type="text"
-                            className={`peer w-full px-4 py-3 rounded-lg border ${
+                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                               errors.street && touched.street
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -874,7 +866,7 @@ export default function Register() {
                             <Field
                               name="location"
                               type="text"
-                              className={`peer w-full px-4 py-3 rounded-lg border ${
+                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
                                 errors.location && touched.location
                                   ? "border-red-500"
                                   : "border-gray-300"

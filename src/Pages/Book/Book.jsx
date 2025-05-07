@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { getAuth } from "firebase/auth";
 import { format, parseISO, isBefore, startOfDay, isToday } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 const Book = () => {
   const [step, setStep] = useState(0);
@@ -15,6 +16,7 @@ const Book = () => {
   const [criticalError, setCriticalError] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const auth = getAuth();
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -297,14 +299,15 @@ const Book = () => {
         }}
         validationSchema={validationSchema[step]}
         onSubmit={handleSubmit}
+        validateOnMount={true}  // <-- added to validate on mount
       >
         {({ values, setFieldValue, isValid, isSubmitting }) => (
-          <Form className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+          <Form className="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto rounded-xl shadow overflow-hidden">
             {/* Stepper Header */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <nav className="flex space-x-4 lg:space-x-8">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+              <nav className="flex flex-col sm:flex-row sm:space-x-4 lg:space-x-8 space-y-4 sm:space-y-0 items-start sm:items-center sm:justify-between">
                 {steps.map((stepName, index) => (
-                  <div key={stepName} className="flex items-center">
+                  <div key={stepName} className="flex items-center w-full sm:w-auto">
                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
                       ${index <= step ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-500"}`}>
                       {index + 1}
@@ -312,6 +315,9 @@ const Book = () => {
                     <div className={`ml-2 text-sm font-medium ${index === step ? "text-blue-600" : "text-gray-500"}`}>
                       {stepName}
                     </div>
+                    {index < steps.length - 1 && (
+                      <div className="hidden sm:block ml-4 text-gray-300">→</div>
+                    )}
                   </div>
                 ))}
               </nav>
@@ -324,9 +330,9 @@ const Book = () => {
                   Booking appointment with Dr. {provider.first_name} {provider.last_name}
                 </h2>
                 {provider.specialty && (
-                  <p className="text-sm text-blue-900 mt-2">{provider.specialty}</p>
+                  <p className="text-md text-blue-900 mt-2">{t(provider.specialty)}</p>
                 )}
-                <p className="text-sm font-medium text-blue-900 mt-2">
+                <p className="text-md font-medium text-blue-900 mt-2">
                   Consultation Fee: EGP {provider.fee}
                 </p>
               </div>
@@ -392,7 +398,7 @@ const PatientInfoStep = () => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
         Full Name
-        <Field name="patient.name" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3" />
+        <Field name="patient.name" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 focus:border-blue-900 focus:border-2 shadow-sm p-3" />
         <ErrorMessage name="patient.name" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
@@ -401,7 +407,7 @@ const PatientInfoStep = () => (
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Age
-          <Field name="patient.age" type="number" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3" />
+          <Field name="patient.age" type="number" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2" />
           <ErrorMessage name="patient.age" component="div" className="text-red-500 text-xs mt-1" />
         </label>
       </div>
@@ -409,7 +415,7 @@ const PatientInfoStep = () => (
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Gender
-          <Field as="select" name="patient.gender" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3">
+          <Field as="select" name="patient.gender" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2">
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -422,7 +428,7 @@ const PatientInfoStep = () => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
         Phone Number
-        <Field name="patient.phone" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3" />
+        <Field name="patient.phone" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2" />
         <ErrorMessage name="patient.phone" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
@@ -430,7 +436,7 @@ const PatientInfoStep = () => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
         Reason for Appointment
-        <Field as="textarea" name="patient.problem" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-3 h-32" />
+        <Field as="textarea" name="patient.problem" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 h-32" />
         <ErrorMessage name="patient.problem" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
@@ -495,7 +501,7 @@ const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots,
                     onClick={() => setFieldValue("time", slot.time24)}
                     className={`p-2 text-sm rounded-md transition-colors ${
                       values.time === slot.time24
-                        ? "bg-blue-600 text-white"
+                        ? "bg-blue-800 text-white"
                         : slot.available
                         ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
                         : "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -588,7 +594,7 @@ const SubmitButton = ({ step, setStep, isValid, loading, isSubmitting, timeSlots
       loading || 
       (step === 1 && timeSlots.length === 0 && values.date)
     }
-    className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg shadow-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+    className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-800 rounded-lg shadow-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
   >
     {loading || isSubmitting ? (
       <span className="flex items-center justify-center">
