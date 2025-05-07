@@ -100,7 +100,7 @@ export default function SearchCard() {
                   {t("specialty")}
                 </Listbox.Label>
                 <div className="relative">
-                  <ListboxButton className="relative w-full cursor-pointer rounded-md bg-white py-3 pl-4 pr-10 text-left shadow-sm border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
+                  <Listbox.Button className="relative w-full cursor-pointer rounded-md bg-white py-3 pl-4 pr-10 text-left shadow-sm border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm">
                     <span className="block truncate">
                       {formik.values.specialty ? (
                         <div className="flex items-center">
@@ -129,11 +129,11 @@ export default function SearchCard() {
                         aria-hidden="true"
                       />
                     </span>
-                  </ListboxButton>
+                  </Listbox.Button>
 
-                  <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {specialties.map((specialty) => (
-                      <ListboxOptions
+                      <Listbox.Option
                         key={specialty.id}
                         value={specialty}
                         className={({ active, selected }) =>
@@ -162,9 +162,9 @@ export default function SearchCard() {
                             </span>
                           </div>
                         )}
-                      </ListboxOptions>
+                      </Listbox.Option>
                     ))}
-                  </ListboxOptions>
+                  </Listbox.Options>
                 </div>
               </Listbox>
               {formik.touched.specialty && formik.errors.specialty && (

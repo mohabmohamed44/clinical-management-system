@@ -128,6 +128,7 @@ const resources = {
       thankYou:
         "Thank you for registering. You can now log in to your account.",
       goToLogin: "Go to Log In",
+      SpecialtyRequired: "Specialty required",
       SelectSpecialty: "Select a specialty",
       back: "Back",
       FindMedicine: "Find Medicine",
@@ -314,6 +315,7 @@ const resources = {
       DiabetesEndocrinologist: "الغدد الصماء والسكري",
       DietitianNutrition: "التغذية والحميات",
       EarNoseAndThroat: "أنف، أذن، وحنجرة",
+      SpecialtyRequired: "التخصص مطلوب",
       GastroenterologistEndoscopy: "طب الجهاز الهضمي والتنظير",
       GeneralSurgery: "الجراحة العامة",
       Geriatrics: "طب الشيخوخة",

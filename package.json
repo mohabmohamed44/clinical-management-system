@@ -23,6 +23,7 @@
     "@tanstack/react-query-devtools": "^5.64.2",
     "axios": "^1.7.9",
     "browser-image-compression": "^2.0.2",
+    "date-fns": "^4.1.0",
     "firebase": "^11.2.0",
     "formik": "^2.4.6",
     "generate-react-cli": "^8.4.9",

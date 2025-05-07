@@ -18,7 +18,7 @@ export default function FindDoctor() {
     searchParams.get("specialty") || "all"
   );
   const [filteredDoctors, setFilteredDoctors] = useState([]);
-  
+  const [activeFilters, setActiveFilters] = useState({});
   const { data: doctors, isLoading, isError, error } = useQuery({
     queryKey: ['doctors', searchParams.toString()],
     queryFn: async () => {
@@ -64,9 +64,63 @@ export default function FindDoctor() {
   });
 
   useEffect(() => {
-    setFilteredDoctors(doctors || []);
-  }, [doctors]);
+    if (doctors) {
+      let filtered = [...doctors];
 
+      // Apply rating filter
+      if (activeFilters.rating) {
+        const minRating = parseInt(activeFilters.rating);
+        filtered = filtered.filter(doctor => doctor.rate >= minRating);
+      }
+
+      // Apply gender filter
+      if (activeFilters.gender) {
+        filtered = filtered.filter(doctor => 
+          doctor.gender?.toLowerCase() === activeFilters.gender.toLowerCase()
+        );
+      }
+
+      // Apply location filter
+      if (activeFilters.location) {
+        filtered = filtered.filter(doctor => {
+          try {
+            const address = typeof doctor.address === "string" 
+              ? JSON.parse(doctor.address)
+              : doctor.address;
+            const searchLocation = activeFilters.location.toLowerCase();
+            
+            if (Array.isArray(address)) {
+              return address.some(addr => 
+                addr?.city?.toLowerCase().includes(searchLocation)
+              );
+            }
+            return address?.city?.toLowerCase().includes(searchLocation);
+          } catch (e) {
+            return false;
+          }
+        });
+      }
+
+      // Apply price range filter (if price data exists)
+      if (activeFilters.priceRange) {
+        const [min, max] = activeFilters.priceRange.split('-').map(num => 
+          num === '301+' ? 301 : parseInt(num)
+        );
+        filtered = filtered.filter(doctor => {
+          const price = doctor.price; // Ensure this field exists in your data
+          if (max === 301) return price >= 301;
+          if (max) return price >= min && price <= max;
+          return price >= min;
+        });
+      }
+
+      setFilteredDoctors(filtered);
+    } else {
+      setFilteredDoctors([]);
+    }
+  }, [doctors, activeFilters]); // Re-run when doctors or filters change
+
+  // handle function for Department Selection
   const handleDepartmentSelect = (departmentId) => {
     const newParams = new URLSearchParams(searchParams);
     if (departmentId === "all") {
@@ -74,7 +128,7 @@ export default function FindDoctor() {
     } else {
       newParams.set("specialty", departmentId);
     }
-    setSearchParams(newParams);
+    setSearchParams(newParams, { replace: true }); // Add replace option here
     setSelectedDepartment(departmentId);
   };
 
@@ -137,7 +191,7 @@ export default function FindDoctor() {
             </div>
             <div className="mt-10">
               <SortDepartment
-                onDepartmentSelect={setSelectedDepartment}
+                onDepartmentSelect={handleDepartmentSelect}
                 selectedDepartment={selectedDepartment}
               />
             </div>

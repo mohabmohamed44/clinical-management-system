@@ -1,5 +1,5 @@
 // AppointmentsPage.jsx
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
@@ -15,10 +15,23 @@ import { SiCashapp } from "react-icons/si";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { getCurrentUser } from "../../utils/GoogleAuth";
+import { getAuth } from "firebase/auth";
+
+// NEW: Define auth globally so it's available in the component.
+const auth = getAuth();
 
 const fetchAppointments = async (filters, userId) => {
   if (!userId) return [];
+  const auth = getAuth();
+  // First get Supabase user ID from Firebase UID
+  const { data: userData, error: userError } = await supabase
+    .from("Users")
+    .select("id")
+    .eq("uid", userId)
+    .single();
+
+  if (userError) throw new Error(userError.message);
+  if (!userData) return [];
 
   let query = supabase
     .from("Appointments")
@@ -43,7 +56,7 @@ const fetchAppointments = async (filters, userId) => {
       )
     `
     )
-    .eq("patient_id", userId)
+    .eq("patient_id", userData.id)
     .order("date", { ascending: false });
 
   if (filters.status) query = query.eq("status", filters.status);
@@ -74,8 +87,32 @@ const fetchAppointments = async (filters, userId) => {
   return data;
 };
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error("ErrorBoundary caught error:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="text-center py-8">
+          <h1 className="text-2xl font-semibold mb-4">Something went wrong.</h1>
+          <p className="text-red-500">{this.state.error.message}</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function AppointmentsPage() {
-  const currentUser = getCurrentUser();
+  const [currentUser, setCurrentUser] = useState(null);
   const [filters, setFilters] = useState({
     status: "",
     payment_method: "",
@@ -84,6 +121,13 @@ export default function AppointmentsPage() {
     startDate: "",
     endDate: "",
   });
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const {
     data: appointments,
@@ -197,7 +241,7 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <MetaData
         title={"My Appointments | HealthCare"}
         description={"Manage your medical appointments"}
@@ -452,6 +496,6 @@ export default function AppointmentsPage() {
           </div>
         </div>
       </div>
-    </>
+    </ErrorBoundary>
   );
 }

@@ -9,8 +9,7 @@ export default function SortDepartment({
   selectedDepartment = "all",
 }) {
   const { t } = useTranslation();
-  const [initialSpecialtyFromProps, setSelectedDepartment] =
-    useState(selectedDepartment);
+  const [currentDepartment, setCurrentDepartment] = useState(selectedDepartment);
   const {
     data: specialties,
     isLoading,
@@ -39,17 +38,22 @@ export default function SortDepartment({
   ];
 
   const handleDepartmentClick = (departmentId) => {
-    onDepartmentSelect?.(departmentId);
+    setCurrentDepartment(departmentId);
+    onDepartmentSelect(departmentId);
   };
-  // In SortDepartment component
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlSpecialty = urlParams.get("specialty");
     if (urlSpecialty) {
-      setSelectedDepartment(urlSpecialty);
+      setCurrentDepartment(urlSpecialty);
       onDepartmentSelect?.(urlSpecialty);
     }
   }, []);
+
+  useEffect(() => {
+    setCurrentDepartment(selectedDepartment);
+  }, [selectedDepartment]);
 
   if (isLoading)
     return <div className="text-center py-4">Loading specialties...</div>;
@@ -71,7 +75,7 @@ export default function SortDepartment({
                   key={department.id}
                   onClick={() => handleDepartmentClick(department.id)}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-full whitespace-nowrap transition-all duration-200 border ${
-                    selectedDepartment === department.id
+                    currentDepartment === department.id
                       ? "bg-[#11319E] text-white border-[#11319E]"
                       : "bg-white text-gray-700 border-gray-300 hover:border-[#11319E] hover:text-[#11319E]"
                   }`}

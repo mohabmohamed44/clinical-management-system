@@ -272,7 +272,6 @@ export default function DoctorDetails() {
 
                 {/* Clinic Information Section */}
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                  
                   {/* Contact Info */}
                   <div>
                     <h3 className="font-semibold text-lg mb-3">Contact Info</h3>
@@ -491,116 +490,100 @@ export default function DoctorDetails() {
 
                 {/* Book Now Button */}
                 <Link
-                  to={`/book/${data.id}`}
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl font-semibold text-white 
-                  bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow transition-all duration-200"
+                  to={`/find_doctor/${data.id}/book`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl font-semibold text-white bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow transition-all duration-200"
                 >
                   Book Appointment
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
                 </Link>
-
                 {/* Reviews Section */}
               </div>
               <div className="mt-6 sm:m shadow rounded-lg p-4 sm:p-6">
-                  <h3 className="text-lg sm:text-xl font-semibold mb-4">
-                    Patient Reviews
-                  </h3>
+                <h3 className="text-lg sm:text-xl font-semibold mb-4">
+                  Patient Reviews
+                </h3>
 
-                  {/* Review Form */}
-                  <form
-                    onSubmit={handleSubmitReview}
-                    className="mb-6 bg-gray-50 p-4 rounded-lg"
+                {/* Review Form */}
+                <form
+                  onSubmit={handleSubmitReview}
+                  className="mb-6 bg-gray-50 p-4 rounded-lg"
+                >
+                  <h4 className="font-medium mb-2">Share Your Experience</h4>
+                  <div className="flex flex-wrap items-center mb-4 gap-2">
+                    <span className="text-sm sm:text-base">Rating:</span>
+                    <div className="flex">{renderStars(rating, true)}</div>
+                  </div>
+                  <textarea
+                    value={newReview}
+                    onChange={(e) => setNewReview(e.target.value)}
+                    placeholder="How was your experience with this doctor?"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
+                    rows="3"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                   >
-                    <h4 className="font-medium mb-2">Share Your Experience</h4>
-                    <div className="flex flex-wrap items-center mb-4 gap-2">
-                      <span className="text-sm sm:text-base">Rating:</span>
-                      <div className="flex">{renderStars(rating, true)}</div>
-                    </div>
-                    <textarea
-                      value={newReview}
-                      onChange={(e) => setNewReview(e.target.value)}
-                      placeholder="How was your experience with this doctor?"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
-                      rows="3"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-                    >
-                      Submit Review
-                    </button>
-                  </form>
+                    Submit Review
+                  </button>
+                </form>
 
-                  {/* Reviews List */}
-                  {reviewsLoading ? (
-                    <div className="flex justify-center py-4">
-                      <DNA height={40} width={40} ariaLabel="loading-reviews" />
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {reviewsData?.reviews &&
-                      reviewsData.reviews.length > 0 ? (
-                        reviewsData.reviews.map((review) => (
-                          <div
-                            key={review.id}
-                            className="bg-gray-50 p-4 rounded-lg"
-                          >
-                            <div className="flex items-center mb-2">
-                              <img
-                                src={
-                                  review.Users?.image ||
-                                  "https://placehold.co/50x50/0A2357/FFFFFF.png"
-                                }
-                                alt="User"
-                                className="w-10 h-10 rounded-full mr-3"
-                              />
-                              <div>
-                                <p className="font-medium">
-                                  {getReviewAuthor(review)}
-                                </p>
-                                <div className="flex items-center">
-                                  <div className="flex mr-2">
-                                    {renderStars(Math.round(review.rate || 0))}
-                                  </div>
-                                  <span className="text-xs text-gray-500">
-                                    {new Date(
-                                      review.created_at
-                                    ).toLocaleDateString("en-US", {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                    })}
-                                  </span>
+                {/* Reviews List */}
+                {reviewsLoading ? (
+                  <div className="flex justify-center py-4">
+                    <DNA height={40} width={40} ariaLabel="loading-reviews" />
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {reviewsData?.reviews && reviewsData.reviews.length > 0 ? (
+                      reviewsData.reviews.map((review) => (
+                        <div
+                          key={review.id}
+                          className="bg-gray-50 p-4 rounded-lg"
+                        >
+                          <div className="flex items-center mb-2">
+                            <img
+                              src={
+                                review.Users?.image ||
+                                "https://placehold.co/50x50/0A2357/FFFFFF.png"
+                              }
+                              alt="User"
+                              className="w-10 h-10 rounded-full mr-3"
+                            />
+                            <div>
+                              <p className="font-medium">
+                                {getReviewAuthor(review)}
+                              </p>
+                              <div className="flex items-center">
+                                <div className="flex mr-2">
+                                  {renderStars(Math.round(review.rate || 0))}
                                 </div>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(
+                                    review.created_at
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </span>
                               </div>
                             </div>
-                            <p className="text-gray-600">{review.review}</p>
                           </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-500">
-                          No reviews yet. Be the first to share your experience!
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
+                          <p className="text-gray-600">{review.review}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">
+                        No reviews yet. Be the first to share your experience!
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        
       </div>
     </>
   );
