@@ -7,6 +7,16 @@ import { toast } from "react-hot-toast";
 import { getAuth } from "firebase/auth";
 import { format, parseISO, isBefore, startOfDay, isToday } from "date-fns";
 import { useTranslation } from "react-i18next";
+import axios from "axios"; // Make sure axios is installed in your project
+
+// Paymob Test Configuration
+const PAYMOB_CONFIG = {
+  API_KEY: import.meta.env.VITE_PAYMOB_API_KEY, // Test API Key
+  INTEGRATION_ID: import.meta.env.VITE_PAYMOB_INTEGRATION_ID, // Test Integration ID
+  IFRAME_ID: import.meta.env.VITE_PAYMOB_IFRAME_ID, // Test Iframe ID
+  BASE_URL: "https://accept.paymobsolutions.com/api", // Test URL
+  IS_TEST_MODE: true
+};
 
 const Book = () => {
   const [step, setStep] = useState(0);
@@ -14,6 +24,8 @@ const Book = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [criticalError, setCriticalError] = useState(null);
+  const [paymentToken, setPaymentToken] = useState(null);
+  const [appointmentId, setAppointmentId] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -155,31 +167,39 @@ const Book = () => {
 
       if (!workDay) return [];
 
-      const [startHour, startMinute] = workDay.start.split(":").map(Number);
-      const [endHour, endMinute] = workDay.end.split(":").map(Number);
-      const duration = parseInt(workDay.duration) || 30;
-
-      const startTotal = startHour * 60 + startMinute;
-      const endTotal = endHour * 60 + endMinute;
-
       let slots = [];
-      for (let minutes = startTotal; minutes + duration <= endTotal; minutes += duration) {
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        const time24 = `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
-        const isoTime = `${selectedDate}T${time24}:00`;
+      try {
+        const [startHour, startMinute] = workDay.start.split(":").map(Number);
+        const [endHour, endMinute] = workDay.end.split(":").map(Number);
+        const duration = parseInt(workDay.duration) || 30;
 
-        if (isToday(parseISO(selectedDate))) {
-          const now = new Date();
-          if (isBefore(parseISO(isoTime), now)) continue;
+        const startTotal = startHour * 60 + startMinute;
+        const endTotal = endHour * 60 + endMinute;
+
+        for (let minutes = startTotal; minutes + duration <= endTotal; minutes += duration) {
+          const hours = Math.floor(minutes / 60);
+          const mins = minutes % 60;
+          const time24 = `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+          
+          // Create date string in correct format
+          const timeString = `${selectedDate}T${time24}:00`;
+          const slotDate = parseISO(timeString);
+
+          if (isToday(parseISO(selectedDate))) {
+            const now = new Date();
+            if (isBefore(slotDate, now)) continue;
+          }
+
+          slots.push({
+            time24,
+            isoTime: timeString,
+            display: format(slotDate, "hh:mm a"),
+            available: true
+          });
         }
-
-        slots.push({
-          time24,
-          isoTime,
-          display: format(parseISO(isoTime), "hh:mm a"),
-          available: true
-        });
+      } catch (timeError) {
+        console.error("Time parsing error:", timeError);
+        return [];
       }
 
       let orConditions = [];
@@ -202,9 +222,167 @@ const Book = () => {
       }));
 
     } catch (error) {
-      console.error("Slot error:", error);
-      toast.error("Failed to load time slots");
+      console.error("Slot generation error:", error);
+      toast.error("Failed to generate time slots");
       return [];
+    }
+  };
+
+  // Paymob Payment Integration Steps
+  
+  // Step 1: Authenticate with Paymob
+  const authenticatePaymob = async () => {
+    try {
+      // Log to verify API key is loaded
+      if (!PAYMOB_CONFIG.API_KEY) {
+        throw new Error("Paymob API key is not configured");
+      }
+
+      const { data } = await axios.post(
+        `${PAYMOB_CONFIG.BASE_URL}/auth/tokens`, 
+        {
+          api_key: PAYMOB_CONFIG.API_KEY
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      );
+
+      if (!data || !data.token) {
+        throw new Error("Invalid response from payment gateway");
+      }
+
+      return data.token;
+    } catch (error) {
+      console.error("Paymob authentication error details:", {
+        message: error.message,
+        response: error.response?.data
+      });
+      throw new Error(error.response?.data?.message || "Failed to authenticate with payment gateway");
+    }
+  };
+  
+  // Step 2: Register order with Paymob
+  const registerOrder = async (authToken, amount) => {
+    try {
+      const { data } = await axios.post(`${PAYMOB_CONFIG.BASE_URL}/ecommerce/orders`, {
+        auth_token: authToken,
+        delivery_needed: false,
+        amount_cents: amount * 100, // Convert to cents
+        currency: "EGP",
+        items: []  // Empty for simple payment
+      });
+      return data.id;
+    } catch (error) {
+      console.error("Paymob order registration error:", error);
+      throw new Error("Failed to register payment order");
+    }
+  };
+  
+  // Step 3: Get payment key
+  const getPaymentKey = async (authToken, orderId, amount, billingData) => {
+    try {
+      const { data } = await axios.post(`${PAYMOB_CONFIG.BASE_URL}/acceptance/payment_keys`, {
+        auth_token: authToken,
+        order_id: orderId,
+        amount_cents: amount,
+        currency: "EGP",
+        integration_id: PAYMOB_CONFIG.INTEGRATION_ID,
+        billing_data: billingData
+      });
+      return data.token;
+    } catch (error) {
+      console.error("Paymob payment key error:", error);
+      throw new Error("Failed to initiate payment");
+    }
+  };
+  
+  // Process the payment for card
+  const processCardPayment = async (values, appointmentId) => {
+    try {
+      setLoading(true);
+      
+      if (!PAYMOB_CONFIG.API_KEY || !PAYMOB_CONFIG.INTEGRATION_ID) {
+        throw new Error("Payment gateway configuration is incomplete");
+      }
+
+      const authToken = await authenticatePaymob();
+      if (!authToken) throw new Error("Failed to get authentication token");
+
+      // Register order with appointment details
+      const orderData = {
+        auth_token: authToken,
+        delivery_needed: false,
+        amount_cents: provider.fee * 100,
+        currency: "EGP",
+        items: [{
+          name: `Appointment with Dr. ${provider.first_name} ${provider.last_name}`,
+          amount_cents: provider.fee * 100,
+          description: "Medical Consultation",
+          quantity: 1
+        }]
+      };
+
+      const orderId = await registerOrder(authToken, provider.fee);
+      
+      // Prepare billing data
+      const billingData = {
+        first_name: values.patient.name.split(' ')[0] || "Patient",
+        last_name: values.patient.name.split(' ').slice(1).join(' ') || "User",
+        email: currentUser.email,
+        phone_number: values.patient.phone,
+        apartment: "NA",
+        floor: "NA",
+        street: "NA",
+        building: "NA",
+        shipping_method: "NA",
+        postal_code: "NA",
+        city: "Cairo",
+        country: "Egypt",
+        state: "NA"
+      };
+      
+      const paymentToken = await getPaymentKey(authToken, orderId, provider.fee * 100, billingData);
+
+      // Update appointment with payment details
+      await supabase
+        .from("Appointments")
+        .update({
+          payment_reference: orderId,
+          payment_token: paymentToken
+        })
+        .eq("id", appointmentId);
+      
+      // Open payment page in new tab and redirect to appointments
+      const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_CONFIG.IFRAME_ID}?payment_token=${paymentToken}`;
+      const paymentWindow = window.open(iframeUrl);
+      
+      // Check if window was blocked by popup blocker
+      if (paymentWindow) {
+        // Redirect main window to appointments after short delay
+        setTimeout(() => {
+          navigate('/appointments');
+        }, 1000);
+      } else {
+        toast.error("Please allow popups to complete payment");
+      }
+      
+    } catch (error) {
+      console.error("Payment error:", error);
+      // Update appointment status to failed (remove payment_status field)
+      await supabase
+        .from("Appointments")
+        .update({ 
+          status: "failed"
+        })
+        .eq("id", appointmentId);
+      
+      toast.error("Payment processing failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -219,31 +397,43 @@ const Book = () => {
     try {
       const supabaseUserId = await getSupabaseUserId(currentUser);
       
-      const timeOnly = values.time + ':00';
-      const dateOnly = values.date;
-
+      // Create appointment with correct structure matching the database
       const appointmentData = {
         type: "Upcoming",
-        status: "pending",
+        status: "pending", // Always set to pending initially
+        doctor_id: id,
+        clinic_id: provider.clinic_id || null,
+        hos_id: provider.hos_id || null,
         patient_id: supabaseUserId,
-        patient: values.patient,
+        time: values.time + ':00',
+        date: values.date,
         fee: provider.fee,
-        payment_method: values.payment_method,
-        time: timeOnly,
-        date: dateOnly,
-        doctor_id: id
+        lab_id: null,
+        lab_services: null,
+        payment_method: values.payment_method, // Regular field, not JSONB
+        patient: {  // Patient info as JSONB
+          name: values.patient.name,
+          age: values.patient.age,
+          gender: values.patient.gender,
+          phone: values.patient.phone,
+          problem: values.patient.problem
+        }
       };
 
-      if (provider.clinic_id) appointmentData.clinic_id = provider.clinic_id;
-      if (provider.hos_id) appointmentData.hos_id = provider.hos_id;
-
-      const { error } = await supabase
+      const { data: newAppointment, error: appointmentError } = await supabase
         .from("Appointments")
-        .insert([appointmentData]);
+        .insert([appointmentData])
+        .select("id")
+        .single();
 
-      if (error) throw error;
+      if (appointmentError) throw appointmentError;
 
-      handlePaymentSuccess(values.payment_method);
+      // Handle payment method
+      if (values.payment_method === "cash") {
+        handlePaymentSuccess("cash");
+      } else {
+        await processCardPayment(values, newAppointment.id);
+      }
 
     } catch (error) {
       console.error("Booking error:", error);
@@ -299,7 +489,7 @@ const Book = () => {
         }}
         validationSchema={validationSchema[step]}
         onSubmit={handleSubmit}
-        validateOnMount={true}  // <-- added to validate on mount
+        validateOnMount={true}
       >
         {({ values, setFieldValue, isValid, isSubmitting }) => (
           <Form className="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto rounded-xl shadow overflow-hidden">
@@ -536,7 +726,7 @@ const PaymentStep = ({ provider, values }) => (
       <dl className="space-y-3">
         <div className="flex justify-between">
           <dt className="text-sm text-gray-600">Doctor</dt>
-          <dd className="text-sm text-gray-900">{provider?.first_name} {provider.last_name}</dd>
+          <dd className="text-sm text-gray-900">{provider?.first_name} {provider?.last_name}</dd>
         </div>
         <div className="flex justify-between">
           <dt className="text-sm text-gray-600">Patient</dt>
@@ -575,7 +765,7 @@ const PaymentStep = ({ provider, values }) => (
           <Field type="radio" name="payment_method" value="visa" className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
           <span className="ml-3 block text-sm font-medium text-gray-700">
             Credit/Debit Card
-            <span className="text-gray-500 text-sm block mt-1">Secure online payment</span>
+            <span className="text-gray-500 text-sm block mt-1">Secure online payment via Paymob</span>
           </span>
         </label>
       </div>
