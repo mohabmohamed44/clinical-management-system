@@ -9,12 +9,12 @@ import { format, parseISO, isBefore, startOfDay, isToday } from "date-fns";
 import { useTranslation } from "react-i18next";
 import axios from "axios"; // Make sure axios is installed in your project
 
-// Paymob Test Configuration
+// Paymob Configuration
 const PAYMOB_CONFIG = {
-  API_KEY: import.meta.env.VITE_PAYMOB_API_KEY, // Test API Key
-  INTEGRATION_ID: import.meta.env.VITE_PAYMOB_INTEGRATION_ID, // Test Integration ID
-  IFRAME_ID: import.meta.env.VITE_PAYMOB_IFRAME_ID, // Test Iframe ID
-  BASE_URL: "https://accept.paymobsolutions.com/api", // Test URL
+  API_KEY: import.meta.env.VITE_PAYMOB_API_KEY, 
+  INTEGRATION_ID: import.meta.env.VITE_PAYMOB_INTEGRATION_ID, 
+  IFRAME_ID: import.meta.env.VITE_PAYMOB_IFRAME_ID, 
+  BASE_URL: "https://accept.paymobsolutions.com/api", 
   IS_TEST_MODE: true
 };
 
