@@ -17,22 +17,17 @@ import {
 
 const fetchAppointment = async (appointmentId) => {
   try {
-    // Query the Appointments table
     const { data, error } = await supabase
       .from("Appointments")
-      .select(
-        `
+      .select(`
         *,
-        Doctors(id, first_name, last_name, specialty, image, specialty),
-        Users(first_name, last_name, email, gender)
-        `
-      )
+        Doctors(id, first_name, last_name, specialty, image),
+        Users(first_name, last_name, email, gender),
+        clinic:Clinics(id, address)
+      `)
       .eq("id", appointmentId)
       .single();
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     return data;
   } catch (error) {
     console.error("Error fetching appointment:", error);
@@ -145,32 +140,48 @@ export default function AppointmentDetails() {
   const statusStyle = statusConfig[status] || statusConfig.pending;
 
   // Format date and time
-  const formatDateTime = (dateString) => {
-    if (!dateString) return "Not specified";
-    const options = {
+  const formatDateTime = (date, time) => {
+    if (!date || !time) return "Not specified";
+    const datetime = new Date(`${date}T${time}`);
+    return datetime.toLocaleString(undefined, {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    });
   };
 
-  // Get location display
+  // Format clinic address
+  const formatClinicAddress = (address) => {
+    if (!address) return "Address not available";
+    const { building, floor, streat } = address;
+    return `${building || ''}, ${floor ? `${floor} Floor` : ''}, ${streat || ''}`.replace(/^[,\s]+|[,\s]+$/g, '');
+  };
+
+  // Get location display with address
   const getLocationDisplay = () => {
-    if (appointment.clinic_id) return `Clinic #${appointment.clinic_id}`;
-    if (appointment.hos_id) return `Hospital #${appointment.hos_id}`;
-    return "Not specified";
+    if (appointment.clinic_id) {
+      return (
+        <div>
+          <p className="font-medium text-gray-800">Clinic</p>
+          <p className="text-sm text-gray-600">
+            {formatClinicAddress(appointment.clinic?.address)}
+          </p>
+        </div>
+      );
+    }
+    return <p className="font-medium text-gray-800">Location not specified</p>;
   };
 
   return (
-    <>
+    <div className="p-4 md:p-8">
       <MetaData
-        title={`Appointment Details - ${appointment.id}`}
+        title="Appointment Details | HealthCare"
+        description="View your appointment details"
         name="Appointment Details"
-        description={`Appointment with Dr. ${appointment.Doctors?.first_name} ${appointment.Doctors?.last_name}`}
+        type="website"
       />
 
       <div className="max-w-lg mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
@@ -182,7 +193,7 @@ export default function AppointmentDetails() {
             {statusStyle.icon}
             <span className="capitalize">{status} Appointment</span>
           </div>
-          <span className="text-sm">{formatDateTime(appointment.date)}</span>
+          <span className="text-sm">{formatDateTime(appointment.date, appointment.time)}</span>
         </div>
 
         {/* Main Content */}
@@ -225,7 +236,7 @@ export default function AppointmentDetails() {
                 <div>
                   <p className="text-sm text-gray-500">Date & Time</p>
                   <p className="font-medium text-gray-800">
-                    {formatDateTime(appointment.date)}
+                    {formatDateTime(appointment.date, appointment.time)}
                   </p>
                 </div>
               </div>
@@ -308,6 +319,6 @@ export default function AppointmentDetails() {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

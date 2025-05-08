@@ -45,6 +45,7 @@ const fetchAppointments = async (filters, userId) => {
       hos_id,
       doctor_id,
       date,
+      time,
       patient,
       patient_id,
       Doctors (
@@ -53,6 +54,10 @@ const fetchAppointments = async (filters, userId) => {
         last_name,
         specialty,
         image
+      ),
+      clinic:Clinics (
+        id,
+        address
       )
     `
     )
@@ -85,6 +90,13 @@ const fetchAppointments = async (filters, userId) => {
   const { data, error } = await query;
   if (error) throw new Error(error.message);
   return data;
+};
+
+// Add formatClinicAddress helper function
+const formatClinicAddress = (address) => {
+  if (!address) return "Address not available";
+  const { building, floor, streat } = address;
+  return `${building || ''}, ${floor ? `${floor} Floor` : ''}, ${streat || ''}`.replace(/^[,\s]+|[,\s]+$/g, '');
 };
 
 class ErrorBoundary extends React.Component {
@@ -191,20 +203,34 @@ export default function AppointmentsPage() {
     </div>
   );
 
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+  const formatDate = (dateString, timeString) => {
+    try {
+      const date = new Date(`${dateString}T${timeString}`);
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "Invalid Date";
+    }
   };
 
+  // Update getLocationDisplay function
   const getLocationDisplay = (appointment) => {
-    if (appointment.clinic_id) return `Clinic #${appointment.clinic_id}`;
-    if (appointment.hos_id) return `Hospital #${appointment.hos_id}`;
+    if (appointment.clinic_id) {
+      const address = formatClinicAddress(appointment.clinic?.address);
+      return (
+        <div>
+          <div className="font-medium">Clinic</div>
+          <div className="text-xs text-gray-500">{address}</div>
+        </div>
+      );
+    }
+    if (appointment.hos_id) return "Hospital";
     return "N/A";
   };
 
@@ -446,7 +472,7 @@ export default function AppointmentsPage() {
                         </Link>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
-                        {formatDate(appointment.date)}
+                        {formatDate(appointment.date, appointment.time)}
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         {getStatusBadge(appointment.status)}
