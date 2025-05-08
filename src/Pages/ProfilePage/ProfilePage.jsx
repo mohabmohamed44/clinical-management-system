@@ -30,22 +30,24 @@ const ProfilePage = () => {
         if (currentUser?.uid) {
           const result = await getUserDataByFirebaseUID(currentUser.uid);
           if (result.success) {
-            // Extract the first address object from the addresses array
             const address = result.userData.addresses?.[0] || {
-              city: "",
-              area: "",
-              street: "",
-              location: "",
+              city: "", area: "", street: "", location: ""
             };
-            setProfile({
+
+            // Merge Supabase data with Firebase auth data
+            const mergedData = {
               id: result.userData.id || "",
-              first_name: result.userData.first_name || "",
-              last_name: result.userData.last_name || "",
+              first_name: result.userData.first_name || 
+                (currentUser.displayName?.split(' ')[0] || "No Name Set"),
+              last_name: result.userData.last_name || 
+                (currentUser.displayName?.split(' ').slice(1).join(' ') || "No Name Set"),
               phone: result.userData.phone || "Not set",
               date_of_birth: result.userData.date_of_birth || "Not specified",
-              image: result.userData.image || FaUser,
+              image: result.userData.image || currentUser.photoURL || "",
               addresses: address,
-            });
+            };
+
+            setProfile(mergedData);
           } else {
             setError(result.error || "Failed to fetch profile data");
           }
@@ -126,12 +128,12 @@ const ProfilePage = () => {
                 <div className="relative mb-4 md:mb-0 md:mr-6">
                   {profile.image ? (
                     <img
-                      src={profile.image || FaUser}
+                      src={profile.image.startsWith("http") ? profile.image : `data:image/png;base64,${profile.image}`}
                       alt="Profile"
                       className="w-16 h-16 rounded-full object-cover"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/default-profile.png";
+                        e.target.src = currentUser?.photoURL || "/default-profile.png";
                       }}
                     />
                   ) : (
@@ -143,8 +145,7 @@ const ProfilePage = () => {
 
                 <div className="text-center md:text-left">
                   <h3 className="text-lg font-medium">
-                    {profile.first_name || "No Name Set"}{" "}
-                    {profile.last_name || "No Name Set"}
+                    {profile.first_name} {profile.last_name}
                   </h3>
                   <p className="text-[#11319E]">
                     {profile.addresses.area || "No Area is Set"}
@@ -178,11 +179,12 @@ const ProfilePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {[
-                    { label: "First Name", value: profile.first_name},
+                    { label: "First Name", value: profile.first_name },
                     { label: "Last Name", value: profile.last_name },
                     { label: "ID", value: profile.id },
                     { label: "Phone", value: profile.phone },
                     { label: "Date of Birth", value: profile.date_of_birth },
+                    { label: "Login Method", value: currentUser.providerData?.[0]?.providerId.replace(".com", "") },
                   ].map((item, index) => (
                     <div key={index}>
                       <p className="text-gray-500 mb-2">{item.label}</p>
