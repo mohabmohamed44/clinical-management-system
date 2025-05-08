@@ -3,7 +3,7 @@ import { Pencil } from "lucide-react";
 import { DNA } from "react-loader-spinner";
 import MetaData from "../../Components/MetaData/MetaData";
 import { useAuth } from "../../Lib/Context/AuthContext";
-import { FaUser } from "react-icons/fa6";
+import { FaUser, FaGoogle } from "react-icons/fa6";
 import { getUserDataByFirebaseUID } from "../../services/AuthService";
 
 const ProfilePage = () => {
@@ -20,6 +20,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [isGoogleUser, setIsGoogleUser] = useState(false);
   
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -28,6 +29,10 @@ const ProfilePage = () => {
 
       try {
         if (currentUser?.uid) {
+          // Check if user is authenticated with Google
+          const isGoogle = currentUser.providerData?.[0]?.providerId === "google.com";
+          setIsGoogleUser(isGoogle);
+          
           const result = await getUserDataByFirebaseUID(currentUser.uid);
           if (result.success) {
             const address = result.userData.addresses?.[0] || {
@@ -36,7 +41,7 @@ const ProfilePage = () => {
 
             // Merge Supabase data with Firebase auth data
             const mergedData = {
-              id: result.userData.id || "",
+              id: result.userData.id || currentUser.uid || "",
               first_name: result.userData.first_name || 
                 (currentUser.displayName?.split(' ')[0] || "No Name Set"),
               last_name: result.userData.last_name || 
@@ -45,16 +50,67 @@ const ProfilePage = () => {
               date_of_birth: result.userData.date_of_birth || "Not specified",
               image: result.userData.image || currentUser.photoURL || "",
               addresses: address,
+              email: currentUser.email || result.userData.email || "No email set",
+              // Store Google-specific properties if available
+              googleData: isGoogle ? {
+                email: currentUser.email,
+                emailVerified: currentUser.emailVerified,
+                displayName: currentUser.displayName,
+                photoURL: currentUser.photoURL,
+              } : null
             };
 
             setProfile(mergedData);
           } else {
             setError(result.error || "Failed to fetch profile data");
+            
+            // If Supabase data fetch fails but we have Google auth data, use that
+            if (isGoogle) {
+              setProfile({
+                id: currentUser.uid || "",
+                first_name: currentUser.displayName?.split(' ')[0] || "No Name Set",
+                last_name: currentUser.displayName?.split(' ').slice(1).join(' ') || "",
+                phone: "Not set",
+                date_of_birth: "Not specified",
+                image: currentUser.photoURL || "",
+                email: currentUser.email || "No email set",
+                addresses: { city: "", area: "", street: "", location: "" },
+                googleData: {
+                  email: currentUser.email,
+                  emailVerified: currentUser.emailVerified,
+                  displayName: currentUser.displayName,
+                  photoURL: currentUser.photoURL,
+                }
+              });
+              setError(""); // Clear error since we have fallback data
+            }
           }
         }
       } catch (error) {
         setError("Error fetching profile data");
         console.error("Fetch error:", error);
+        
+        // Fallback to Google data if available
+        if (currentUser && currentUser.providerData?.[0]?.providerId === "google.com") {
+          setIsGoogleUser(true);
+          setProfile({
+            id: currentUser.uid || "",
+            first_name: currentUser.displayName?.split(' ')[0] || "No Name Set",
+            last_name: currentUser.displayName?.split(' ').slice(1).join(' ') || "",
+            phone: "Not set",
+            date_of_birth: "Not specified",
+            image: currentUser.photoURL || "",
+            email: currentUser.email || "No email set",
+            addresses: { city: "", area: "", street: "", location: "" },
+            googleData: {
+              email: currentUser.email,
+              emailVerified: currentUser.emailVerified,
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
+            }
+          });
+          setError(""); // Clear error since we have fallback data
+        }
       } finally {
         setLoading(false);
       }
@@ -106,6 +162,15 @@ const ProfilePage = () => {
         <div className="flex-1 p-4 md:p-8 bg-gray-50">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold">Profile</h1>
+            {isGoogleUser && (
+              <div className="flex items-center mt-2 text-sm text-gray-600">
+                <FaGoogle className="text-blue-500 mr-2" />
+                <span>Google Account Connected</span>
+                {profile.googleData?.emailVerified && 
+                  <span className="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Verified</span>
+                }
+              </div>
+            )}
           </div>
 
           {error && (
@@ -153,6 +218,11 @@ const ProfilePage = () => {
                   <p className="text-gray-500">
                     {profile.addresses.location || "No location set"}
                   </p>
+                  {isGoogleUser && (
+                    <p className="text-gray-500">
+                      {profile.email}
+                    </p>
+                  )}
                 </div>
 
                 <button
@@ -184,6 +254,7 @@ const ProfilePage = () => {
                     { label: "ID", value: profile.id },
                     { label: "Phone", value: profile.phone },
                     { label: "Date of Birth", value: profile.date_of_birth },
+                    { label: "Email", value: profile.email },
                     { label: "Login Method", value: currentUser.providerData?.[0]?.providerId.replace(".com", "") },
                   ].map((item, index) => (
                     <div key={index}>
@@ -221,6 +292,44 @@ const ProfilePage = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Google Account Information - Only shown for Google users */}
+              {isGoogleUser && profile.googleData && (
+                <div className="border-t border-gray-200 pt-6 mt-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center">
+                      <h3 className="text-lg font-medium">Google Account Information</h3>
+                      <FaGoogle className="ml-2 text-blue-500" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[
+                      { label: "Google Display Name", value: profile.googleData.displayName },
+                      { label: "Google Email", value: profile.googleData.email },
+                      { 
+                        label: "Email Verification Status", 
+                        value: profile.googleData.emailVerified ? "Verified" : "Not Verified",
+                        badge: profile.googleData.emailVerified ? 
+                          { text: "Verified", color: "green" } : 
+                          { text: "Not Verified", color: "yellow" }
+                      },
+                    ].map((item, index) => (
+                      <div key={index}>
+                        <p className="text-gray-500 mb-2">{item.label}</p>
+                        <div className="flex items-center">
+                          <p>{item.value || "Not specified"}</p>
+                          {item.badge && (
+                            <span className={`ml-2 bg-${item.badge.color}-100 text-${item.badge.color}-800 px-2 py-1 rounded-full text-xs`}>
+                              {item.badge.text}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
