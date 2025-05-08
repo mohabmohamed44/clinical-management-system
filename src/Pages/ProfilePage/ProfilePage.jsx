@@ -251,7 +251,6 @@ const ProfilePage = () => {
                   {[
                     { label: "First Name", value: profile.first_name },
                     { label: "Last Name", value: profile.last_name },
-                    { label: "ID", value: profile.id },
                     { label: "Phone", value: profile.phone },
                     { label: "Date of Birth", value: profile.date_of_birth },
                     { label: "Email", value: profile.email },
