@@ -195,7 +195,7 @@ const ProfilePage = () => {
                     <img
                       src={profile.image.startsWith("http") ? profile.image : `data:image/png;base64,${profile.image}`}
                       alt="Profile"
-                      className="w-16 h-16 rounded-full object-cover"
+                      className="w-20 h-20 rounded-full object-cover"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = currentUser?.photoURL || "/default-profile.png";

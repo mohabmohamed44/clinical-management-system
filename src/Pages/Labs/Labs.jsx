@@ -4,12 +4,14 @@ import { supabase } from '../../Config/Supabase';
 import { ImLab } from "react-icons/im";
 import { DNA } from 'react-loader-spinner';
 import MetaData from '../../Components/MetaData/MetaData';
+import LabFilters from '../../Components/LabFilters/LabFilters';
 
 const Labs = () => {
   const [labs, setLabs] = useState([])
   const [labLocations, setLabLocations] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [filteredSpecialties, setFilteredSpecialties] = useState([]);
 
   useEffect(() => {
     const fetchLabsData = async () => {
@@ -74,6 +76,10 @@ const Labs = () => {
     fetchLabsData()
   }, [])
 
+  const handleFilterChange = (selectedSpecialties) => {
+    setFilteredSpecialties(selectedSpecialties);
+  };
+
   if (loading) return (
     <div className="flex items-center justify-center h-screen">
       <div className='text-center'>
@@ -98,6 +104,10 @@ const Labs = () => {
     )
   }
 
+  const filteredLabs = labs.filter(lab => 
+    filteredSpecialties.length === 0 || filteredSpecialties.includes(lab.specialty)
+  );
+
   return (
     <>
     <MetaData 
@@ -107,13 +117,16 @@ const Labs = () => {
       author={"Mohab Mohammed"}
     />
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex items-center mb-8">
-        <ImLab className="text-3xl text-[#005D] mr-2" />
-        <h1 className="text-3xl font-bold text-[#005D]">Available Labs</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div className="flex items-center mb-4 md:mb-0">
+          <ImLab className="text-3xl text-[#005D] mr-2" />
+          <h1 className="text-3xl font-bold text-[#005D]">Available Labs</h1>
+        </div>
+        <LabFilters onFilterChange={handleFilterChange} />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {labs.map((lab) => {
+        {filteredLabs.map((lab) => {
           const locations = labLocations[lab.id] || [];
           
           return (

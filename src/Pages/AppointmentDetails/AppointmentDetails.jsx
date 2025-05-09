@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../Config/Supabase";
 import { useParams } from "react-router-dom";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
+import { Dialog } from "@headlessui/react";
 import {
   FaClock,
   FaCheckCircle,
@@ -50,6 +51,140 @@ export default function AppointmentDetails() {
       toast.error(`Failed to load appointment: ${err.message}`);
     },
   });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [newDate, setNewDate] = useState("");
+  const [newTime, setNewTime] = useState("");
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  const handleCancellation = async () => {
+    try {
+      setIsSubmitting(true);
+      const { error } = await supabase
+        .from("Appointments")
+        .update({
+          status: "cancelled",
+          problem_reason: cancelReason
+        })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast.success("Appointment cancelled successfully");
+      setIsOpen(false);
+      refetch();
+    } catch (error) {
+      toast.error(`Failed to cancel appointment: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Add this function to fetch available slots
+  const fetchAvailableSlots = async (date) => {
+    try {
+      setLoadingSlots(true);
+      
+      // Get clinic work times
+      const { data: clinicData, error: clinicError } = await supabase
+        .from('Clinics')
+        .select('work_times')
+        .eq('id', appointment.clinic_id)
+        .single();
+
+      if (clinicError) throw clinicError;
+
+      if (!clinicData?.work_times?.length) {
+        toast.error('Clinic schedule not found');
+        return;
+      }
+
+      // Get the day of week for the selected date
+      const selectedDay = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
+      
+      // Find the schedule for the selected day
+      const daySchedule = clinicData.work_times.find(
+        schedule => schedule.day === selectedDay
+      );
+
+      if (!daySchedule) {
+        toast.error('No schedule available for selected day');
+        return;
+      }
+
+      // Get booked slots for the selected date
+      const { data: bookedSlots, error: bookedError } = await supabase
+        .from('Appointments')
+        .select('time')
+        .eq('doctor_id', appointment.doctor_id)
+        .eq('date', date)
+        .neq('status', 'cancelled');
+
+      if (bookedError) throw bookedError;
+
+      // Generate available slots based on clinic's schedule
+      const slots = [];
+      let currentTime = daySchedule.start.slice(0, 5); // Remove seconds
+      const endTime = daySchedule.end.slice(0, 5);
+      
+      while (currentTime <= endTime) {
+        const isBooked = bookedSlots?.some(slot => slot.time === currentTime);
+        if (!isBooked) {
+          slots.push({
+            time: currentTime,
+            formatted: new Date(`2000-01-01T${currentTime}`).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            }),
+          });
+        }
+        // Add duration minutes
+        const [hours, minutes] = currentTime.split(':');
+        const date = new Date(2000, 0, 1, parseInt(hours), parseInt(minutes));
+        date.setMinutes(date.getMinutes() + parseInt(daySchedule.duration));
+        currentTime = date.toTimeString().slice(0, 5);
+      }
+
+      setAvailableSlots(slots);
+    } catch (error) {
+      toast.error('Failed to load available slots');
+      console.error(error);
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
+
+  // Modify handleReschedule function
+  const handleReschedule = async () => {
+    if (!selectedSlot || !newDate) return;
+
+    try {
+      setIsRescheduling(true);
+      const { error } = await supabase
+        .from("Appointments")
+        .update({
+          date: newDate,
+          time: selectedSlot.time,
+        })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast.success("Appointment rescheduled successfully");
+      setIsRescheduleOpen(false);
+      refetch();
+    } catch (error) {
+      toast.error(`Failed to reschedule appointment: ${error.message}`);
+    } finally {
+      setIsRescheduling(false);
+    }
+  };
 
   // Loading state
   if (isLoading) {
@@ -164,15 +299,15 @@ export default function AppointmentDetails() {
   const getLocationDisplay = () => {
     if (appointment.clinic_id) {
       return (
-        <div>
-          <p className="font-medium text-gray-800">Clinic</p>
-          <p className="text-sm text-gray-600">
+        <div className="flex flex-col">
+          <span className="font-medium text-gray-800">Clinic</span>
+          <span className="text-sm text-gray-600">
             {formatClinicAddress(appointment.clinic?.address)}
-          </p>
+          </span>
         </div>
       );
     }
-    return <p className="font-medium text-gray-800">Location not specified</p>;
+    return <span className="text-gray-800">Location not specified</span>;
   };
 
   return (
@@ -241,13 +376,11 @@ export default function AppointmentDetails() {
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-3 rounded-lg flex items-center">
-                <FaMapMarkerAlt className="text-blue-500 mr-3" />
-                <div>
-                  <p className="text-sm text-gray-500">Location</p>
-                  <p className="font-medium text-gray-800">
-                    {getLocationDisplay()}
-                  </p>
+              <div className="bg-gray-50 p-3 rounded-lg flex items-start">
+                <FaMapMarkerAlt className="text-blue-500 mt-1 mr-3 flex-shrink-0" />
+                <div className="flex flex-col">
+                  <span className="text-sm text-gray-500">Location</span>
+                  {getLocationDisplay()}
                 </div>
               </div>
 
@@ -310,14 +443,155 @@ export default function AppointmentDetails() {
 
         {/* Action Buttons */}
         <div className="flex border-t border-gray-200">
-          <button className="flex-1 py-3 text-blue-600 font-medium hover:bg-blue-100 transition duration-150">
+          <button 
+            onClick={() => setIsRescheduleOpen(true)}
+            className="flex-1 py-3 text-blue-600 font-medium hover:bg-blue-100 transition duration-150"
+          >
             Reschedule
           </button>
           <div className="w-px bg-gray-200"></div>
-          <button className="flex-1 py-3 text-red-600 font-medium hover:bg-red-100 transition duration-150 ">
+          <button 
+            onClick={() => setIsOpen(true)}
+            className="flex-1 py-3 text-red-600 font-medium hover:bg-red-100 transition duration-150"
+          >
             Cancel Appointment
           </button>
         </div>
+
+        {/* Cancellation Modal */}
+        <Dialog
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          className="relative z-50"
+        >
+          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="mx-auto max-w-sm rounded-lg bg-white p-6">
+              <Dialog.Title className="text-lg font-medium text-gray-900 mb-4">
+                Cancel Appointment
+              </Dialog.Title>
+
+              <div className="mb-4">
+                <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+                  Reason for Cancellation
+                </label>
+                <textarea
+                  id="reason"
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="3"
+                  placeholder="Please provide a reason for cancellation..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50"
+                  onClick={handleCancellation}
+                  disabled={isSubmitting || !cancelReason.trim()}
+                >
+                  {isSubmitting ? "Cancelling..." : "Confirm Cancellation"}
+                </button>
+              </div>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+
+        {/* Reschedule Modal */}
+        <Dialog
+          open={isRescheduleOpen}
+          onClose={() => setIsRescheduleOpen(false)}
+          className="relative z-50"
+        >
+          <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+          <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog.Panel className="mx-auto max-w-md w-full rounded-lg bg-white p-6">
+              <Dialog.Title className="text-lg font-medium text-gray-900 mb-4">
+                Reschedule Appointment
+              </Dialog.Title>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                    Select New Date
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    value={newDate}
+                    onChange={(e) => {
+                      setNewDate(e.target.value);
+                      setSelectedSlot(null);
+                      fetchAvailableSlots(e.target.value);
+                    }}
+                    className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+
+                {newDate && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Select Available Time Slot
+                    </label>
+                    {loadingSlots ? (
+                      <div className="text-center py-4">Loading available slots...</div>
+                    ) : availableSlots.length > 0 ? (
+                      <div className="grid grid-cols-3 gap-2">
+                        {availableSlots.map((slot) => (
+                          <button
+                            key={slot.time}
+                            onClick={() => setSelectedSlot(slot)}
+                            className={`p-2 text-sm rounded-md transition-colors ${
+                              selectedSlot?.time === slot.time
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                            }`}
+                          >
+                            {slot.formatted}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4 text-gray-500">
+                        No available slots for this date
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  onClick={() => setIsRescheduleOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  onClick={handleReschedule}
+                  disabled={isRescheduling || !newDate || !selectedSlot}
+                >
+                  {isRescheduling ? "Rescheduling..." : "Confirm Reschedule"}
+                </button>
+              </div>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
       </div>
     </div>
   );

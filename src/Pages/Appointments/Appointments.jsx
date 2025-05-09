@@ -10,6 +10,8 @@ import {
   FaCcVisa,
   FaUser,
   FaFilter,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 import { SiCashapp } from "react-icons/si";
 import MetaData from "../../Components/MetaData/MetaData";
@@ -133,6 +135,7 @@ export default function AppointmentsPage() {
     startDate: "",
     endDate: "",
   });
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -224,14 +227,14 @@ export default function AppointmentsPage() {
     if (appointment.clinic_id) {
       const address = formatClinicAddress(appointment.clinic?.address);
       return (
-        <div>
-          <div className="font-medium">Clinic</div>
-          <div className="text-xs text-gray-500">{address}</div>
+        <div className="flex flex-col">
+          <span className="font-medium">Clinic</span>
+          <span className="text-xs text-gray-500">{address}</span>
         </div>
       );
     }
-    if (appointment.hos_id) return "Hospital";
-    return "N/A";
+    if (appointment.hos_id) return <span>Hospital</span>;
+    return <span>N/A</span>;
   };
 
   if (!currentUser) {
@@ -266,6 +269,60 @@ export default function AppointmentsPage() {
     );
   }
 
+  // Add responsive table/card view component
+  const AppointmentCard = ({ appointment }) => (
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <img
+            src={appointment.Doctors?.image || "/default-avatar.png"}
+            alt="Doctor"
+            className="w-12 h-12 rounded-full object-cover"
+          />
+          <div>
+            <div className="font-medium text-gray-900">
+              Dr. {appointment.Doctors?.first_name} {appointment.Doctors?.last_name}
+            </div>
+            <div className="text-sm text-[#667198]">
+              {appointment.Doctors?.specialty}
+            </div>
+          </div>
+        </div>
+        {getStatusBadge(appointment.status)}
+      </div>
+      
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500">Date & Time:</span>
+          <span className="text-gray-900">{formatDate(appointment.date, appointment.time)}</span>
+        </div>
+        
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500">Payment:</span>
+          <span>{getPaymentMethod(appointment.payment_method)}</span>
+        </div>
+        
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500">Location:</span>
+          <span>{getLocationDisplay(appointment)}</span>
+        </div>
+        
+        <div className="flex justify-between text-sm">
+          <span className="text-gray-500">Type:</span>
+          <span className="capitalize">{appointment.type}</span>
+        </div>
+      </div>
+      
+      <Link
+        to={`/appointments/${appointment.id}`}
+        className="mt-3 block w-full text-center py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
+      >
+        View Details
+      </Link>
+    </div>
+  );
+
+  // Update the return statement
   return (
     <ErrorBoundary>
       <MetaData
@@ -278,142 +335,126 @@ export default function AppointmentsPage() {
 
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
             My Appointments
           </h1>
 
-          {/* Filters Section */}
-          <div className="bg-white p-4 md:p-6 rounded-lg shadow mb-6 border-2 border-[#1972EE]">
-            <div className="flex items-center justify-between mb-4">
+          {/* Filters Section - Mobile Responsive */}
+          <div className="bg-white rounded-lg shadow mb-6 border-2 border-[#1972EE] overflow-hidden">
+            {/* Filter Header - Always Visible */}
+            <button
+              onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+              className="w-full p-4 flex items-center justify-between md:hidden"
+            >
               <div className="flex items-center gap-2">
                 <FaFilter className="text-[#00155D]" />
-                <h2 className="text-base md:text-lg font-semibold text-[#00155D]">
+                <h2 className="text-base font-semibold text-[#00155D]">
                   Filter Appointments
                 </h2>
               </div>
-              <button
-                onClick={resetFilters}
-                className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
-              >
-                Reset Filters
-              </button>
-            </div>
+              {isFiltersVisible ? (
+                <FaChevronUp className="text-[#00155D]" />
+              ) : (
+                <FaChevronDown className="text-[#00155D]" />
+              )}
+            </button>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">
-                  Status
-                </label>
-                <select
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.status}
-                  onChange={(e) =>
-                    setFilters((prev) => ({ ...prev, status: e.target.value }))
-                  }
-                >
-                  <option value="">All Statuses</option>
-                  {["Completed", "Pending", "Cancelled", "Confirmed"].map(
-                    (option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
+            {/* Filter Content - Collapsible on Mobile */}
+            <div
+              className={`${
+                isFiltersVisible ? "max-h-[1000px]" : "max-h-0 md:max-h-[1000px]"
+              } transition-all duration-300 ease-in-out overflow-hidden`}
+            >
+              <div className="p-4 md:p-6 border-t md:border-t-0">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="hidden md:flex items-center gap-2">
+                    <FaFilter className="text-[#00155D]" />
+                    <h2 className="text-base md:text-lg font-semibold text-[#00155D]">
+                      Filter Appointments
+                    </h2>
+                  </div>
+                  <button
+                    onClick={resetFilters}
+                    className="w-full md:w-auto px-3 py-2 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
 
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">
-                  Payment
-                </label>
-                <select
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.payment_method}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      payment_method: e.target.value,
-                    }))
-                  }
-                >
-                  <option value="">All Payments</option>
-                  {["Visa", "Cash"].map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                  {/* Filter Fields - Updated for better mobile spacing */}
+                  {[
+                    { label: "Status", value: "status", options: ["Completed", "Pending", "Cancelled", "Confirmed"] },
+                    { label: "Payment", value: "payment_method", options: ["Visa", "Cash"] },
+                    { label: "Type", value: "type", options: ["Completed", "Upcoming"] },
+                    { label: "Location", value: "location", options: ["clinic", "hospital"] }
+                  ].map((filter) => (
+                    <div key={filter.value} className="space-y-1">
+                      <label className="block text-sm text-blue-700 font-medium">
+                        {filter.label}
+                      </label>
+                      <select
+                        className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={filters[filter.value]}
+                        onChange={(e) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            [filter.value]: e.target.value,
+                          }))
+                        }
+                      >
+                        <option value="">All {filter.label}s</option>
+                        {filter.options.map((option) => (
+                          <option key={option} value={option.toLowerCase()}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   ))}
-                </select>
-              </div>
+                  
+                  {/* Date Fields */}
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      From
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.startDate}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          startDate: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">Type</label>
-                <select
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.type}
-                  onChange={(e) =>
-                    setFilters((prev) => ({ ...prev, type: e.target.value }))
-                  }
-                >
-                  <option value="">All Types</option>
-                  {["Completed", "Upcoming"].map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">
-                  Location
-                </label>
-                <select
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.location}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      location: e.target.value,
-                    }))
-                  }
-                >
-                  <option value="">All Locations</option>
-                  <option value="clinic">Clinic</option>
-                  <option value="hospital">Hospital</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">From</label>
-                <input
-                  type="date"
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.startDate}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      startDate: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-blue-700 mb-1">To</label>
-                <input
-                  type="date"
-                  className="w-full py-1 px-2 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  value={filters.endDate}
-                  onChange={(e) =>
-                    setFilters((prev) => ({ ...prev, endDate: e.target.value }))
-                  }
-                />
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      To
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.endDate}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          endDate: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Appointments Table */}
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
+          {/* Responsive Table/Card View */}
+          <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
+            {/* Original table markup for tablet and desktop */}
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -519,6 +560,22 @@ export default function AppointmentsPage() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4">
+            {appointments?.length > 0 ? (
+              appointments.map((appointment) => (
+                <AppointmentCard key={appointment.id} appointment={appointment} />
+              ))
+            ) : (
+              <div className="text-center py-8 bg-white rounded-lg">
+                <p className="text-gray-500">No appointments found.</p>
+                <Link to="/book" className="text-blue-500 hover:underline mt-2 inline-block">
+                  Book an appointment
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
