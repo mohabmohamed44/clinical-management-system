@@ -69,7 +69,7 @@ export default function AppointmentDetails() {
       const { error } = await supabase
         .from("Appointments")
         .update({
-          status: "cancelled",
+          status: "Cancelled",
           problem_reason: cancelReason
         })
         .eq("id", id);
