@@ -20,12 +20,14 @@ const fetchAppointment = async (appointmentId) => {
   try {
     const { data, error } = await supabase
       .from("Appointments")
-      .select(`
+      .select(
+        `
         *,
         Doctors(id, first_name, last_name, specialty, image),
         Users(first_name, last_name, email, gender),
         clinic:Clinics(id, address)
-      `)
+      `
+      )
       .eq("id", appointmentId)
       .single();
     if (error) throw error;
@@ -70,7 +72,7 @@ export default function AppointmentDetails() {
         .from("Appointments")
         .update({
           status: "Cancelled",
-          problem_reason: cancelReason
+          problem_reason: cancelReason,
         })
         .eq("id", id);
 
@@ -90,41 +92,43 @@ export default function AppointmentDetails() {
   const fetchAvailableSlots = async (date) => {
     try {
       setLoadingSlots(true);
-      
+
       // Get clinic work times
       const { data: clinicData, error: clinicError } = await supabase
-        .from('Clinics')
-        .select('work_times')
-        .eq('id', appointment.clinic_id)
+        .from("Clinics")
+        .select("work_times")
+        .eq("id", appointment.clinic_id)
         .single();
 
       if (clinicError) throw clinicError;
 
       if (!clinicData?.work_times?.length) {
-        toast.error('Clinic schedule not found');
+        toast.error("Clinic schedule not found");
         return;
       }
 
       // Get the day of week for the selected date
-      const selectedDay = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
-      
+      const selectedDay = new Date(date).toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+
       // Find the schedule for the selected day
       const daySchedule = clinicData.work_times.find(
-        schedule => schedule.day === selectedDay
+        (schedule) => schedule.day === selectedDay
       );
 
       if (!daySchedule) {
-        toast.error('No schedule available for selected day');
+        toast.error("No schedule available for selected day");
         return;
       }
 
       // Get booked slots for the selected date
       const { data: bookedSlots, error: bookedError } = await supabase
-        .from('Appointments')
-        .select('time')
-        .eq('doctor_id', appointment.doctor_id)
-        .eq('date', date)
-        .neq('status', 'cancelled');
+        .from("Appointments")
+        .select("time")
+        .eq("doctor_id", appointment.doctor_id)
+        .eq("date", date)
+        .neq("status", "cancelled");
 
       if (bookedError) throw bookedError;
 
@@ -132,20 +136,23 @@ export default function AppointmentDetails() {
       const slots = [];
       let currentTime = daySchedule.start.slice(0, 5); // Remove seconds
       const endTime = daySchedule.end.slice(0, 5);
-      
+
       while (currentTime <= endTime) {
-        const isBooked = bookedSlots?.some(slot => slot.time === currentTime);
+        const isBooked = bookedSlots?.some((slot) => slot.time === currentTime);
         if (!isBooked) {
           slots.push({
             time: currentTime,
-            formatted: new Date(`2000-01-01T${currentTime}`).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
+            formatted: new Date(`2000-01-01T${currentTime}`).toLocaleTimeString(
+              [],
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            ),
           });
         }
         // Add duration minutes
-        const [hours, minutes] = currentTime.split(':');
+        const [hours, minutes] = currentTime.split(":");
         const date = new Date(2000, 0, 1, parseInt(hours), parseInt(minutes));
         date.setMinutes(date.getMinutes() + parseInt(daySchedule.duration));
         currentTime = date.toTimeString().slice(0, 5);
@@ -153,7 +160,7 @@ export default function AppointmentDetails() {
 
       setAvailableSlots(slots);
     } catch (error) {
-      toast.error('Failed to load available slots');
+      toast.error("Failed to load available slots");
       console.error(error);
     } finally {
       setLoadingSlots(false);
@@ -189,18 +196,20 @@ export default function AppointmentDetails() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="max-w-lg mx-auto bg-white rounded-xl p-5">
-        <div className="animate-pulse">
-          <div className="h-7 bg-gray-200 rounded w-1/2 mb-4"></div>
-          <div className="flex gap-4 mb-5">
-            <div className="bg-gray-200 rounded-full h-14 w-14"></div>
-            <div className="flex-1">
-              <div className="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="max-w-lg mx-auto bg-white rounded-xl p-5">
+          <div className="animate-pulse">
+            <div className="h-7 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div className="flex gap-4 mb-5">
+              <div className="bg-gray-200 rounded-full h-14 w-14"></div>
+              <div className="flex-1">
+                <div className="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
             </div>
+            <div className="h-20 bg-gray-200 rounded mb-4"></div>
+            <div className="h-16 bg-gray-200 rounded"></div>
           </div>
-          <div className="h-20 bg-gray-200 rounded mb-4"></div>
-          <div className="h-16 bg-gray-200 rounded"></div>
         </div>
       </div>
     );
@@ -292,7 +301,9 @@ export default function AppointmentDetails() {
   const formatClinicAddress = (address) => {
     if (!address) return "Address not available";
     const { building, floor, streat } = address;
-    return `${building || ''}, ${floor ? `${floor} Floor` : ''}, ${streat || ''}`.replace(/^[,\s]+|[,\s]+$/g, '');
+    return `${building || ""}, ${floor ? `${floor} Floor` : ""}, ${
+      streat || ""
+    }`.replace(/^[,\s]+|[,\s]+$/g, "");
   };
 
   // Get location display with address
@@ -328,7 +339,9 @@ export default function AppointmentDetails() {
             {statusStyle.icon}
             <span className="capitalize">{status} Appointment</span>
           </div>
-          <span className="text-sm">{formatDateTime(appointment.date, appointment.time)}</span>
+          <span className="text-sm">
+            {formatDateTime(appointment.date, appointment.time)}
+          </span>
         </div>
 
         {/* Main Content */}
@@ -443,14 +456,14 @@ export default function AppointmentDetails() {
 
         {/* Action Buttons */}
         <div className="flex border-t border-gray-200">
-          <button 
+          <button
             onClick={() => setIsRescheduleOpen(true)}
             className="flex-1 py-3 text-blue-600 font-medium hover:bg-blue-100 transition duration-150"
           >
             Reschedule
           </button>
           <div className="w-px bg-gray-200"></div>
-          <button 
+          <button
             onClick={() => setIsOpen(true)}
             className="flex-1 py-3 text-red-600 font-medium hover:bg-red-100 transition duration-150"
           >
@@ -473,7 +486,10 @@ export default function AppointmentDetails() {
               </Dialog.Title>
 
               <div className="mb-4">
-                <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="reason"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Reason for Cancellation
                 </label>
                 <textarea
@@ -523,7 +539,10 @@ export default function AppointmentDetails() {
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="date"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Select New Date
                   </label>
                   <input
@@ -536,7 +555,7 @@ export default function AppointmentDetails() {
                       fetchAvailableSlots(e.target.value);
                     }}
                     className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
-                    min={new Date().toISOString().split('T')[0]}
+                    min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
 
@@ -546,7 +565,9 @@ export default function AppointmentDetails() {
                       Select Available Time Slot
                     </label>
                     {loadingSlots ? (
-                      <div className="text-center py-4">Loading available slots...</div>
+                      <div className="text-center py-4">
+                        Loading available slots...
+                      </div>
                     ) : availableSlots.length > 0 ? (
                       <div className="grid grid-cols-3 gap-2">
                         {availableSlots.map((slot) => (
@@ -555,8 +576,8 @@ export default function AppointmentDetails() {
                             onClick={() => setSelectedSlot(slot)}
                             className={`p-2 text-sm rounded-md transition-colors ${
                               selectedSlot?.time === slot.time
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                             }`}
                           >
                             {slot.formatted}

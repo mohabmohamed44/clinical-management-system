@@ -66,10 +66,15 @@ const fetchAppointments = async (filters, userId) => {
     .eq("patient_id", userData.id)
     .order("date", { ascending: false });
 
-  if (filters.status) query = query.eq("status", filters.status);
-  if (filters.payment_method)
-    query = query.eq("payment_method", filters.payment_method);
-  if (filters.type) query = query.eq("type", filters.type);
+  if (filters.status) {
+    query = query.ilike('status', `%${filters.status}%`);
+  }
+  if (filters.payment_method) {
+    query = query.ilike('payment_method', `%${filters.payment_method}%`);
+  }
+  if (filters.type) {
+    query = query.ilike('type', `%${filters.type}%`);
+  }
 
   if (filters.location === "clinic") {
     query = query.not("clinic_id", "is", null);
@@ -195,16 +200,19 @@ export default function AppointmentsPage() {
     );
   };
 
-  const getPaymentMethod = (method) => (
-    <div className="flex items-center gap-2">
-      {method === "Visa" ? (
-        <FaCcVisa size={20} className="text-[#1972EE]" />
-      ) : (
-        <SiCashapp size={20} className="text-[#1972EE]" />
-      )}
-      <span className="capitalize">{method}</span>
-    </div>
-  );
+  const getPaymentMethod = (method) => {
+    const normalizedMethod = (method || '').toLowerCase();
+    return (
+      <div className="flex items-center gap-2">
+        {normalizedMethod.includes('visa') ? (
+          <FaCcVisa size={20} className="text-[#1972EE]" />
+        ) : (
+          <SiCashapp size={20} className="text-[#1972EE]" />
+        )}
+        <span className="capitalize">{method}</span>
+      </div>
+    );
+  };
 
   const formatDate = (dateString, timeString) => {
     try {
@@ -384,9 +392,13 @@ export default function AppointmentsPage() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                   {/* Filter Fields - Updated for better mobile spacing */}
                   {[
-                    { label: "Status", value: "status", options: ["Completed", "Pending", "Cancelled", "Confirmed"] },
+                    { 
+                      label: "Status", 
+                      value: "status", 
+                      options: ["completed", "pending", "cancelled", "confirmed"]  // lowercase options
+                    },
                     { label: "Payment", value: "payment_method", options: ["Visa", "Cash"] },
-                    { label: "Type", value: "type", options: ["Completed", "Upcoming"] },
+                    { label: "Type", value: "type", options: ["upcoming", "completed"] }, // Updated options
                     { label: "Location", value: "location", options: ["clinic", "hospital"] }
                   ].map((filter) => (
                     <div key={filter.value} className="space-y-1">
@@ -403,10 +415,10 @@ export default function AppointmentsPage() {
                           }))
                         }
                       >
-                        <option value="">All {filter.label}s</option>
+                        <option value="">All {filter.label}es</option>
                         {filter.options.map((option) => (
-                          <option key={option} value={option.toLowerCase()}>
-                            {option}
+                          <option key={option} value={option}>
+                            {option.charAt(0).toUpperCase() + option.slice(1)}
                           </option>
                         ))}
                       </select>
