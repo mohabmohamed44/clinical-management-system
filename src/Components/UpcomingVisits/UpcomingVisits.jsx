@@ -103,6 +103,7 @@ export default function UpcomingVisits() {
         )
         .eq("patient_id", userData.id) // Use Supabase user ID instead of Firebase UID
         .eq("type", "Upcoming")
+        .neq("type", "Cancelled")
         .order("date", { ascending: true });
 
       if (appointmentsError) throw appointmentsError;
