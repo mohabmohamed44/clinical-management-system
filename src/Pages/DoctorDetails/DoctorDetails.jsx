@@ -352,8 +352,8 @@ export default function DoctorDetails() {
                         <div>
                           <p className="font-medium">Consultation Fee</p>
                           <p className="text-sm text-gray-600">
-                            {data.clinic.fee
-                              ? `${data.clinic.fee} EGP`
+                            {data.fee
+                              ? `${data.fee} EGP`
                               : "Not specified"}
                           </p>
                         </div>
