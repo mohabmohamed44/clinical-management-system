@@ -163,19 +163,21 @@ export default function FindDoctor() {
           <img
             src={Background}
             className="w-full h-screen absolute top-0 left-0 right-0"
-            alt="Background"
+            alt="Medical facility background"
             role="presentation"
             loading="lazy"
+            width="1920"
+            height="1080"
           />
           <section
             className="relative z-10 h-full px-6 md:px-10 max-w-screen-xl mx-auto"
-            aria-label="Doctor Information"
+            aria-labelledby="main-heading"
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               <div className="text-white max-w-lg mt-12 text-3xl text-center lg:text-left">
-                <h2 className="text-3xl sm:text-5xl font-bold mt-15">
+                <h1 id="main-heading" className="text-3xl sm:text-5xl font-bold mt-15">
                   {t("Experts")}
-                </h2>
+                </h1>
                 <p className="text-2xl md:text-4xl font-medium mt-4">
                   {t("ExpertsDescription")}
                 </p>
@@ -183,9 +185,11 @@ export default function FindDoctor() {
               <figure className="mt-auto flex justify-center items-center w-full lg:w-1/2">
                 <img
                   src={Doctor}
-                  className="w-full h-auto max-w-[320px] md:max-h-[4000px] object-contain"
-                  alt="Doctor"
+                  className="w-full h-auto max-w-[320px] md:max-h-[400px] object-contain"
+                  alt="Healthcare professional"
                   loading="lazy"
+                  width="320"
+                  height="400"
                 />
               </figure>
             </div>
@@ -202,7 +206,7 @@ export default function FindDoctor() {
       {/* Doctor Cards Section */}
       <div className="min-h-screen bg-gray-50 p-8 mt-screen">
         <div className="max-w-7xl mx-auto pt-16">
-          <h2 className="text-3xl font-bold text-center mb-8 text-[#274760]">
+          <h2 className="text-3xl font-bold text-center mb-8 text-[#274760] contrast-check">
             {selectedDepartment === "all"
               ? "Our Medical Specialists"
               : `${t(selectedDepartment)} Specialists`}

@@ -40,10 +40,19 @@ export default function FilterDoctors({ onFilterChange }) {
       <div 
         className="p-4 cursor-pointer"
         onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+        role="button"
+        aria-expanded={isFiltersVisible}
+        aria-controls="filter-options"
+        tabIndex={0}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setIsFiltersVisible(!isFiltersVisible);
+          }
+        }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-5 h-5 text-blue-600" />
+            <SlidersHorizontal className="w-5 h-5 text-blue-600" aria-hidden="true" />
             <h2 className="text-xl font-semibold text-gray-800">
               Filter Options
             </h2>
@@ -73,6 +82,7 @@ export default function FilterDoctors({ onFilterChange }) {
         </div>
 
         <div
+          id="filter-options"
           className={`overflow-hidden transition-all duration-300 mt-4 ${
             isFiltersVisible ? "max-h-[500px]" : "max-h-0"
           }`}
@@ -81,21 +91,21 @@ export default function FilterDoctors({ onFilterChange }) {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* Rating Filter */}
             <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-2">
                 Rating
               </label>
               <select
+                id="rating"
                 name="rating"
                 value={filters.rating}
                 onChange={handleFilterChange}
-                className="w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
+                className="w-full min-h-[44px] px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                      appearance-none cursor-pointer transition-all duration-200
                      group-hover:border-blue-400"
+                aria-label="Filter by rating"
               >
-                <option value="" disabled>
-                  Filter by Rating
-                </option>
+                <option value="">Select Rating</option>
                 <option value="5">5 Stars</option>
                 <option value="4">4+ Stars</option>
                 <option value="3">3+ Stars</option>
@@ -119,17 +129,19 @@ export default function FilterDoctors({ onFilterChange }) {
 
             {/* Gender Filter */}
             <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-2">
                 Gender
               </label>
               <select
+                id="gender"
                 name="gender"
                 value={filters.gender}
                 onChange={handleFilterChange}
-                className="w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
+                className="w-full min-h-[44px] px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                      appearance-none cursor-pointer transition-all duration-200
                      group-hover:border-blue-400"
+                aria-label="Filter by gender"
               >
                 <option value="" disabled>
                   Filter by Gender
@@ -156,17 +168,19 @@ export default function FilterDoctors({ onFilterChange }) {
 
             {/* Location Filter */}
             <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
                 Location
               </label>
               <select
+                id="location"
                 name="location"
                 value={filters.location}
                 onChange={handleFilterChange}
-                className="w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
+                className="w-full min-h-[44px] px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                      appearance-none cursor-pointer transition-all duration-200
                      group-hover:border-blue-400"
+                aria-label="Filter by location"
               >
                 <option value="" disabled>
                   Filter by Location
@@ -194,17 +208,19 @@ export default function FilterDoctors({ onFilterChange }) {
 
             {/* Price Range Filter */}
             <div className="relative group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="priceRange" className="block text-sm font-medium text-gray-700 mb-2">
                 Price Range
               </label>
               <select
+                id="priceRange"
                 name="priceRange"
                 value={filters.priceRange}
                 onChange={handleFilterChange}
-                className="w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
+                className="w-full min-h-[44px] px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg 
                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
                      appearance-none cursor-pointer transition-all duration-200
                      group-hover:border-blue-400"
+                aria-label="Filter by price range"
               >
                 <option value="" disabled>
                   Filter by Price

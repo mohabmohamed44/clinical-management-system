@@ -1,0 +1,26 @@
+/* Ensure sufficient color contrast */
+.contrast-check {
+  color: #274760;
+  background-color: #ffffff;
+}
+
+/* Ensure touch targets are large enough */
+button,
+select,
+[role="button"],
+a {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Improve text contrast */
+.text-contrast {
+  color: #1a365d;
+}
