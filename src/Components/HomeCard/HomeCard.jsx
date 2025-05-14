@@ -80,7 +80,7 @@ export default function HomeCard() {
               <div className="inline-flex items-center justify-center bg-[#1972EE]/10 rounded-full mb-4 w-16 h-16 shadow-sm">
                 {service.icon}
               </div>
-              <h4 className="text-xl font-semibold mb-3">{t(service.title)}</h4>
+              <h3 className="text-xl font-semibold mb-3">{t(service.title)}</h3>
               <p className="mb-4 text-gray-600">{service.description}</p>
               <Link 
                 to={`/departments/${service.title}/doctors`}

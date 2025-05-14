@@ -201,15 +201,30 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               <span>{t("FollowUs")}</span>
               <div className="flex gap-4">
-                <a href="#" className="hover:text-sky-200 transition-colors">
-                  <FaFacebook className="w-5 h-5" />
-                </a>
-                <a href="#" className="hover:text-sky-200 transition-colors">
-                  <FaLinkedinIn className="w-5 h-5" />
-                </a>
-                <a href="#" className="hover:text-sky-200 transition-colors">
-                  <FaXTwitter className="w-5 h-5" />
-                </a>
+                <Link 
+                  to="https://facebook.com" 
+                  className="hover:text-sky-200 transition-colors"
+                  aria-label="Follow us on Facebook"
+                >
+                  <FaFacebook className="w-5 h-5" aria-hidden="true" />
+                  <span className="sr-only">Facebook</span>
+                </Link>
+                <Link 
+                  to="https://linkedin.com" 
+                  className="hover:text-sky-200 transition-colors"
+                  aria-label="Follow us on LinkedIn"
+                >
+                  <FaLinkedinIn className="w-5 h-5" aria-hidden="true" />
+                  <span className="sr-only">LinkedIn</span>
+                </Link>
+                <Link 
+                  to="https://twitter.com" 
+                  className="hover:text-sky-200 transition-colors"
+                  aria-label="Follow us on Twitter"
+                >
+                  <FaXTwitter className="w-5 h-5" aria-hidden="true" />
+                  <span className="sr-only">Twitter</span>
+                </Link>
               </div>
             </div>
             <div>

@@ -144,13 +144,14 @@ export default function Chatbot() {
       <button
         className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium border-none rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-[#11319E] hover:bg-[#0e2a85] cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 p-0 z-50"
         onClick={toggleModal}
-        aria-expanded={isOpen ? "Close chat" : "Open chat"}
+        aria-expanded={isOpen}
+        aria-label={isOpen ? "Close chat" : "Open chat"}
         type="button"
       >
         {isOpen ? (
-          <X className="text-white w-6 h-6" />
+          <X className="text-white w-6 h-6" aria-hidden="true" />
         ) : (
-          <BotMessageSquare className="text-white w-6 h-6" />
+          <BotMessageSquare className="text-white w-6 h-6" aria-hidden="true" />
         )}
       </button>
 
