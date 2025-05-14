@@ -144,7 +144,7 @@ export default function Chatbot() {
       <button
         className="fixed bottom-4 right-4 inline-flex items-center justify-center text-sm font-medium border-none rounded-full w-14 h-14 sm:w-16 sm:h-16 bg-[#11319E] hover:bg-[#0e2a85] cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-300 p-0 z-50"
         onClick={toggleModal}
-        aria-expanded={isOpen}
+        aria-expanded={isOpen ? "Close chat" : "Open chat"}
         type="button"
       >
         {isOpen ? (
@@ -287,6 +287,7 @@ export default function Chatbot() {
               <button
                 type="submit"
                 className="flex items-center justify-center rounded-full text-sm font-medium text-white disabled:opacity-50 bg-[#11319E] hover:bg-[#0e2a85] h-12 w-12 transition-colors duration-200 shadow-md"
+                aria-label="Send message"
               >
                 <Send className="h-5 w-5" />
               </button>

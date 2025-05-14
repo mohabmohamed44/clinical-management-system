@@ -110,20 +110,38 @@ export default function Navbar() {
           </div>
           
           {/* Language Dropdown */}
-          <div className="relative" aria-label="Language Dropdown" aria-expanded={languageDropdownOpen} aria-haspopup="true">
+          <div className="relative">
             <button
               onClick={toggleLanguageDropdown}
               className="flex items-center space-x-2 p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
+              aria-expanded={languageDropdownOpen}
+              aria-haspopup="true"
+              aria-controls="language-dropdown-menu"
+              role="button"
+              aria-label="Select language"
             >
-              <img loading="lazy" src={language === "ar" ? ar : en} alt="flag" className="h-5 w-5" />
+              <img loading="lazy" src={language === "ar" ? ar : en} alt={language === "ar" ? "Arabic" : "English"} className="h-5 w-5" />
               <ChevronDown className="w-4 h-4" />
             </button>
             {languageDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden z-50">
-                <button onClick={() => changeLanguage("en")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" aria-label="english language">
+              <div 
+                className="absolute right-0 mt-2 w-36 bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden z-50"
+                id="language-dropdown-menu"
+                role="menu"
+                aria-label="Language options"
+              >
+                <button 
+                  onClick={() => changeLanguage("en")} 
+                  className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" 
+                  role="menuitem"
+                >
                   <img loading="lazy" src={en} alt="English" className="h-5 w-5 mr-2" /> English
                 </button>
-                <button onClick={() => changeLanguage("ar")} className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" aria-label="arabic language">
+                <button 
+                  onClick={() => changeLanguage("ar")} 
+                  className="flex items-center px-4 py-2 hover:bg-gray-100 w-full" 
+                  role="menuitem"
+                >
                   <img loading="lazy" src={ar} alt="Arabic" className="h-5 w-5 mr-2" /> Arabic
                 </button>
               </div>

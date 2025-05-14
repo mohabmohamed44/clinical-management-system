@@ -92,7 +92,7 @@ const Labs = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center text-red-600">
-          <p>{error}</p>
+          <p className='text-sm md:text-md'>{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"

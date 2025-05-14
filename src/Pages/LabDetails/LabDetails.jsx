@@ -157,7 +157,7 @@ export default function LabDetails() {
       author={"Mohab Mohammed"}
     />
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <h1 className="text-[#005d] mb-5 font-semibold text-2xl md:text-3xl" role="heading" aria-level="1">
           Lab Details - {lab.city} Branch
         </h1>
@@ -288,7 +288,7 @@ export default function LabDetails() {
                   lab.work_times.map((time, index) => (
                     <div key={`worktime-${index}`} className="mb-2 p-2 bg-white rounded">
                       <p className="font-medium">
-                        {time.from} - {time.to}
+                        {time.day}
                       </p>
                       <p className="text-sm text-gray-600">
                         {time.start} am to {time.end} pm
