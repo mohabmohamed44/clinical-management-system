@@ -172,7 +172,7 @@ export default function LabDetails() {
         }`}
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <div className="max-w-3xl md:max-w-4xl mx-auto w-full">
+        <div className="max-w-3xl md:max-w-3xl mx-auto w-full">
           <header
             className={`mb-8 ${isRTL ? "text-right" : "text-left"}`}
             aria-label={t("LabDetailsHeader")}
