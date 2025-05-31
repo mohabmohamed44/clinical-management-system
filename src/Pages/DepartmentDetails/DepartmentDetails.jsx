@@ -173,26 +173,28 @@ export default function DepartmentDetails() {
           className="bg-gray-50 py-3 px-4 md:px-6"
           aria-label="Breadcrumb"
           data-navigation="breadcrumb"
+          role="navigation"
         >
           <div className="max-w-7xl mx-auto">
-            <ol className="flex items-center space-x-2 text-md">
-              <li>
-                <Link to="/" className="text-blue-600 hover:underline">
+            <ol className="flex items-center space-x-2 text-md" role="list">
+              <li role="listitem">
+                <Link to="/" className="text-blue-600 hover:underline" aria-current="page">
                   {t("Home")}
                 </Link>
               </li>
-              <li className="flex items-center">
+              <li className="flex items-center" aria-hidden="true">
                 <ChevronRight className="w-4 h-4 text-gray-500" />
               </li>
-              <li>
+              <li role="listitem">
                 <Link
                   to="/departments"
                   className="text-blue-600 hover:underline"
+                  aria-current="page"
                 >
                   {t("Departments")}
                 </Link>
               </li>
-              <li className="flex items-center">
+              <li className="flex items-center" aria-hidden="true">
                 <ChevronRight className="w-4 h-4 text-gray-500" />
               </li>
               <li className="text-gray-700 font-medium">{t(specialty)}</li>
@@ -210,7 +212,7 @@ export default function DepartmentDetails() {
                 data-empty-state="doctors"
               >
                 <p className="text-gray-600 text-lg">
-                  {t("NoDoctorsFound")} {t(specialty)} {t("Department")}
+                  {t("NoDoctorsFound")} in {t(specialty)} {t("Department")}
                 </p>
               </div>
             ) : (

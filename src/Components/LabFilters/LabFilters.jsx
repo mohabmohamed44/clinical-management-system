@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Style from "./LabFilters.module.css";
 import { supabase } from "../../Config/Supabase";
+import {useTranslation} from 'react-i18next';
 
 export default function LabFilters({ onFilterChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [specialties, setSpecialties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const {t, i18n} = useTranslation();
   const [error, setError] = useState(null);
+  const isRTL = i18n.dir() === 'rtl';
 
   useEffect(() => {
     fetchSpecialties();
@@ -56,18 +59,22 @@ export default function LabFilters({ onFilterChange }) {
   }
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex items-center justify-end p-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
+          className={`text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center gap-2 ${
+            isRTL ? 'flex-row-reverse' : ''
+          }`}
           type="button"
         >
-          {selectedSpecialties.length > 0 
-            ? `${selectedSpecialties.length} selected`
-            : "Filter by specialty"}
+          <span className={isRTL ? 'ml-2' : 'mr-2'}>
+            {selectedSpecialties.length > 0 
+              ? `${selectedSpecialties.length} ${t('selected')}`
+              : t("Filter by specialty")}
+          </span>
           <svg
-            className={`w-4 h-4 ml-2 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
             aria-hidden="true"
             fill="none"
             stroke="currentColor"
@@ -79,9 +86,13 @@ export default function LabFilters({ onFilterChange }) {
         </button>
 
         {/* Dropdown menu */}
-        <div className={`absolute z-10 w-60 p-3 mt-1 bg-white rounded-lg shadow-lg ${isOpen ? 'block' : 'hidden'}`}>
-          <h6 className="mb-3 text-sm font-medium text-gray-900 border-b pb-2">
-            Lab Specialties
+        <div 
+          className={`absolute z-10 w-60 p-3 mt-1 bg-white rounded-lg shadow-lg ${
+            isOpen ? 'block' : 'hidden'
+          } ${isRTL ? 'right-0 text-right' : 'left-0 text-left'}`}
+        >
+          <h6 className={`mb-3 text-sm font-medium text-gray-900 border-b pb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+            {t("Lab Specialties")}
           </h6>
           
           {isLoading ? (
@@ -89,13 +100,15 @@ export default function LabFilters({ onFilterChange }) {
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-700"></div>
             </div>
           ) : (
-            <ul className="space-y-1.5 text-sm max-h-60 overflow-y-auto pr-2">
+            <ul className={`space-y-1.5 text-sm max-h-60 overflow-y-auto ${isRTL ? 'pl-2 text-right' : 'pr-2 text-left'}`}>
               {specialties.map(({ name, count }) => (
                 <li 
                   key={name} 
-                  className="relative flex items-center hover:bg-blue-50 p-2 rounded-md transition-colors duration-150 cursor-pointer group"
+                  className={`relative flex items-center hover:bg-blue-50 p-2 rounded-md transition-colors duration-150 cursor-pointer group ${
+                    isRTL ? 'flex-row-reverse' : ''
+                  }`}
                 >
-                  <div className="relative">
+                  <div className={`relative ${isRTL ? 'order-2' : 'order-1'}`}>
                     <input
                       id={name}
                       type="checkbox"
@@ -122,10 +135,14 @@ export default function LabFilters({ onFilterChange }) {
                   </div>
                   <label 
                     htmlFor={name} 
-                    className="ml-3 flex justify-between w-full cursor-pointer"
+                    className={`flex justify-between w-full cursor-pointer ${
+                      isRTL ? 'mr-3 flex-row-reverse' : 'ml-3'
+                    }`}
                   >
-                    <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
-                      {name}
+                    <span className={`font-medium text-gray-700 group-hover:text-blue-600 transition-colors ${
+                      isRTL ? 'text-right' : 'text-left'
+                    }`}>
+                      {t(name)}
                     </span>
                     <span className="text-gray-500 bg-gray-100 px-2 rounded-full text-xs font-medium py-0.5 group-hover:bg-blue-100">
                       {count}
@@ -136,17 +153,17 @@ export default function LabFilters({ onFilterChange }) {
             </ul>
           )}
           
-          {selectedSpecialties.length > 0 && (
-            <button
-              onClick={() => {
-                setSelectedSpecialties([]);
-                onFilterChange?.([]);
-              }}
-              className="mt-3 w-full text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 py-1.5 rounded-md transition-colors"
-            >
-              Clear all filters
-            </button>
-          )}
+          <button
+            onClick={() => {
+              setSelectedSpecialties([]);
+              onFilterChange?.([]);
+            }}
+            className={`mt-3 w-full text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 py-1.5 rounded-md transition-colors ${
+              isRTL ? 'text-right' : 'text-left'
+            }`}
+          >
+            {t("Clear all filters")}
+          </button>
         </div>
       </div>
     </div>

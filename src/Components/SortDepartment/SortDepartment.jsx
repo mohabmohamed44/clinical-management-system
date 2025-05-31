@@ -8,7 +8,8 @@ export default function SortDepartment({
   onDepartmentSelect,
   selectedDepartment = "all",
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
   const [currentDepartment, setCurrentDepartment] = useState(selectedDepartment);
   const {
     data: specialties,

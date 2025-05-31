@@ -168,9 +168,21 @@ export default function AdditionalServices() {
     );
 
   return (
-    <div className="py-12 w-full bg-gray-50">
-      <div className="text-center mx-auto mb-10 max-w-xl">
-        <p className="inline-block border rounded-full border-blue-600 py-1 px-4 text-blue-600">
+    <div
+      className={`py-12 w-full bg-gray-50 ${
+        i18n.language === "ar" ? "rtl" : ""
+      }`}
+    >
+      <div
+        className={`text-center mx-auto mb-10 max-w-xl ${
+          i18n.language === "ar" ? "text-right" : ""
+        }`}
+      >
+        <p
+          className={`inline-block border rounded-full border-blue-600 py-1 px-4 text-blue-600 ${
+            i18n.language === "ar" ? "ml-0 mr-0" : ""
+          }`}
+        >
           {t("SpecialServices")}
         </p>
         <h2 className="text-4xl font-bold mt-4">{t("FeaturedOffers")}</h2>
@@ -178,8 +190,16 @@ export default function AdditionalServices() {
 
       <div className="max-w-7xl mx-auto px-4 relative">
         {/* Carousel Controls */}
-        <div className="flex justify-between mb-6">
-          <div className="flex gap-2">
+        <div
+          className={`flex justify-between mb-6 ${
+            i18n.language === "ar" ? "flex-row-reverse" : ""
+          }`}
+        >
+          <div
+            className={`flex gap-2 ${
+              i18n.language === "ar" ? "flex-row-reverse" : ""
+            }`}
+          >
             <button
               onClick={prevSlide}
               className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
@@ -195,8 +215,11 @@ export default function AdditionalServices() {
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
-
-          <div className="flex items-center gap-2">
+          <div
+            className={`flex items-center gap-2 ${
+              i18n.language === "ar" ? "flex-row-reverse" : ""
+            }`}
+          >
             {Array.from({ length: totalSlideGroups }).map((_, idx) => (
               <button
                 key={idx}
@@ -213,7 +236,9 @@ export default function AdditionalServices() {
         {/* Carousel Items */}
         <div className="overflow-hidden" ref={carouselRef}>
           <div
-            className="flex transition-transform duration-300"
+            className={`flex transition-transform duration-300 ${
+              i18n.language === "ar" ? "flex-row-reverse" : ""
+            }`}
             style={{
               transform: `translateX(-${currentIndex * (100 / visibleItems)}%)`,
             }}
@@ -237,11 +262,19 @@ export default function AdditionalServices() {
                       alt={offer.title}
                       className="w-full h-full object-cover rounded-t-xl"
                     />
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
+                    <div
+                      className={`absolute top-2 ${
+                        i18n.language === "ar" ? "left-2" : "right-2"
+                      } bg-red-500 text-white px-3 py-1 rounded-full text-sm`}
+                    >
                       {offer.usage_limit} {t("SlotsLeft")}
                     </div>
                     {offer.discount_percentage > 0 && (
-                      <div className="absolute top-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                      <div
+                        className={`absolute top-2 ${
+                          i18n.language === "ar" ? "right-2" : "left-2"
+                        } bg-green-500 text-white px-3 py-1 rounded-full text-sm`}
+                      >
                         {offer.discount_percentage}% {t("Off")}
                       </div>
                     )}
@@ -279,11 +312,17 @@ export default function AdditionalServices() {
                     </div>
 
                     {/* Doctor Info */}
-                    <div className="flex items-center mb-6">
+                    <div
+                      className={`flex items-center mb-6 ${
+                        i18n.language === "ar" ? "flex-row-reverse" : ""
+                      }`}
+                    >
                       <img
                         src={offer.doctor.image}
                         alt={offer.doctor.name}
-                        className="w-10 h-10 rounded-full object-cover mr-3"
+                        className={`w-10 h-10 rounded-full object-cover ${
+                          i18n.language === "ar" ? "ml-3" : "mr-3"
+                        }`}
                       />
                       <div>
                         <p className="font-medium text-gray-900">
@@ -312,13 +351,23 @@ export default function AdditionalServices() {
         </div>
 
         {/* View All Link */}
-        <div className="flex justify-end mt-6">
+        <div
+          className={`flex justify-end mt-6 ${
+            i18n.language === "ar" ? "justify-start" : ""
+          }`}
+        >
           <Link
             to="/offers"
-            className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
+            className={`flex items-center text-blue-600 hover:text-blue-800 font-medium ${
+              i18n.language === "ar" ? "flex-row-reverse" : ""
+            }`}
           >
             {t("ViewAllServices")}
-            <ArrowIconLink className="ml-2 h-5 w-5" />
+            <ArrowIconLink
+              className={`${
+                i18n.language === "ar" ? "mr-2" : "ml-2"
+              } h-5 w-5`}
+            />
           </Link>
         </div>
       </div>

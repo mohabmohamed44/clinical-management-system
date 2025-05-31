@@ -5,14 +5,17 @@ import { ImLab } from "react-icons/im";
 import { DNA } from 'react-loader-spinner';
 import MetaData from '../../Components/MetaData/MetaData';
 import LabFilters from '../../Components/LabFilters/LabFilters';
+import { useTranslation } from 'react-i18next';
 
-const Labs = () => {
+export default function Labs() {
   const [labs, setLabs] = useState([])
   const [labLocations, setLabLocations] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filteredSpecialties, setFilteredSpecialties] = useState([]);
+  const { t, i18n } = useTranslation();
 
+  const isRTL = i18n.dir() === 'rtl';
   useEffect(() => {
     const fetchLabsData = async () => {
       try {
@@ -26,8 +29,7 @@ const Labs = () => {
             image,
             specialty,
             rate,
-            services,
-            patients
+            services
           `)
           .order('id')
 
@@ -111,18 +113,22 @@ const Labs = () => {
   return (
     <>
     <MetaData 
-      title={"Labs"}
-      description={"Labs page"}
-      keywords={"labs, laboratories, medical labs"}
+      title={t("Labs")}
+      description={t("Labs page")}
+      keywords={t("labs, laboratories, medical labs")}
       author={"Mohab Mohammed"}
     />
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div className="flex items-center mb-4 md:mb-0">
-          <ImLab className="text-3xl text-[#005D] mr-2" />
-          <h1 className="text-3xl font-bold text-[#005D]">Available Labs</h1>
+    <div className={`min-h-screen bg-gray-50 p-8 ${isRTL ? 'rtl' : 'ltr'}`}>
+      <div className={`flex flex-col md:flex-row md:items-center md:justify-between mb-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <div className={`flex items-center mb-4 md:mb-0 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <ImLab className={`text-3xl text-[#005D] ${isRTL ? 'order-2 ml-2' : 'order-1 mr-2'}`} />
+          <h1 className={`text-3xl font-bold text-[#005D] ${isRTL ? 'order-1' : 'order-2'}`}>
+            {t("Available Labs")}
+          </h1>
         </div>
-        <LabFilters onFilterChange={handleFilterChange} />
+        <div className={`${isRTL ? 'mr-auto' : 'ml-auto'}`}>
+          <LabFilters onFilterChange={handleFilterChange} />
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -143,22 +149,23 @@ const Labs = () => {
                   e.target.src = '/placeholder-lab.jpg'
                 }}
               />
-              <div className="p-6">
+              <div className={`p-6 ${isRTL ? 'text-right' : 'text-left'}`}>
                 <h2 className="text-xl font-semibold mb-2">{lab.name}</h2>
                 <p className="text-gray-600 mb-4 line-clamp-3">{lab.description}</p>
                 
                 {locations.length > 0 && (
                   <div className="mt-2 mb-4">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-1">Available Locations:</h3>
-                    <div className="space-y-1 max-h-28 overflow-y-auto">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-1">{t("Available Locations")}:</h3>
+                    <div className="space-y-1 max-h-28 overflow-hidden">
                       {locations.map((location, index) => (
-                        <div key={`location-${lab.id}-${index}`} className="flex justify-between">
+                        <div key={`location-${lab.id}-${index}`} 
+                             className={`flex justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <span className="text-md text-gray-600">{location.city}, {location.government}</span>
                           <Link
                             to={`/labs/${location.infoId}`}
                             className="text-md text-blue-600 hover:underline"
                           >
-                            View
+                            {t("View")}
                           </Link>
                         </div>
                       ))}
@@ -166,20 +173,20 @@ const Labs = () => {
                   </div>
                 )}
                 
-                <div className="flex justify-between items-center">
+                <div className={`flex justify-between items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <span className="text-sm font-medium text-gray-500">
-                    Services: {lab.services}
+                    {t("Services")}: {lab.services}
                   </span>
                   {locations.length > 0 ? (
                     <span className="text-sm text-gray-500">
-                      {locations.length} {locations.length === 1 ? 'location' : 'locations'}
+                      {locations.length} {locations.length === 1 ? t('location') : t('locations')}
                     </span>
                   ) : (
                     <Link
                       to={`/labs/${lab.id}`}
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                     >
-                      View Details
+                      {t("View Details")}
                     </Link>
                   )}
                 </div>
@@ -191,6 +198,4 @@ const Labs = () => {
     </div>
     </>
   )
-}
-
-export default Labs;
+};

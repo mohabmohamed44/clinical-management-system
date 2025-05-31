@@ -12,8 +12,10 @@ import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
-// 🧠 Fetch clinics with joined doctors
+
+// Fetch clinics with joined doctors
 const fetchClinicsWithDoctors = async () => {
   const { data, error } = await supabase
     .from("Clinics")
@@ -37,6 +39,9 @@ const fetchClinicsWithDoctors = async () => {
 };
 
 export default function Clinics() {
+  const {t, i18n} = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
+
   const {
     data: clinics,
     isLoading,
@@ -80,16 +85,16 @@ export default function Clinics() {
   return (
     <>
       <MetaData
-        title="Clinics"
-        description="Find the best clinics in your area with our comprehensive directory."
-        keywords="clinics, healthcare, medical services"
+        title={t("Clinics")}
+        description={t("Find the best clinics in your area with our comprehensive directory.")}
+        keywords={t("clinics, healthcare, medical services")}
         author="Mohab Mohamed"
       />
-      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className={`min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 ${isRTL ? "rtl" : ""}`}>
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+          <h1 className={`text-3xl font-bold text-gray-900 mb-8 flex items-center gap-2 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
             <FaClinicMedical className="text-blue-600" />
-            Our Clinics
+            {t("Our Clinics")}
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -104,11 +109,11 @@ export default function Clinics() {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">
+                  <div className={`flex justify-between items-start mb-4 ${isRTL ? "flex-row-reverse" : ""}`}>
+                    <h2 className={`text-xl font-semibold text-gray-800 ${isRTL ? "text-right" : ""}`}>
                       {clinic.name}
                     </h2>
-                    <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                       {renderRating(clinic.rate)}
                       <span className="text-sm text-gray-500">
                         ({clinic.rate_count})
@@ -116,8 +121,8 @@ export default function Clinics() {
                     </div>
                   </div>
 
-                  <div className="space-y-3 text-gray-600">
-                    <div className="flex items-center gap-2">
+                  <div className={`space-y-3 text-gray-600 ${isRTL ? "text-right" : ""}`}>
+                    <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                       <FaMapMarkerAlt className="text-blue-600 flex-shrink-0" />
                       <div>
                         <p className="text-sm">{clinic.government}</p>
@@ -127,7 +132,7 @@ export default function Clinics() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                       <FaPhone className="text-blue-600" />
                       <a
                         href={`tel:${clinic.phones}`}
@@ -137,12 +142,12 @@ export default function Clinics() {
                       </a>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                       <FaClock className="text-blue-600" />
                       <div className="text-sm">
                         {clinic.work_times?.map((time, index) => (
                           <div key={index}>
-                            {time.day}: {time.start} - {time.end}
+                            {t(time.day)}: {time.start} - {time.end}
                           </div>
                         ))}
                       </div>
@@ -151,12 +156,11 @@ export default function Clinics() {
 
                   {/* Doctors Section */}
                   <div className="mt-4 flex-1">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <h3 className={`font-medium mb-2 flex items-center gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
                       <FaUserMd className="text-blue-600" />
-                      Available Doctors:
+                      {t("Available Doctors")}:
                     </h3>
                     <div className="space-y-3">
-                      {/* Fix: Changed clinic.doctors to clinic.Doctors */}
                       {clinic.Doctors && clinic.Doctors.length > 0 ? (
                         clinic.Doctors.map((doctor) => (
                           <Link
@@ -164,22 +168,22 @@ export default function Clinics() {
                             to={`/doctors/${doctor.id}`}
                             className="block hover:bg-blue-50 rounded-lg p-2 transition-colors"
                           >
-                            <div className="flex items-start gap-3">
+                            <div className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse" : ""}`}>
                               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 flex-shrink-0">
                                 <FaUserMd className="text-blue-600 text-sm" />
                               </div>
                               <div className="flex-1">
                                 <p className="font-medium">
-                                  Dr. {doctor.first_name} {doctor.last_name}
+                                  {t("Dr.")} {doctor.first_name} {doctor.last_name}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                  {doctor.specialty ? `Specialty: ${doctor.specialty}` : 'General Practitioner'}
+                                  {doctor.specialty ? `${t("Specialty")}: ${t(doctor.specialty)}` : t('General Practitioner')}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                  Fee: ${clinic.fee}
+                                  {t("Fee")}: ${clinic.fee}
                                 </p>
                                 <p className="text-sm text-blue-600 mt-1">
-                                  Contact: {doctor.phone}
+                                  {t("Contact")}: {doctor.phone}
                                 </p>
                               </div>
                             </div>
@@ -187,7 +191,7 @@ export default function Clinics() {
                         ))
                       ) : (
                         <p className="text-sm text-gray-500">
-                          No doctors currently available
+                          {t("No doctors currently available")}
                         </p>
                       )}
                     </div>
@@ -195,14 +199,14 @@ export default function Clinics() {
 
                   {/* Services Section */}
                   <div className="mt-4">
-                    <h3 className="font-medium mb-2">Services:</h3>
+                    <h3 className="font-medium mb-2">{t("Services")}:</h3>
                     <div className="flex flex-wrap gap-2">
                       {clinic.services?.map((service, index) => (
                         <span
                           key={index}
                           className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
                         >
-                          {service}
+                          {t(service)}
                         </span>
                       ))}
                     </div>
@@ -213,7 +217,7 @@ export default function Clinics() {
                     to={`/clinics/${clinic.id}`}
                     className="mt-4 inline-block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
                   >
-                    View Clinic Details
+                    {t("View Clinic Details")}
                   </Link>
                 </div>
               </div>
