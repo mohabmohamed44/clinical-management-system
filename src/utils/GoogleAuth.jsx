@@ -18,7 +18,6 @@ export const signInWithGoogle = async () => {
         const idToken = await user.getIdToken();
         
         // success message if user logs in 
-        console.log('Google sign in Successful');
         toast.success('Google sign in Successful');
         
         // Return user and tokens for cookie storage
@@ -33,7 +32,6 @@ export const signInWithGoogle = async () => {
         // the Auth credential type was used
         const credential = GoogleAuthProvider.credentialFromError(error);
         // error message if user fails to log in
-        console.log('Google sign in Failed:', errorMessage, errorCode);
         toast.error('Google sign in Failed', {
             duration: 2000,
             position: 'top-center',
@@ -45,7 +43,6 @@ export const signInWithGoogle = async () => {
 export const signOutUser = async () => {
     try {
         await signOut(auth);
-        console.log('Sign out successful');
         toast.success('Signed out successfully');
     } catch(error) {
         console.error('Sign out error:', error);

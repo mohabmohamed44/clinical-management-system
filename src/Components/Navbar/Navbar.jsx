@@ -176,7 +176,7 @@ export default function Navbar() {
               aria-expanded={authDropdownOpen}
             >
               <div className="flex items-center">
-                <User size={20} className="mr-2" />
+                <User size={20} className="mr-2 rtl:ml-2" />
                 <span>{currentUser ? (currentUser.displayName || t("Account")) : t("Account")}</span>
               </div>
               <ChevronDown className="w-4 h-4" />
@@ -193,14 +193,14 @@ export default function Navbar() {
                         setNavbarOpen(false);
                       }}
                     >
-                      <User size={18} className="mr-2" />
+                      <User size={18} className="mr-2 ltr:ml-3" />
                       {t("Profile")}
                     </NavLink>
                     <button 
                       onClick={handleLogout}
                       className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
                     >
-                      <LogOut size={18} className="mr-2" />
+                      <LogOut size={18} className="mr-2 ltr:ml-2" />
                       {t("Logout")}
                     </button>
                   </>

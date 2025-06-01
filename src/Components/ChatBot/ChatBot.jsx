@@ -68,11 +68,9 @@ export default function Chatbot() {
       const specialty = extractSpecialty(message);
 
       if (!specialty) {
-        console.log("No specialty found in message");
         return;
       }
 
-      console.log("Searching for specialty:", specialty);
 
       const { data, error } = await supabase
         .from("Doctors")
@@ -83,7 +81,7 @@ export default function Chatbot() {
 
       if (error) throw error;
       setDoctors(data || []);
-      console.log("Doctors fetched:", data);
+      
     } catch (err) {
       console.error("Error fetching doctors:", err.message);
       setDoctors([]);
@@ -107,13 +105,12 @@ export default function Chatbot() {
         }
 
         if (messageContent) {
-          console.log("Processing AI message:", messageContent);
+          
           fetchDoctors(messageContent);
         }
       } catch (e) {
         // If JSON parsing fails, try to use the content directly
         if (lastMessage.content) {
-          console.log("Processing raw message:", lastMessage.content);
           fetchDoctors(lastMessage.content);
         }
       }

@@ -93,8 +93,6 @@ export default function useChatBot() {
       }
     } catch (e) {
       console.error('JSON parsing error:', e);
-      console.log('Original string:', jsonString);
-      console.log('Cleaned string:', cleaned);
       
       // Fallback: Try to extract message content using regex
       try {

@@ -13,7 +13,6 @@ const validationSchema = Yup.object({
 const EmailInput = () => {
   const handleSubmit = (values, { resetForm, setSubmitting }) => {
     // Handle form submission logic here
-    console.log('Form submitted with:', values);
     
     // Simulate API call
     setTimeout(() => {

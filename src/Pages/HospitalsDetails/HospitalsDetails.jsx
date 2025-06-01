@@ -81,10 +81,6 @@ export default function HospitalsDetails() {
         setHospital(hospitalData);
         setHospitalDetails(hospitalData.HospitalsInfo?.[0]);
         setDoctors(formattedDoctors);
-
-        console.log("Hospital data:", hospitalData);
-        console.log("HospitalInfo ID:", hospitalInfoId);
-        console.log("Doctors data:", formattedDoctors);
       } catch (err) {
         console.error("Error fetching hospital details:", err);
         setError(err.message);

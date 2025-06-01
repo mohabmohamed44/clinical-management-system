@@ -66,11 +66,15 @@ export default function SortDepartment({
     );
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8">
+    <div dir={isRTL ? "rtl" : "ltr"} className="w-full px-4 sm:px-6 lg:px-8">
       <div className="relative">
         <div className="flex items-center gap-2 sm:gap-3 py-2">
           <div className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="flex gap-2 sm:gap-3 min-w-max pb-2">
+            <div
+              className={`flex gap-2 sm:gap-3 min-w-max pb-2 ${
+                isRTL ? "space-x-reverse" : ""
+              }`}
+            >
               {departments.map((department) => (
                 <button
                   key={department.id}

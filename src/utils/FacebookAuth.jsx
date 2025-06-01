@@ -22,7 +22,6 @@ export const signInWithFacebook = async () => {
         const idToken = await user.getIdToken();
         
         // success message
-        console.log('Facebook sign in Successful');
         toast.success("Facebook sign in Successful");
 
         return {
@@ -33,7 +32,6 @@ export const signInWithFacebook = async () => {
     } catch(error) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log('Facebook Sign in failed', errorMessage, errorCode);
         toast.error('Facebook sign in Failed', {
             duration: 2000,
             position: 'top-center',
@@ -46,10 +44,8 @@ export const signInWithFacebook = async () => {
 export const signOutUser = async () => {
     try {
         await signOut(auth);
-        console.log('Sign out successful');
         toast.success('Signed out successfully');
     } catch(error) {
-        console.error('Sign out error:', error);
         toast.error('Sign out failed');
         throw error;
     }

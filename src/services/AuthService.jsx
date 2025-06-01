@@ -312,7 +312,6 @@ export async function getDoctorReviews(doctorId) {
  */
 export async function createDoctorReview(reviewData) {
   try {
-    console.log("Creating review with data:", reviewData);
     
     // First get the Supabase user ID using Firebase UID
     const { data: userData, error: userError } = await supabase
@@ -391,7 +390,6 @@ async function updateDoctorRating(doctorId) {
     
     if (updateError) throw updateError;
     
-    console.log(`Updated doctor ${doctorId} rating to ${averageRating} (${totalReviews} reviews)`);
   } catch (error) {
     console.error('Error updating doctor rating:', error);
   }

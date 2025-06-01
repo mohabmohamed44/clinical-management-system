@@ -11,7 +11,6 @@ export const emailAndPasswordSign = async (email, password) => {
         // Get the ID token for consistent behavior with social logins
         const idToken = await user.getIdToken();
         
-        console.log('Email/password sign in successful');
         toast.success('Sign in successful');
 
         return {
@@ -22,7 +21,6 @@ export const emailAndPasswordSign = async (email, password) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         
-        console.log('Sign in failed:', errorMessage, errorCode);
         
         // Provide more user-friendly error messages
         if (errorCode === 'auth/user-not-found') {
