@@ -209,7 +209,7 @@ export default function FindDoctor() {
           <h2 className="text-3xl font-bold text-center mb-8 text-[#274760] contrast-check">
             {selectedDepartment === "all"
               ? "Our Medical Specialists"
-              : `${t("Specialists")} ${t(selectedDepartment)}`}
+              : `${t(selectedDepartment)} ${t("Specialists")}`}
           </h2>
 
           <div className="mb-8">

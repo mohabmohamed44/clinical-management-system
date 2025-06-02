@@ -9,6 +9,8 @@ import MetaData from "../../Components/MetaData/MetaData";
 import { DNA } from "react-loader-spinner";
 import { FaUser, FaStethoscope, FaVenusMars, FaBirthdayCake } from "react-icons/fa";
 import toast from "react-hot-toast";
+import {Menu, MenuButton, MenuItems, MenuItem} from '@headlessui/react';
+import { ChevronDown } from "lucide-react";  
 import { getUserDataByFirebaseUID } from "../../services/AuthService";
 
 const QuestionSchema = Yup.object().shape({
@@ -110,7 +112,7 @@ const mutation = useMutation({
 
       <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-8">
         <div className="max-w-4xl mx-auto w-full">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#00155D] mb-4 sm:mb-6 text-center">
             Ask a Medical Question
           </h1>
 
@@ -125,31 +127,50 @@ const mutation = useMutation({
             validationSchema={QuestionSchema}
             onSubmit={(values) => mutation.mutate(values)}
           >
-            {({ isSubmitting, errors, touched }) => (
+            {({ isSubmitting, errors, touched, setFieldValue, values }) => (
               <Form className="p-3 sm:p-4 md:p-6 rounded-lg w-full">
                 <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                  {/* Specialty Field */}
+                  {/* Specialty Field with Headless UI Menu */}
                   <div className="w-full">
                     <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
                       <FaStethoscope className="text-[#1972EE]" />
                       Specialty
                     </label>
-                    <Field
-                      as="select"
-                      name="speciality"
-                      className={`w-full outline-0 px-4 py-2 sm:py-3 border-2 text-center appearance-none ${
-                        errors.speciality && touched.speciality
-                          ? "border-red-500"
-                          : "border-[#1972EE]"
-                      } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
-                    >
-                      <option value="" disabled>Select Specialty</option>
-                      {specialties?.map((spec) => (
-                        <option key={spec.specialty} value={t(spec.specialty)}>
-                          {t(spec.specialty)}
-                        </option>
-                      ))}
-                    </Field>
+                    <Menu as="div" className="relative w-full">
+                      <MenuButton
+                        className={`w-full outline-0 px-4 py-2 sm:py-3 border-2 text-start flex items-center justify-between ${
+                          errors.speciality && touched.speciality
+                            ? "border-red-500"
+                            : "border-[#1972EE]"
+                        } rounded-md focus:ring-2 focus:ring-[#1972EE] bg-white`}
+                      >
+                        <span className={`block truncate ${!values.speciality && "text-gray-400"}`}>
+                          {values.speciality || "Select Specialty"}
+                        </span>
+                        <ChevronDown className="h-5 w-5 text-[#1972EE]" aria-hidden="true" />
+                      </MenuButton>
+                      <MenuItems
+                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                      >
+                        <div className="py-1">
+                          {specialties?.map((spec) => (
+                            <MenuItem key={spec.specialty} value={spec.specialty}>
+                              {({ active }) => (
+                                <button
+                                  type="button"
+                                  className={`${
+                                    active ? 'bg-[#1972EE] text-white' : 'text-gray-900'
+                                  } group flex w-full items-center px-4 py-2 text-sm`}
+                                  onClick={() => setFieldValue('speciality', t(spec.specialty))}
+                                >
+                                  {t(spec.specialty)}
+                                </button>
+                              )}
+                            </MenuItem>
+                          ))}
+                        </div>
+                      </MenuItems>
+                    </Menu>
                     <ErrorMessage
                       name="speciality"
                       component="div"
@@ -177,7 +198,7 @@ const mutation = useMutation({
                         <option value="Choose" disabled>Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
-                        <option value="other">Other</option>
+                        <option value="other">Not prefer to say</option>
                       </Field>
                       <ErrorMessage
                         name="gender"

@@ -19,6 +19,7 @@ import Appointments from "@pages/Appointments/Appointments";
 import FindDoctor from "@pages/FindDoctor/FindDoctor";
 import Blog from "@pages/Blog/Blog";
 import About from "@pages/About/About";
+import BookLab from "@pages/BookLab/BookLab";
 import PricingPlan from "@pages/PricingPlan/PricingPlan";
 import Departments from "@pages/Departments/Departments";
 import Offers from "@pages/Offers/Offers";
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
       { path: "find-medicine", element: <PrivateRoute><FindMedicine /></PrivateRoute> },
       { path: "/find_doctor/:id/book", element: <PrivateRoute><Book type="doctor" /></PrivateRoute>},
       { path: "/book/:type(clinic|hospital|lab)/:id", element: <PrivateRoute><Book /></PrivateRoute>},
+      { path: "/book-lab", element: <PrivateRoute><BookLab/></PrivateRoute>},
       { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },
