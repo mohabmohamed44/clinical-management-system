@@ -394,7 +394,7 @@ export default function LabDetails() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-lg font-semibold mb-2">Book a test</h2>
                   <button className="flex items-center gap-2 text-white cursor-pointer bg-blue-700 px-4 py-3 rounded-md hover:bg-blue-800 transition duration-200">
-                    <Link to="/book-test">
+                    <Link to={`/lab/${lab.id}`}>
                         Book Now
                     </Link>
                   </button>

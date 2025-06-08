@@ -46,7 +46,6 @@ export default function Navbar() {
             <NavLink to="/about" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("About")}</NavLink>
             <NavLink to="/departments" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Departments")}</NavLink>
             <NavLink to="/pricing" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("pricing")}</NavLink>
-            <NavLink to="/clinics" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Clinics")}</NavLink>
             <NavLink to="/labs" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Labs")}</NavLink>
             <NavLink to="/hospitals" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Hospitals")}</NavLink>
             <NavLink to="/contact" className="text-gray-600 hover:text-gray-700 font-medium cursor-pointer text-sm lg:text-base">{t("Contact")}</NavLink>
@@ -161,7 +160,6 @@ export default function Navbar() {
           <NavLink to="/find_doctor" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Doctors")}</NavLink>
           <NavLink to="/about" className="w-full py-2 text-gray-600 hover:text-gray-700 font-medium cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("About")}</NavLink>
           <NavLink to="/departments" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Departments")}</NavLink>
-          <NavLink to="/clinics" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Clinics")}</NavLink>
           <NavLink to="/hospitals" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Hospitals")}</NavLink>
           <NavLink to="/pricing" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("pricing")}</NavLink>
           <NavLink to="/labs" className="w-full py-2 text-gray-600 hover:text-blue-700 cursor-pointer" onClick={() => setNavbarOpen(false)}>{t("Labs")}</NavLink>

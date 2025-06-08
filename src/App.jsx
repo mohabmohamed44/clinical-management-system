@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       { path: "find-medicine", element: <PrivateRoute><FindMedicine /></PrivateRoute> },
       { path: "/find_doctor/:id/book", element: <PrivateRoute><Book type="doctor" /></PrivateRoute>},
       { path: "/book/:type(clinic|hospital|lab)/:id", element: <PrivateRoute><Book /></PrivateRoute>},
-      { path: "/book-lab", element: <PrivateRoute><BookLab/></PrivateRoute>},
+      { path: "/lab/:lab_id", element: <PrivateRoute><BookLab/></PrivateRoute>},
       { path: "*", element: <PrivateRoute><NotFound /></PrivateRoute> },
     ],
   },
