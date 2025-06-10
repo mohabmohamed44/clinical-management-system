@@ -47,10 +47,15 @@ export default function UpcomingVisits() {
   const formatAddress = (address) => {
     if (!address) return "Address not available";
 
+    // Handle both string and object address formats
+    if (typeof address === 'string') {
+      return address;
+    }
+
     // Extract relevant parts from the address object if they exist
     const building = address.building || "";
     const floor = address.floor ? `${address.floor} Floor` : "";
-    const street = address.streat || address.street || "";
+    const street = address.street || address.streat || ""; // Fixed typo: streat -> street
     const sign = address.sign || "";
 
     // Filter out empty parts and join with commas
@@ -67,7 +72,6 @@ export default function UpcomingVisits() {
 
       setLoading(true);
 
-      // First get the Supabase user ID
       const { data: userData, error: userError } = await supabase
         .from("Users")
         .select("id")
@@ -76,17 +80,12 @@ export default function UpcomingVisits() {
 
       if (userError) throw userError;
 
+      // Fixed query: Join with Laboratories table through LaboratoriesInfo using lab_id
       const { data: appointments, error: appointmentsError } = await supabase
         .from("Appointments")
-        .select(
-          `
-          id,
-          date,
-          time,
-          fee,
-          payment_method,
-          patient,
-          doctor:Doctors(
+        .select(`
+          *,
+          Doctors (
             id, 
             first_name,
             last_name,
@@ -95,48 +94,87 @@ export default function UpcomingVisits() {
             fee,
             image
           ),
-          clinic:Clinics(
+          Clinics (
             id,
             address
+          ),
+          LaboratoriesInfo (
+            id,
+            lab_id,
+            government,
+            city,
+            location,
+            images,
+            work_times,
+            services,
+            Laboratories (
+              id,
+              name_ar,
+              description,
+              description_ar,
+              rate,
+              image,
+              rate_count,
+              services,
+              patients
+            )
           )
-        `
-        )
-        .eq("patient_id", userData.id) // Use Supabase user ID instead of Firebase UID
+        `)
+        .eq("patient_id", userData.id)
         .eq("type", "Upcoming")
         .neq("status", "Cancelled")
         .order("date", { ascending: true });
 
       if (appointmentsError) throw appointmentsError;
 
-      const formattedAppointments = appointments.map((appointment) => ({
+      setVisits(formatAppointments(appointments));
+    } catch (err) {
+      setError("Failed to fetch upcoming visits");
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatAppointments = (appointments) => {
+    return appointments.map((appointment) => {
+      const isLabAppointment = !!appointment.lab_id;
+      const labInfo = appointment.LaboratoriesInfo;
+      const lab = labInfo?.Laboratories; // Get the actual lab data from the nested relation
+      const doctor = appointment.Doctors;
+      const clinic = appointment.Clinics;
+
+      return {
         id: appointment.id,
         date: new Date(`${appointment.date}T${appointment.time}`),
-        patient: appointment.patient,
+        patient: appointment.patient || {},
         reason: appointment.patient?.problem || "",
         payment: {
           method: appointment.payment_method,
           amount: appointment.fee,
         },
-        doctor: {
-          ...appointment.doctor,
-          name: `${appointment.doctor.first_name} ${appointment.doctor.last_name}`,
-          phone: appointment.doctor.phone,
-          photo_url: appointment.doctor.image,
-        },
-        clinic: {
-          ...appointment.clinic,
-          name: appointment.clinic.address?.name || "Clinic",
-          formattedAddress: formatAddress(appointment.clinic.address),
-        },
-      }));
-
-      setVisits(formattedAppointments);
-    } catch (err) {
-      setError("Failed to fetch upcoming visits");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+        isLabAppointment,
+        doctor: doctor ? {
+          name: `${doctor.first_name} ${doctor.last_name}`,
+          ...doctor,
+          photo_url: doctor.image,
+        } : null,
+        lab: lab ? {
+          name: lab.name_ar || "Laboratory", // Use name_ar from Laboratories table
+          name_ar: lab.name_ar,
+          photo_url: lab.image,
+          services: labInfo?.services || lab.services || [],
+          location: labInfo?.location,
+          government: labInfo?.government,
+          city: labInfo?.city,
+        } : null,
+        clinic: clinic ? {
+          ...clinic,
+          name: clinic.address?.name || "Clinic",
+          formattedAddress: formatAddress(clinic.address),
+        } : null,
+      };
+    });
   };
 
   useEffect(() => {
@@ -222,6 +260,33 @@ export default function UpcomingVisits() {
     );
   }
 
+  // Updated visit card rendering with better lab appointment display
+  const renderVisitCard = (visit) => (
+    <div className="flex items-start space-x-3 mb-3">
+      <img
+        src={visit.isLabAppointment ? (visit.lab?.photo_url || Doctor) : (visit.doctor?.photo_url || Doctor)}
+        alt={visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
+        className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-100"
+      />
+      <div className="flex-1 min-w-0">
+        <h3 className="font-bold text-base md:text-lg line-clamp-1">
+          {visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
+        </h3>
+        <p className="text-blue-600 text-sm">
+          {visit.isLabAppointment ? "Laboratory Test" : visit.doctor?.specialty}
+        </p>
+        {visit.isLabAppointment && visit.lab?.services && visit.lab.services.length > 0 && (
+          <p className="text-sm text-gray-600">
+            Services: {Array.isArray(visit.lab.services) ? visit.lab.services.length : "Multiple"}
+          </p>
+        )}
+        <span className="inline-block mt-1 bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
+          {getDaysRemaining(visit.date)}
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="w-full bg-white rounded-lg shadowP mt-20 overflow-hidden">
       {/* Header */}
@@ -296,26 +361,9 @@ export default function UpcomingVisits() {
                         : screenSize === "medium"
                         ? "w-1/2"
                         : "w-1/3"
-                    } rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow bg-white`}
+                    } rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow bg-white border`}
                   >
-                    <div className="flex items-start space-x-3 mb-3">
-                      <img
-                        src={visit.doctor?.photo_url || Doctor}
-                        alt={visit.doctor?.name}
-                        className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-100"
-                      />
-                      <div>
-                        <h3 className="font-bold text-base md:text-lg line-clamp-1">
-                          {visit.doctor?.name}
-                        </h3>
-                        <p className="text-blue-600 text-sm">
-                          {visit.doctor?.specialty}
-                        </p>
-                        <span className="inline-block mt-1 bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
-                          {getDaysRemaining(visit.date)}
-                        </span>
-                      </div>
-                    </div>
+                    {renderVisitCard(visit)}
 
                     <div className="space-y-2">
                       <div className="flex items-start">
@@ -330,32 +378,72 @@ export default function UpcomingVisits() {
                         </div>
                       </div>
 
-                      <div className="flex items-start">
-                        <MapPin className="flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500" />
-                        <div className="ml-2">
-                          <p className="text-sm text-gray-700 line-clamp-2">
-                            {visit.clinic?.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {visit.clinic?.formattedAddress}
+                      {/* Show location info for both doctor and lab appointments */}
+                      {(visit.clinic || visit.lab) && (
+                        <div className="flex items-start">
+                          <MapPin className="flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500" />
+                          <div className="ml-2">
+                            <p className="text-sm text-gray-700 line-clamp-2">
+                              {visit.isLabAppointment 
+                                ? (visit.lab?.name || "Laboratory") 
+                                : (visit.clinic?.name || "Clinic")
+                              }
+                            </p>
+                            {visit.isLabAppointment && visit.lab?.government && visit.lab?.city && (
+                              <p className="text-xs text-gray-500">
+                                {visit.lab.city}, {visit.lab.government}
+                              </p>
+                            )}
+                            {visit.clinic?.formattedAddress && (
+                              <p className="text-xs text-gray-500">
+                                {visit.clinic.formattedAddress}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Show phone number if available */}
+                      {(visit.doctor?.phone || visit.clinic?.phone) && (
+                        <div className="flex items-center">
+                          <Phone className="w-4 h-4 text-gray-500" />
+                          <p className="text-sm text-gray-700 ml-2">
+                            {visit.doctor?.phone || visit.clinic?.phone}
                           </p>
                         </div>
-                      </div>
+                      )}
 
-                      <div className="flex items-center">
-                        <Phone className="w-4 h-4 text-gray-500" />
-                        <p className="text-sm text-gray-700 ml-2">
-                          {visit.doctor?.phone || visit.clinic?.phone}
-                        </p>
-                      </div>
-
+                      {/* Show appointment reason if available */}
                       {visit.reason && (
                         <div className="mt-2 bg-yellow-50 p-2 rounded text-sm">
                           <p className="font-medium">Appointment Reason:</p>
                           <p className="text-gray-700">{visit.reason}</p>
                         </div>
                       )}
+
+                      {/* Show lab services if it's a lab appointment */}
+                      {visit.isLabAppointment && visit.lab?.services && Array.isArray(visit.lab.services) && visit.lab.services.length > 0 && (
+                        <div className="mt-2 bg-green-50 p-2 rounded text-sm">
+                          <p className="font-medium">Lab Services:</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {visit.lab.services.slice(0, 3).map((service, index) => (
+                              <span 
+                                key={index} 
+                                className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"
+                              >
+                                {typeof service === 'string' ? service : service.name || 'Service'}
+                              </span>
+                            ))}
+                            {visit.lab.services.length > 3 && (
+                              <span className="text-xs text-gray-600">
+                                +{visit.lab.services.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
+
                     {/* Buttons */}
                     <div className="mt-4 pt-3 border-t flex flex-col space-y-2">
                       <button
