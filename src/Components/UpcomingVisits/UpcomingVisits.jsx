@@ -48,7 +48,7 @@ export default function UpcomingVisits() {
     if (!address) return "Address not available";
 
     // Handle both string and object address formats
-    if (typeof address === 'string') {
+    if (typeof address === "string") {
       return address;
     }
 
@@ -83,7 +83,8 @@ export default function UpcomingVisits() {
       // Fixed query: Join with Laboratories table through LaboratoriesInfo using lab_id
       const { data: appointments, error: appointmentsError } = await supabase
         .from("Appointments")
-        .select(`
+        .select(
+          `
           *,
           Doctors (
             id, 
@@ -119,7 +120,8 @@ export default function UpcomingVisits() {
               patients
             )
           )
-        `)
+        `
+        )
         .eq("patient_id", userData.id)
         .eq("type", "Upcoming")
         .neq("status", "Cancelled")
@@ -154,25 +156,31 @@ export default function UpcomingVisits() {
           amount: appointment.fee,
         },
         isLabAppointment,
-        doctor: doctor ? {
-          name: `${doctor.first_name} ${doctor.last_name}`,
-          ...doctor,
-          photo_url: doctor.image,
-        } : null,
-        lab: lab ? {
-          name: lab.name_ar || "Laboratory", // Use name_ar from Laboratories table
-          name_ar: lab.name_ar,
-          photo_url: lab.image,
-          services: labInfo?.services || lab.services || [],
-          location: labInfo?.location,
-          government: labInfo?.government,
-          city: labInfo?.city,
-        } : null,
-        clinic: clinic ? {
-          ...clinic,
-          name: clinic.address?.name || "Clinic",
-          formattedAddress: formatAddress(clinic.address),
-        } : null,
+        doctor: doctor
+          ? {
+              name: `${doctor.first_name} ${doctor.last_name}`,
+              ...doctor,
+              photo_url: doctor.image,
+            }
+          : null,
+        lab: lab
+          ? {
+              name: lab.name_ar || "Laboratory", // Use name_ar from Laboratories table
+              name_ar: lab.name_ar,
+              photo_url: lab.image,
+              services: labInfo?.services || lab.services || [],
+              location: labInfo?.location,
+              government: labInfo?.government,
+              city: labInfo?.city,
+            }
+          : null,
+        clinic: clinic
+          ? {
+              ...clinic,
+              name: clinic.address?.name || "Clinic",
+              formattedAddress: formatAddress(clinic.address),
+            }
+          : null,
       };
     });
   };
@@ -264,7 +272,11 @@ export default function UpcomingVisits() {
   const renderVisitCard = (visit) => (
     <div className="flex items-start space-x-3 mb-3">
       <img
-        src={visit.isLabAppointment ? (visit.lab?.photo_url || Doctor) : (visit.doctor?.photo_url || Doctor)}
+        src={
+          visit.isLabAppointment
+            ? visit.lab?.photo_url || Doctor
+            : visit.doctor?.photo_url || Doctor
+        }
         alt={visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
         className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-100"
       />
@@ -275,11 +287,16 @@ export default function UpcomingVisits() {
         <p className="text-blue-600 text-sm">
           {visit.isLabAppointment ? "Laboratory Test" : visit.doctor?.specialty}
         </p>
-        {visit.isLabAppointment && visit.lab?.services && visit.lab.services.length > 0 && (
-          <p className="text-sm text-gray-600">
-            Services: {Array.isArray(visit.lab.services) ? visit.lab.services.length : "Multiple"}
-          </p>
-        )}
+        {visit.isLabAppointment &&
+          visit.lab?.services &&
+          visit.lab.services.length > 0 && (
+            <p className="text-sm text-gray-600">
+              Services:{" "}
+              {Array.isArray(visit.lab.services)
+                ? visit.lab.services.length
+                : "Multiple"}
+            </p>
+          )}
         <span className="inline-block mt-1 bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
           {getDaysRemaining(visit.date)}
         </span>
@@ -384,16 +401,17 @@ export default function UpcomingVisits() {
                           <MapPin className="flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500" />
                           <div className="ml-2">
                             <p className="text-sm text-gray-700 line-clamp-2">
-                              {visit.isLabAppointment 
-                                ? (visit.lab?.name || "Laboratory") 
-                                : (visit.clinic?.name || "Clinic")
-                              }
+                              {visit.isLabAppointment
+                                ? visit.lab?.name || "Laboratory"
+                                : visit.clinic?.name || "Clinic"}
                             </p>
-                            {visit.isLabAppointment && visit.lab?.government && visit.lab?.city && (
-                              <p className="text-xs text-gray-500">
-                                {visit.lab.city}, {visit.lab.government}
-                              </p>
-                            )}
+                            {visit.isLabAppointment &&
+                              visit.lab?.government &&
+                              visit.lab?.city && (
+                                <p className="text-xs text-gray-500">
+                                  {visit.lab.city}, {visit.lab.government}
+                                </p>
+                              )}
                             {visit.clinic?.formattedAddress && (
                               <p className="text-xs text-gray-500">
                                 {visit.clinic.formattedAddress}
@@ -422,26 +440,33 @@ export default function UpcomingVisits() {
                       )}
 
                       {/* Show lab services if it's a lab appointment */}
-                      {visit.isLabAppointment && visit.lab?.services && Array.isArray(visit.lab.services) && visit.lab.services.length > 0 && (
-                        <div className="mt-2 bg-green-50 p-2 rounded text-sm">
-                          <p className="font-medium">Lab Services:</p>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {visit.lab.services.slice(0, 3).map((service, index) => (
-                              <span 
-                                key={index} 
-                                className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"
-                              >
-                                {typeof service === 'string' ? service : service.name || 'Service'}
-                              </span>
-                            ))}
-                            {visit.lab.services.length > 3 && (
-                              <span className="text-xs text-gray-600">
-                                +{visit.lab.services.length - 3} more
-                              </span>
-                            )}
+                      {visit.isLabAppointment &&
+                        visit.lab?.services &&
+                        Array.isArray(visit.lab.services) &&
+                        visit.lab.services.length > 0 && (
+                          <div className="mt-2 bg-green-50 p-2 rounded text-sm">
+                            <p className="font-medium">Lab Services:</p>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {visit.lab.services
+                                .slice(0, 3)
+                                .map((service, index) => (
+                                  <span
+                                    key={index}
+                                    className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"
+                                  >
+                                    {typeof service === "string"
+                                      ? service
+                                      : service.name || "Service"}
+                                  </span>
+                                ))}
+                              {visit.lab.services.length > 3 && (
+                                <span className="text-xs text-gray-600">
+                                  +{visit.lab.services.length - 3} more
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </div>
 
                     {/* Buttons */}
