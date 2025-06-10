@@ -1,41 +1,91 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../../Config/Supabase";
 import { useParams } from "react-router-dom";
-import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
 import { Dialog } from "@headlessui/react";
+import { supabase } from "../../Config/Supabase";
+import MetaData from "../../Components/MetaData/MetaData";
 import {
   FaClock,
   FaCheckCircle,
   FaTimesCircle,
-  FaUser,
   FaCalendarAlt,
   FaMapMarkerAlt,
   FaMoneyBillWave,
   FaStethoscope,
+  FaFlask,
 } from "react-icons/fa";
 
+// Fetch appointment with Doctor details and Lab details separately
 const fetchAppointment = async (appointmentId) => {
-  try {
-    const { data, error } = await supabase
-      .from("Appointments")
-      .select(
-        `
-        *,
-        Doctors(id, first_name, last_name, specialty, image),
-        Users(first_name, last_name, email, gender),
-        clinic:Clinics(id, address)
+  // First, get the appointment data
+  const { data: appointment, error: appointmentError } = await supabase
+    .from("Appointments")
+    .select(
       `
+      *,
+      Doctors (
+        id,
+        first_name,
+        last_name,
+        specialty,
+        image
+      ),
+      Users (
+        first_name,
+        last_name,
+        email,
+        gender
+      ),
+      clinic:Clinics (
+        id,
+        address
       )
-      .eq("id", appointmentId)
+    `
+    )
+    .eq("id", appointmentId)
+    .single();
+
+  if (appointmentError) throw appointmentError;
+
+  // If there's a lab_id, fetch lab data separately
+  let labData = null;
+  let labInfoData = null;
+  
+  if (appointment.lab_id) {
+    // Fetch lab data
+    const { data: lab, error: labError } = await supabase
+      .from("Laboratories")
+      .select("id, name, image, rate, services")
+      .eq("id", appointment.lab_id)
       .single();
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error("Error fetching appointment:", error);
-    throw error;
+    
+    if (labError) {
+      console.warn("Could not fetch lab data:", labError);
+    } else {
+      labData = lab;
+    }
+
+    // Fetch lab info data (fix: use id instead of lab_id)
+    const { data: labInfo, error: labInfoError } = await supabase
+      .from("LaboratoriesInfo")
+      .select("government, city, address, work_times, services")
+      .eq("id", appointment.lab_id)
+      .single();
+    
+    if (labInfoError) {
+      console.warn("Could not fetch lab info data:", labInfoError);
+    } else {
+      labInfoData = labInfo;
+    }
   }
+
+  // Combine the data
+  return {
+    ...appointment,
+    lab: labData,
+    lab_info: labInfoData
+  };
 };
 
 export default function AppointmentDetails() {
@@ -49,92 +99,167 @@ export default function AppointmentDetails() {
   } = useQuery({
     queryKey: ["appointment", id],
     queryFn: () => fetchAppointment(id),
-    onError: (err) => {
-      toast.error(`Failed to load appointment: ${err.message}`);
-    },
+    onError: (err) =>
+      toast.error(`Failed to load appointment: ${err.message}`),
   });
 
-  const [isOpen, setIsOpen] = useState(false);
+  // Modal states
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
   const [newDate, setNewDate] = useState("");
-  const [newTime, setNewTime] = useState("");
-  const [isRescheduling, setIsRescheduling] = useState(false);
-  const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRescheduling, setIsRescheduling] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
-  const handleCancellation = async () => {
-    try {
-      setIsSubmitting(true);
-      const { error } = await supabase
-        .from("Appointments")
-        .update({
-          status: "Cancelled",
-          problem_reason: cancelReason,
-        })
-        .eq("id", id);
-
-      if (error) throw error;
-
-      toast.success("Appointment cancelled successfully");
-      setIsOpen(false);
-      refetch();
-    } catch (error) {
-      toast.error(`Failed to cancel appointment: ${error.message}`);
-    } finally {
-      setIsSubmitting(false);
-    }
+  // Status config
+  const statusConfig = {
+    confirmed: {
+      color: "bg-[#00155D]",
+      icon: <FaCheckCircle className="mr-1" />,
+    },
+    pending: {
+      color: "bg-yellow-500",
+      icon: <FaClock className="mr-1" />,
+    },
+    cancelled: {
+      color: "bg-red-500",
+      icon: <FaTimesCircle className="mr-1" />,
+    },
+    completed: {
+      color: "bg-green-500",
+      icon: <FaCheckCircle className="mr-1" />,
+    },
   };
 
-  // Add this function to fetch available slots
+  // Format date and time
+  const formatDateTime = (date, time) => {
+    if (!date || !time) return "Not specified";
+    const datetime = new Date(`${date}T${time}`);
+    return datetime.toLocaleString(undefined, {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // Format clinic address
+  const formatClinicAddress = (address) => {
+    if (!address) return "Address not available";
+    const { building, floor, streat } = address;
+    return `${building || ""}, ${floor ? `${floor} Floor` : ""}, ${streat || ""}`;
+  };
+
+  // Format lab location
+  const formatLabLocation = (labInfo) => {
+    if (!labInfo) return "Location not available";
+    const { government, city, address } = labInfo;
+
+    // If address is an object, try to extract its fields, else use as string
+    let addressStr = "";
+    if (typeof address === "string") {
+      addressStr = address;
+    } else if (typeof address === "object" && address !== null) {
+      // Try to extract common fields from address object
+      const { street, streat, building, floor } = address;
+      addressStr = [
+        building,
+        floor ? `${floor} Floor` : "",
+        street || streat || ""
+      ].filter(Boolean).join(", ");
+    }
+
+    return [government, city, addressStr]
+      .filter((part) => part && part !== "[object Object]")
+      .join(", ") || "Location not available";
+  };
+
+  // Get location display
+  const getLocationDisplay = () => {
+    if (appointment.clinic_id) {
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium text-gray-800">Clinic</span>
+          <span className="text-sm text-gray-600">
+            {formatClinicAddress(appointment.clinic?.address)}
+          </span>
+        </div>
+      );
+    }
+
+    if (appointment.lab_id) {
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium text-gray-800">Lab</span>
+          <span className="text-sm text-gray-600">
+            {formatLabLocation(appointment.lab_info)}
+          </span>
+        </div>
+      );
+    }
+
+    return <span className="text-gray-800">Location not specified</span>;
+  };
+
+  // Fetch available slots (clinic or lab)
   const fetchAvailableSlots = async (date) => {
     try {
       setLoadingSlots(true);
+      let workTimes = [];
 
-      // Get clinic work times
-      const { data: clinicData, error: clinicError } = await supabase
-        .from("Clinics")
-        .select("work_times")
-        .eq("id", appointment.clinic_id)
-        .single();
+      if (appointment.clinic_id) {
+        const { data: clinicData, error: clinicError } = await supabase
+          .from("Clinics")
+          .select("work_times")
+          .eq("id", appointment.clinic_id)
+          .single();
+        if (clinicError) throw clinicError;
+        workTimes = clinicData?.work_times || [];
+      }
 
-      if (clinicError) throw clinicError;
+      if (appointment.lab_id) {
+        const { data: labData, error: labError } = await supabase
+          .from("LaboratoriesInfo")
+          .select("work_times")
+          .eq("lab_id", appointment.lab_id)
+          .single();
+        if (labError) throw labError;
+        workTimes = labData?.work_times || [];
+      }
 
-      if (!clinicData?.work_times?.length) {
-        toast.error("Clinic schedule not found");
+      if (!workTimes.length) {
+        toast.error("Schedule not found");
         return;
       }
 
-      // Get the day of week for the selected date
       const selectedDay = new Date(date).toLocaleDateString("en-US", {
         weekday: "long",
       });
 
-      // Find the schedule for the selected day
-      const daySchedule = clinicData.work_times.find(
+      const daySchedule = workTimes.find(
         (schedule) => schedule.day === selectedDay
       );
-
       if (!daySchedule) {
         toast.error("No schedule available for selected day");
         return;
       }
 
-      // Get booked slots for the selected date
       const { data: bookedSlots, error: bookedError } = await supabase
         .from("Appointments")
         .select("time")
-        .eq("doctor_id", appointment.doctor_id)
+        .eq(appointment.clinic_id ? "clinic_id" : "lab_id", appointment.clinic_id || appointment.lab_id)
         .eq("date", date)
         .neq("status", "cancelled");
 
       if (bookedError) throw bookedError;
 
-      // Generate available slots based on clinic's schedule
       const slots = [];
-      let currentTime = daySchedule.start.slice(0, 5); // Remove seconds
+      let currentTime = daySchedule.start.slice(0, 5);
       const endTime = daySchedule.end.slice(0, 5);
 
       while (currentTime <= endTime) {
@@ -142,20 +267,17 @@ export default function AppointmentDetails() {
         if (!isBooked) {
           slots.push({
             time: currentTime,
-            formatted: new Date(`2000-01-01T${currentTime}`).toLocaleTimeString(
-              [],
-              {
-                hour: "2-digit",
-                minute: "2-digit",
-              }
-            ),
+            formatted: new Date(`2000-01-01T${currentTime}`).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
           });
         }
-        // Add duration minutes
+
         const [hours, minutes] = currentTime.split(":");
-        const date = new Date(2000, 0, 1, parseInt(hours), parseInt(minutes));
-        date.setMinutes(date.getMinutes() + parseInt(daySchedule.duration));
-        currentTime = date.toTimeString().slice(0, 5);
+        const dateObj = new Date(2000, 0, 1, parseInt(hours), parseInt(minutes));
+        dateObj.setMinutes(dateObj.getMinutes() + parseInt(daySchedule.duration));
+        currentTime = dateObj.toTimeString().slice(0, 5);
       }
 
       setAvailableSlots(slots);
@@ -167,10 +289,31 @@ export default function AppointmentDetails() {
     }
   };
 
-  // Modify handleReschedule function
+  // Handle cancellation
+  const handleCancellation = async () => {
+    try {
+      setIsSubmitting(true);
+      const { error } = await supabase
+        .from("Appointments")
+        .update({
+          status: "Cancelled",
+          problem_reason: cancelReason,
+        })
+        .eq("id", id);
+      if (error) throw error;
+      toast.success("Appointment cancelled successfully");
+      setIsCancelModalOpen(false);
+      refetch();
+    } catch (error) {
+      toast.error(`Failed to cancel appointment: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle rescheduling
   const handleReschedule = async () => {
     if (!selectedSlot || !newDate) return;
-
     try {
       setIsRescheduling(true);
       const { error } = await supabase
@@ -180,11 +323,9 @@ export default function AppointmentDetails() {
           time: selectedSlot.time,
         })
         .eq("id", id);
-
       if (error) throw error;
-
       toast.success("Appointment rescheduled successfully");
-      setIsRescheduleOpen(false);
+      setIsRescheduleModalOpen(false);
       refetch();
     } catch (error) {
       toast.error(`Failed to reschedule appointment: ${error.message}`);
@@ -260,76 +401,13 @@ export default function AppointmentDetails() {
     );
   }
 
-  // Status configuration
-  const statusConfig = {
-    confirmed: {
-      color: "bg-[#00155D]",
-      icon: <FaCheckCircle className="mr-1" />,
-    },
-    pending: {
-      color: "bg-yellow-500",
-      icon: <FaClock className="mr-1" />,
-    },
-    cancelled: {
-      color: "bg-red-500",
-      icon: <FaTimesCircle className="mr-1" />,
-    },
-    completed: {
-      color: "bg-green-500",
-      icon: <FaCheckCircle className="mr-1" />,
-    },
-  };
-
+  // Status logic after data is confirmed
   const status = appointment.status?.toLowerCase() || "pending";
   const statusStyle = statusConfig[status] || statusConfig.pending;
 
-  // Format date and time
-  const formatDateTime = (date, time) => {
-    if (!date || !time) return "Not specified";
-    const datetime = new Date(`${date}T${time}`);
-    return datetime.toLocaleString(undefined, {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  // Format clinic address
-  const formatClinicAddress = (address) => {
-    if (!address) return "Address not available";
-    const { building, floor, streat } = address;
-    return `${building || ""}, ${floor ? `${floor} Floor` : ""}, ${
-      streat || ""
-    }`.replace(/^[,\s]+|[,\s]+$/g, "");
-  };
-
-  // Get location display with address
-  const getLocationDisplay = () => {
-    if (appointment.clinic_id) {
-      return (
-        <div className="flex flex-col">
-          <span className="font-medium text-gray-800">Clinic</span>
-          <span className="text-sm text-gray-600">
-            {formatClinicAddress(appointment.clinic?.address)}
-          </span>
-        </div>
-      );
-    }
-    return <span className="text-gray-800">Location not specified</span>;
-  };
-
   return (
     <div className="p-4 md:p-8">
-      <MetaData
-        title="Appointment Details | HealthCare"
-        description="View your appointment details"
-        name="Appointment Details"
-        type="website"
-      />
-
+      <MetaData title="Appointment Details | HealthCare" />
       <div className="max-w-lg mx-auto bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
         {/* Status Banner */}
         <div
@@ -346,38 +424,111 @@ export default function AppointmentDetails() {
 
         {/* Main Content */}
         <div className="p-5">
-          {/* Doctor Information */}
+          {/* Doctor or Lab Information */}
           <div className="mb-6">
             <h2 className="text-xl font-bold text-gray-800 mb-3">
-              Doctor Information
+              {appointment.doctor_id ? "Doctor" : "Lab"} Information
             </h2>
             <div className="bg-white border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center">
-                <img
-                  src={appointment.Doctors?.image || "/default-avatar.png"}
-                  alt={`Dr. ${appointment.Doctors?.first_name} ${appointment.Doctors?.last_name}`}
-                  className="w-16 h-16 rounded-full object-cover mr-4"
-                />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    Dr. {appointment.Doctors?.first_name}{" "}
-                    {appointment.Doctors?.last_name}
-                  </h3>
-                  <p className="text-gray-600 flex items-center">
-                    <FaStethoscope className="mr-1" />
-                    {appointment.Doctors?.specialty ||
-                      "Specialty not specified"}
-                  </p>
+              {appointment.doctor_id && (
+                <div className="flex items-center">
+                  <img
+                    src={appointment.Doctors?.image || "/default-avatar.png"}
+                    alt={`Dr. ${appointment.Doctors?.first_name} ${appointment.Doctors?.last_name}`}
+                    className="w-16 h-16 rounded-full object-cover mr-4"
+                  />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      Dr. {appointment.Doctors?.first_name}{" "}
+                      {appointment.Doctors?.last_name}
+                    </h3>
+                    <p className="text-gray-600 flex items-center">
+                      <FaStethoscope className="mr-1" />
+                      {appointment.Doctors?.specialty ||
+                        "Specialty not specified"}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {appointment.lab_id && (
+                <div className="flex items-center">
+                  <img
+                    src={appointment.lab?.image || "/default-lab.png"}
+                    alt={appointment.lab?.name || "Lab"}
+                    className="w-16 h-16 rounded-full object-cover mr-4"
+                  />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {appointment.lab?.name || "Lab Name Not Available"}
+                    </h3>
+                    <p className="text-gray-600 flex items-center">
+                      <FaFlask className="mr-1" />
+                      Laboratory Services
+                    </p>
+                    <p className="text-gray-600 flex items-center">
+                      <FaMapMarkerAlt className="mr-1" />
+                      {formatLabLocation(appointment.lab_info)}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Lab Services */}
+          {appointment.lab_id && appointment.lab_services && (
+            <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100 mt-4">
+              <h3 className="font-medium text-gray-800 mb-2">Requested Lab Services</h3>
+              <div className="space-y-2">
+                {Array.isArray(appointment.lab_services) ? (
+                  appointment.lab_services.map((service, idx) => (
+                    <div key={idx} className="flex justify-between items-center bg-white rounded p-2">
+                      <div>
+                        <span className="font-medium text-gray-800">
+                          {typeof service === 'object' ? service.service : service}
+                        </span>
+                        {typeof service === 'object' && service.service_ar && (
+                          <div className="text-sm text-gray-600">{service.service_ar}</div>
+                        )}
+                      </div>
+                      {typeof service === 'object' && service.price && (
+                        <span className="text-blue-600 font-medium">
+                          ${service.price}
+                        </span>
+                      )}
+                    </div>
+                  ))
+                ):( typeof appointment.lab_services === 'object' ? (
+                  <div className="flex justify-between items-center bg-white rounded p-2">
+                    <div>
+                      <span className="font-medium text-gray-800">
+                        {appointment.lab_services.service}
+                      </span>
+                      {appointment.lab_services.service_ar && (
+                        <div className="text-sm text-gray-600">{appointment.lab_services.service_ar}</div>
+                      )}
+                    </div>
+                    {appointment.lab_services.price && (
+                      <span className="text-blue-600 font-medium">
+                        ${appointment.lab_services.price}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded p-2">
+                    <span className="text-gray-800">{appointment.lab_services}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Appointment Details */}
           <div className="mb-6">
             <h2 className="text-xl font-bold text-[#00155D] mb-3">
               Appointment Details
             </h2>
-
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-gray-50 p-3 rounded-lg flex items-center">
                 <FaCalendarAlt className="text-blue-500 mr-3" />
@@ -388,7 +539,6 @@ export default function AppointmentDetails() {
                   </p>
                 </div>
               </div>
-
               <div className="bg-gray-50 p-3 rounded-lg flex items-start">
                 <FaMapMarkerAlt className="text-blue-500 mt-1 mr-3 flex-shrink-0" />
                 <div className="flex flex-col">
@@ -396,7 +546,6 @@ export default function AppointmentDetails() {
                   {getLocationDisplay()}
                 </div>
               </div>
-
               <div className="bg-gray-50 p-3 rounded-lg flex items-center">
                 <FaMoneyBillWave className="text-blue-500 mr-3" />
                 <div>
@@ -406,7 +555,6 @@ export default function AppointmentDetails() {
                   </p>
                 </div>
               </div>
-
               <div className="bg-gray-50 p-3 rounded-lg">
                 <p className="text-sm text-gray-500">Appointment Type</p>
                 <p className="font-medium text-gray-800 capitalize">
@@ -415,6 +563,7 @@ export default function AppointmentDetails() {
               </div>
             </div>
           </div>
+
           {/* Notes Section */}
           {appointment.notes && (
             <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100">
@@ -422,69 +571,81 @@ export default function AppointmentDetails() {
               <p className="text-gray-700">{appointment.notes}</p>
             </div>
           )}
-          {/* Update the Patient Data section in the JSX */}
+
+          {/* Patient Data */}
           {appointment.patient ? (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
               <h2 className="text-xl font-bold text-[#005] mb-3">
                 Patient Information
               </h2>
-              <p className="text-lg text-gray-500">Name</p>
-              <p className="font-medium text-gray-800">
-                {appointment.patient?.name || "Not specified"}
-              </p>
-              <p className="text-lg text-gray-500">Gender</p>
-              <p className="font-medium text-gray-800">
-                {appointment.patient?.gender || "Not specified"}
-              </p>
-              <p className="text-lg text-gray-500">Phone</p>
-              <p className="font-medium text-gray-800">
-                {appointment.patient?.phone || "Not specified"}
-              </p>
-              <p className="text-lg text-gray-500">Reason</p>
-              <p className="font-medium text-gray-800">
-                {appointment.patient?.problem || "Not specified"}
-              </p>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-sm text-gray-500">Name</p>
+                  <p className="font-medium text-gray-800">
+                    {appointment.patient?.name || "Not specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Gender</p>
+                  <p className="font-medium text-gray-800">
+                    {appointment.patient?.gender || "Not specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Phone</p>
+                  <p className="font-medium text-gray-800">
+                    {appointment.patient?.phone || "Not specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Reason</p>
+                  <p className="font-medium text-gray-800">
+                    {appointment.patient?.problem || "Not specified"}
+                  </p>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
               <h2 className="text-xl font-bold text-[#005] mb-3">
-                There is no Patient Information
+                Patient Information
               </h2>
+              <p className="text-gray-500">No patient information available</p>
             </div>
           )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex border-t border-gray-200">
-          <button
-            onClick={() => setIsRescheduleOpen(true)}
-            className="flex-1 py-3 text-blue-600 font-medium hover:bg-blue-100 transition duration-150"
-          >
-            Reschedule
-          </button>
-          <div className="w-px bg-gray-200"></div>
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex-1 py-3 text-red-600 font-medium hover:bg-red-100 transition duration-150"
-          >
-            Cancel Appointment
-          </button>
-        </div>
+        {status !== 'cancelled' && status !== 'completed' && (
+          <div className="flex border-t border-gray-200">
+            <button
+              onClick={() => setIsRescheduleModalOpen(true)}
+              className="flex-1 py-3 text-blue-600 font-medium hover:bg-blue-50 transition duration-150"
+            >
+              Reschedule
+            </button>
+            <div className="w-px bg-gray-200"></div>
+            <button
+              onClick={() => setIsCancelModalOpen(true)}
+              className="flex-1 py-3 text-red-600 font-medium hover:bg-red-50 transition duration-150"
+            >
+              Cancel Appointment
+            </button>
+          </div>
+        )}
 
         {/* Cancellation Modal */}
         <Dialog
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
+          open={isCancelModalOpen}
+          onClose={() => setIsCancelModalOpen(false)}
           className="relative z-50"
         >
           <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <Dialog.Panel className="mx-auto max-w-sm rounded-lg bg-white p-6">
               <Dialog.Title className="text-lg font-medium text-gray-900 mb-4">
                 Cancel Appointment
               </Dialog.Title>
-
               <div className="mb-4">
                 <label
                   htmlFor="reason"
@@ -501,12 +662,11 @@ export default function AppointmentDetails() {
                   placeholder="Please provide a reason for cancellation..."
                 />
               </div>
-
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setIsCancelModalOpen(false)}
                 >
                   Cancel
                 </button>
@@ -525,18 +685,16 @@ export default function AppointmentDetails() {
 
         {/* Reschedule Modal */}
         <Dialog
-          open={isRescheduleOpen}
-          onClose={() => setIsRescheduleOpen(false)}
+          open={isRescheduleModalOpen}
+          onClose={() => setIsRescheduleModalOpen(false)}
           className="relative z-50"
         >
           <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <Dialog.Panel className="mx-auto max-w-md w-full rounded-lg bg-white p-6">
               <Dialog.Title className="text-lg font-medium text-gray-900 mb-4">
                 Reschedule Appointment
               </Dialog.Title>
-
               <div className="space-y-4">
                 <div>
                   <label
@@ -558,16 +716,13 @@ export default function AppointmentDetails() {
                     min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
-
                 {newDate && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Select Available Time Slot
                     </label>
                     {loadingSlots ? (
-                      <div className="text-center py-4">
-                        Loading available slots...
-                      </div>
+                      <div className="text-center py-4">Loading available slots...</div>
                     ) : availableSlots.length > 0 ? (
                       <div className="grid grid-cols-3 gap-2">
                         {availableSlots.map((slot) => (
@@ -592,12 +747,11 @@ export default function AppointmentDetails() {
                   </div>
                 )}
               </div>
-
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   type="button"
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                  onClick={() => setIsRescheduleOpen(false)}
+                  onClick={() => setIsRescheduleModalOpen(false)}
                 >
                   Cancel
                 </button>

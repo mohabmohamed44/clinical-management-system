@@ -12,6 +12,11 @@ import {
   FaFilter,
   FaChevronDown,
   FaChevronUp,
+  FaFlask,
+  FaHospital,
+  FaClinicMedical,
+  FaStar,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
 import { SiCashapp } from "react-icons/si";
 import MetaData from "../../Components/MetaData/MetaData";
@@ -19,12 +24,12 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 
-// NEW: Define auth globally so it's available in the component.
+// Define auth globally so it's available in the component
 const auth = getAuth();
 
 const fetchAppointments = async (filters, userId) => {
   if (!userId) return [];
-  const auth = getAuth();
+  
   // First get Supabase user ID from Firebase UID
   const { data: userData, error: userError } = await supabase
     .from("Users")
@@ -37,8 +42,7 @@ const fetchAppointments = async (filters, userId) => {
 
   let query = supabase
     .from("Appointments")
-    .select(
-      `
+    .select(`
       id,
       status,
       payment_method,
@@ -46,10 +50,12 @@ const fetchAppointments = async (filters, userId) => {
       clinic_id,
       hos_id,
       doctor_id,
+      lab_id,
       date,
       time,
       patient,
       patient_id,
+      lab_services,
       Doctors (
         id,
         first_name,
@@ -61,11 +67,11 @@ const fetchAppointments = async (filters, userId) => {
         id,
         address
       )
-    `
-    )
+    `)
     .eq("patient_id", userData.id)
     .order("date", { ascending: false });
 
+  // Apply filters
   if (filters.status) {
     query = query.ilike('status', `%${filters.status}%`);
   }
@@ -76,12 +82,16 @@ const fetchAppointments = async (filters, userId) => {
     query = query.ilike('type', `%${filters.type}%`);
   }
 
+  // Location filters
   if (filters.location === "clinic") {
     query = query.not("clinic_id", "is", null);
   } else if (filters.location === "hospital") {
     query = query.not("hos_id", "is", null);
+  } else if (filters.location === "laboratory") {
+    query = query.not("lab_id", "is", null);
   }
 
+  // Date filters
   if (filters.startDate) {
     const start = new Date(filters.startDate);
     start.setHours(0, 0, 0, 0);
@@ -94,16 +104,153 @@ const fetchAppointments = async (filters, userId) => {
     query = query.lte("date", end.toISOString());
   }
 
-  const { data, error } = await query;
+  const { data: appointmentsData, error } = await query;
   if (error) throw new Error(error.message);
-  return data;
+  
+  if (!appointmentsData || appointmentsData.length === 0) {
+    return [];
+  }
+
+  // Fetch laboratory data separately for appointments with lab_id
+  const labIds = appointmentsData
+    .filter(apt => apt.lab_id)
+    .map(apt => apt.lab_id);
+
+  let laboratoriesData = [];
+  let laboratoriesInfoData = [];
+  
+  if (labIds.length > 0) {
+    // Fetch Laboratories data
+    const { data: labs, error: labsError } = await supabase
+      .from("Laboratories")
+      .select(`
+        id,
+        description,
+        description_ar,
+        name_ar,
+        name,
+        rate,
+        image,
+        rate_count,
+        services,
+        patients
+      `)
+      .in("id", labIds);
+    
+    if (labsError) {
+      console.error("Error fetching laboratories:", labsError);
+    } else {
+      laboratoriesData = labs || [];
+    }
+
+    // Fetch LaboratoriesInfo data
+    const { data: labsInfo, error: labsInfoError } = await supabase
+      .from("LaboratoriesInfo")
+      .select(`
+        id,
+        government,
+        city,
+        lab_id,
+        location,
+        images,
+        work_times,
+        services
+      `)
+      .in("lab_id", labIds);
+    
+    if (labsInfoError) {
+      console.error("Error fetching laboratories info:", labsInfoError);
+    } else {
+      laboratoriesInfoData = labsInfo || [];
+    }
+  }
+
+  // Combine the data
+  const combinedData = appointmentsData.map(appointment => {
+    if (appointment.lab_id) {
+      const laboratory = laboratoriesData.find(lab => lab.id === appointment.lab_id);
+      const lab_info = laboratoriesInfoData.find(info => info.lab_id === appointment.lab_id);
+      
+      return {
+        ...appointment,
+        laboratory,
+        lab_info
+      };
+    }
+    return appointment;
+  });
+
+  return combinedData;
 };
 
-// Add formatClinicAddress helper function
-const formatClinicAddress = (address) => {
-  if (!address) return "Address not available";
-  const { building, floor, streat } = address;
-  return `${building || ''}, ${floor ? `${floor} Floor` : ''}, ${streat || ''}`.replace(/^[,\s]+|[,\s]+$/g, '');
+// Format clinic address
+  const formatClinicAddress = (address) => {
+    if (!address) return "Address not available";
+    const { building, floor, streat } = address;
+    return `${building || ""}, ${floor ? `${floor} Floor` : ""}, ${streat || ""}`;
+  };
+
+  // Format lab location
+  const formatLabLocation = (labInfo) => {
+    if (!labInfo) return "Location not available";
+    const { government, city, address } = labInfo;
+
+    // If address is an object, try to extract its fields, else use as string
+    let addressStr = "";
+    if (typeof address === "string") {
+      addressStr = address;
+    } else if (typeof address === "object" && address !== null) {
+      // Try to extract common fields from address object
+      const { street, streat, building, floor } = address;
+      addressStr = [
+        building,
+        floor ? `${floor} Floor` : "",
+        street || streat || ""
+      ].filter(Boolean).join(", ");
+    }
+
+    return [government, city, addressStr]
+      .filter((part) => part && part !== "[object Object]")
+      .join(", ") || "Location not available";
+  };
+
+// Helper function to format work times
+const formatWorkTimes = (workTimes) => {
+  if (!workTimes) return "Hours not available";
+
+  // Handle string format
+  if (typeof workTimes === 'string') {
+    try {
+      // Try to parse JSON string if possible
+      const parsed = JSON.parse(workTimes);
+      if (Array.isArray(parsed)) workTimes = parsed;
+      else return workTimes;
+    } catch {
+      return workTimes;
+    }
+  }
+
+  // Handle array of objects (jsonb[])
+  if (Array.isArray(workTimes) && workTimes.length > 0 && typeof workTimes[0] === 'object') {
+    return workTimes
+      .map(
+        (wt) =>
+          `${wt.day}: ${wt.start?.slice(0, 5) || wt.start} - ${wt.end?.slice(0, 5) || wt.end} (${wt.duration || "?"} min)`
+      )
+      .join(", ");
+  }
+
+  // Handle array of strings
+  if (Array.isArray(workTimes)) {
+    return workTimes.join(', ');
+  }
+
+  // Handle object with open/close
+  if (typeof workTimes === 'object' && workTimes.open && workTimes.close) {
+    return `${workTimes.open} - ${workTimes.close}`;
+  }
+
+  return "Hours not available";
 };
 
 class ErrorBoundary extends React.Component {
@@ -111,18 +258,21 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null };
   }
+  
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
+  
   componentDidCatch(error, info) {
     console.error("ErrorBoundary caught error:", error, info);
   }
+  
   render() {
     if (this.state.hasError) {
       return (
         <div className="text-center py-8">
           <h1 className="text-2xl font-semibold mb-4">Something went wrong.</h1>
-          <p className="text-red-500">{this.state.error.message}</p>
+          <p className="text-red-500">{this.state.error?.message || "Unknown error"}</p>
         </div>
       );
     }
@@ -179,8 +329,14 @@ export default function AppointmentsPage() {
         color: "bg-green-100 text-green-800",
         icon: <FaCheckCircle />,
       },
-      pending: { color: "bg-yellow-100 text-yellow-800", icon: <FaClock /> },
-      cancelled: { color: "bg-red-100 text-red-800", icon: <FaTimesCircle /> },
+      pending: { 
+        color: "bg-yellow-100 text-yellow-800", 
+        icon: <FaClock /> 
+      },
+      cancelled: { 
+        color: "bg-red-100 text-red-800", 
+        icon: <FaTimesCircle /> 
+      },
       confirmed: {
         color: "bg-blue-100 text-blue-800",
         icon: <FaCheckCircle />,
@@ -230,19 +386,64 @@ export default function AppointmentsPage() {
     }
   };
 
-  // Update getLocationDisplay function
   const getLocationDisplay = (appointment) => {
     if (appointment.clinic_id) {
       const address = formatClinicAddress(appointment.clinic?.address);
       return (
-        <div className="flex flex-col">
-          <span className="font-medium">Clinic</span>
-          <span className="text-xs text-gray-500">{address}</span>
+        <div className="flex items-center gap-2">
+          <FaClinicMedical className="text-blue-500" />
+          <div className="flex flex-col">
+            <span className="font-medium">Clinic</span>
+            <span className="text-xs text-gray-500">{address}</span>
+          </div>
         </div>
       );
     }
-    if (appointment.hos_id) return <span>Hospital</span>;
+    
+    if (appointment.hos_id) {
+      return (
+        <div className="flex items-center gap-2">
+          <FaHospital className="text-red-500" />
+          <span className="font-medium">Hospital</span>
+        </div>
+      );
+    }
+    
+    if (appointment.lab_id) {
+      const location = formatLabLocation(appointment.lab_info);
+      return (
+        <div className="flex items-center gap-2">
+          <FaFlask className="text-green-500" />
+          <div className="flex flex-col">
+            <span className="font-medium">Laboratory</span>
+            <span className="text-xs text-gray-500">{location}</span>
+          </div>
+        </div>
+      );
+    }
+    
     return <span>N/A</span>;
+  };
+
+  const getProviderInfo = (appointment) => {
+    if (appointment.lab_id) {
+      return {
+        name: appointment.laboratory?.name || appointment.laboratory?.name_ar || "Unknown Lab",
+        subtitle: `${appointment.lab_info?.city || ''}, ${appointment.lab_info?.government || ''}`.trim().replace(/^,\s*|,\s*$/g, '') || "Location not available",
+        image: appointment.laboratory?.image || "/default-lab.png",
+        rating: appointment.laboratory?.rate,
+        ratingCount: appointment.laboratory?.rate_count,
+        type: "laboratory",
+        extraInfo: appointment.lab_services?.length ? `${appointment.lab_services.length} services selected` : null
+      };
+    } else {
+      return {
+        name: `Dr. ${appointment.Doctors?.first_name || ''} ${appointment.Doctors?.last_name || ''}`.trim() || "Unknown Doctor",
+        subtitle: appointment.Doctors?.specialty || "Specialty not available",
+        image: appointment.Doctors?.image || "/default-avatar.png",
+        type: "doctor"
+      };
+    }
   };
 
   if (!currentUser) {
@@ -272,65 +473,89 @@ export default function AppointmentsPage() {
   if (isError) {
     return (
       <div className="text-red-500 text-center py-8">
-        Error: {error.message}
+        Error: {error?.message || "An error occurred"}
       </div>
     );
   }
 
-  // Add responsive table/card view component
-  const AppointmentCard = ({ appointment }) => (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <img
-            src={appointment.Doctors?.image || "/default-avatar.png"}
-            alt="Doctor"
-            className="w-12 h-12 rounded-full object-cover"
-          />
-          <div>
-            <div className="font-medium text-gray-900">
-              Dr. {appointment.Doctors?.first_name} {appointment.Doctors?.last_name}
-            </div>
-            <div className="text-sm text-[#667198]">
-              {appointment.Doctors?.specialty}
+  // Mobile Card Component
+  const AppointmentCard = ({ appointment }) => {
+    const providerInfo = getProviderInfo(appointment);
+    
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <img
+              src={providerInfo.image}
+              alt={providerInfo.type}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <div>
+              <div className="font-medium text-gray-900">
+                {providerInfo.name}
+              </div>
+              <div className="text-sm text-[#667198]">
+                {providerInfo.subtitle}
+              </div>
+              {providerInfo.rating && (
+                <div className="flex items-center gap-1 text-xs">
+                  <FaStar className="text-yellow-500" />
+                  <span>{providerInfo.rating}</span>
+                  {providerInfo.ratingCount && (
+                    <span className="text-gray-500">({providerInfo.ratingCount})</span>
+                  )}
+                </div>
+              )}
+              {providerInfo.extraInfo && (
+                <div className="text-xs text-blue-600">
+                  {providerInfo.extraInfo}
+                </div>
+              )}
             </div>
           </div>
-        </div>
-        {getStatusBadge(appointment.status)}
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Date & Time:</span>
-          <span className="text-gray-900">{formatDate(appointment.date, appointment.time)}</span>
+          {getStatusBadge(appointment.status)}
         </div>
         
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Payment:</span>
-          <span>{getPaymentMethod(appointment.payment_method)}</span>
-        </div>
-        
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Location:</span>
-          <span>{getLocationDisplay(appointment)}</span>
-        </div>
-        
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Type:</span>
-          <span className="capitalize">{appointment.type}</span>
-        </div>
-      </div>
-      
-      <Link
-        to={`/appointments/${appointment.id}`}
-        className="mt-3 block w-full text-center py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
-      >
-        View Details
-      </Link>
-    </div>
-  );
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Date & Time:</span>
+            <span className="text-gray-900">{formatDate(appointment.date, appointment.time)}</span>
+          </div>
+          
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Payment:</span>
+            <span>{getPaymentMethod(appointment.payment_method)}</span>
+          </div>
+          
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Location:</span>
+            <span>{getLocationDisplay(appointment)}</span>
+          </div>
+          
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Type:</span>
+            <span className="capitalize">{appointment.type}</span>
+          </div>
 
-  // Update the return statement
+          {appointment.lab_id && appointment.lab_info?.work_times && (
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Hours:</span>
+              <span className="text-gray-900">{formatWorkTimes(appointment.lab_info.work_times)}</span>
+            </div>
+          )}
+        </div>
+        
+        <Link
+          to={`/appointments/${appointment.id}`}
+          className="mt-3 block w-full text-center py-2 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
+        >
+          View Details
+        </Link>
+      </div>
+    );
+  };
+
   return (
     <ErrorBoundary>
       <MetaData
@@ -347,9 +572,8 @@ export default function AppointmentsPage() {
             My Appointments
           </h1>
 
-          {/* Filters Section - Mobile Responsive */}
+          {/* Filters Section */}
           <div className="bg-white rounded-lg shadow mb-6 border-2 border-[#1972EE] overflow-hidden">
-            {/* Filter Header - Always Visible */}
             <button
               onClick={() => setIsFiltersVisible(!isFiltersVisible)}
               className="w-full p-4 flex items-center justify-between md:hidden"
@@ -367,7 +591,6 @@ export default function AppointmentsPage() {
               )}
             </button>
 
-            {/* Filter Content - Collapsible on Mobile */}
             <div
               className={`${
                 isFiltersVisible ? "max-h-[1000px]" : "max-h-0 md:max-h-[1000px]"
@@ -390,42 +613,94 @@ export default function AppointmentsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                  {/* Filter Fields - Updated for better mobile spacing */}
-                  {[
-                    { 
-                      label: "Status", 
-                      value: "status", 
-                      options: ["completed", "pending", "cancelled", "confirmed"]  // lowercase options
-                    },
-                    { label: "Payment", value: "payment_method", options: ["Visa", "Cash"] },
-                    { label: "Type", value: "type", options: ["upcoming", "completed"] }, // Updated options
-                    { label: "Location", value: "location", options: ["clinic", "hospital"] }
-                  ].map((filter) => (
-                    <div key={filter.value} className="space-y-1">
-                      <label className="block text-sm text-blue-700 font-medium">
-                        {filter.label}
-                      </label>
-                      <select
-                        className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={filters[filter.value]}
-                        onChange={(e) =>
-                          setFilters((prev) => ({
-                            ...prev,
-                            [filter.value]: e.target.value,
-                          }))
-                        }
-                      >
-                        <option value="">All {filter.label}es</option>
-                        {filter.options.map((option) => (
-                          <option key={option} value={option}>
-                            {option.charAt(0).toUpperCase() + option.slice(1)}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ))}
+                  {/* Status Filter */}
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      Status
+                    </label>
+                    <select
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.status}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          status: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">All Statuses</option>
+                      <option value="completed">Completed</option>
+                      <option value="pending">Pending</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="confirmed">Confirmed</option>
+                    </select>
+                  </div>
+
+                  {/* Payment Method Filter */}
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      Payment
+                    </label>
+                    <select
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.payment_method}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          payment_method: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">All Payments</option>
+                      <option value="Visa">Visa</option>
+                      <option value="Cash">Cash</option>
+                    </select>
+                  </div>
+
+                  {/* Type Filter */}
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      Type
+                    </label>
+                    <select
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.type}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          type: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">All Types</option>
+                      <option value="upcoming">Upcoming</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </div>
+
+                  {/* Location Filter */}
+                  <div className="space-y-1">
+                    <label className="block text-sm text-blue-700 font-medium">
+                      Location
+                    </label>
+                    <select
+                      className="w-full p-2.5 border border-blue-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={filters.location}
+                      onChange={(e) =>
+                        setFilters((prev) => ({
+                          ...prev,
+                          location: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">All Locations</option>
+                      <option value="clinic">Clinic</option>
+                      <option value="hospital">Hospital</option>
+                      <option value="laboratory">Laboratory</option>
+                    </select>
+                  </div>
                   
-                  {/* Date Fields */}
+                  {/* Date Filters */}
                   <div className="space-y-1">
                     <label className="block text-sm text-blue-700 font-medium">
                       From
@@ -464,14 +739,13 @@ export default function AppointmentsPage() {
             </div>
           </div>
 
-          {/* Responsive Table/Card View */}
+          {/* Desktop Table View */}
           <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
-            {/* Original table markup for tablet and desktop */}
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
-                    Doctor
+                    Provider
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-medium text-[#00155D] uppercase">
                     Date & Time
@@ -495,65 +769,73 @@ export default function AppointmentsPage() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {appointments?.length > 0 ? (
-                  appointments.map((appointment) => (
-                    <tr
-                      key={appointment.id}
-                      className="hover:bg-blue-50 transition-colors"
-                    >
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <Link
-                          to={`/appointments/${appointment.id}`}
-                          className="flex items-center gap-3"
-                        >
-                          <img
-                            src={
-                              appointment.Doctors?.image ||
-                              "/default-avatar.png"
-                            }
-                            alt="Doctor"
-                            className="w-9 h-9 rounded-full object-cover"
-                          />
-                          <div>
-                            <div className="font-medium text-gray-900">
-                              {appointment.Doctors?.first_name}{" "}
-                              {appointment.Doctors?.last_name}
+                  appointments.map((appointment) => {
+                    const providerInfo = getProviderInfo(appointment);
+                    
+                    return (
+                      <tr key={appointment.id} className="hover:bg-blue-50 transition-colors">
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <Link to={`/appointments/${appointment.id}`} className="flex items-center gap-3">
+                            <img
+                              src={providerInfo.image}
+                              alt={providerInfo.type}
+                              className="w-9 h-9 rounded-full object-cover"
+                            />
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {providerInfo.name}
+                              </div>
+                              <div className="text-sm text-[#667198]">
+                                {providerInfo.subtitle}
+                              </div>
+                              {providerInfo.rating && (
+                                <div className="flex items-center gap-1 text-xs">
+                                  <FaStar className="text-yellow-500" />
+                                  <span>{providerInfo.rating}</span>
+                                  {providerInfo.ratingCount && (
+                                    <span className="text-gray-500">({providerInfo.ratingCount})</span>
+                                  )}
+                                </div>
+                              )}
+                              {providerInfo.extraInfo && (
+                                <div className="text-xs text-blue-600">
+                                  {providerInfo.extraInfo}
+                                </div>
+                              )}
                             </div>
-                            <div className="text-sm text-[#667198]">
-                              {appointment.Doctors?.specialty}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
+                          {formatDate(appointment.date, appointment.time)}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {getStatusBadge(appointment.status)}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          {getPaymentMethod(appointment.payment_method)}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198] capitalize">
+                          {appointment.type}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
+                          {getLocationDisplay(appointment)}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <FaUser className="w-6 h-6 text-gray-400" />
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {appointment.patient?.name || "N/A"}
+                              </div>
+                              <div className="text-sm text-[#667198]">
+                                {appointment.patient?.phone || "No phone"}
+                              </div>
                             </div>
                           </div>
-                        </Link>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
-                        {formatDate(appointment.date, appointment.time)}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {getStatusBadge(appointment.status)}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        {getPaymentMethod(appointment.payment_method)}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198] capitalize">
-                        {appointment.type}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-[#667198]">
-                        {getLocationDisplay(appointment)}
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <FaUser className="w-6 h-6 text-gray-400" />
-                          <div>
-                            <div className="font-medium text-gray-900">
-                              {appointment.patient?.name || "N/A"}
-                            </div>
-                            <div className="text-sm text-[#667198]">
-                              {appointment.patient?.phone || "No phone"}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td
