@@ -113,7 +113,7 @@ const mutation = useMutation({
       <div className="min-h-screen bg-gray-50 p-2 sm:p-4 md:p-8">
         <div className="max-w-4xl mx-auto w-full">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#00155D] mb-4 sm:mb-6 text-center">
-            Ask a Medical Question
+            {t("Ask")}
           </h1>
 
           <Formik
@@ -134,7 +134,7 @@ const mutation = useMutation({
                   <div className="w-full">
                     <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
                       <FaStethoscope className="text-[#1972EE]" />
-                      Specialty
+                      {t("specialty")}
                     </label>
                     <Menu as="div" className="relative w-full">
                       <MenuButton
@@ -184,7 +184,7 @@ const mutation = useMutation({
                     <div>
                       <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
                         <FaVenusMars className="text-[#1972EE]" />
-                        Gender
+                        {t("gender")}
                       </label>
                       <Field
                         as="select"
@@ -211,7 +211,7 @@ const mutation = useMutation({
                     <div>
                       <label className="text-sm font-medium text-[#00155D] mb-2 flex items-center justify-start gap-2">
                         <FaBirthdayCake className="text-[#1972EE]" />
-                        Age
+                        {t("age")}
                       </label>
                       <Field
                         type="number"
@@ -233,7 +233,7 @@ const mutation = useMutation({
                   {/* Question Fields */}
                   <div className="w-full">
                     <label className="block text-sm font-medium text-[#00155D] mb-2 text-start">
-                      Your Question
+                      {t("YourQuestion")}
                     </label>
                     <Field
                       name="question"
@@ -244,7 +244,7 @@ const mutation = useMutation({
                           ? "border-red-500"
                           : "border-[#1972EE]"
                       } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
-                      placeholder="Enter your main question..."
+                      placeholder={t("QuestionMain")}
                     />
                     <ErrorMessage
                       name="question"
@@ -256,7 +256,7 @@ const mutation = useMutation({
                   {/* Details Field */}
                   <div className="w-full">
                     <label className="block text-sm font-medium text-[#00155D] mb-2 text-start">
-                      Detailed Information
+                      {t("DetailedInformation")}
                     </label>
                     <Field
                       name="question_details"
@@ -267,7 +267,7 @@ const mutation = useMutation({
                           ? "border-red-500"
                           : "border-[#1972EE]"
                       } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
-                      placeholder="Include relevant details about your medical history, symptoms, duration, etc."
+                      placeholder={t("DetailsPlaceholder")}
                     />
                     <ErrorMessage
                       name="question_details"

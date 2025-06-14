@@ -31,7 +31,6 @@ const initialValues = {
   area: "",
   street: "",
   location: "",
-  medicalHistory: "",
 };
 
 export default function Register() {
@@ -72,7 +71,6 @@ export default function Register() {
         t("HeightMustBePositive"),
         (value) => !value || parseFloat(value) > 0
       ),
-    medicalHistory: Yup.string().required(t("MedicalHistoryRequired")),
   });
 
   const addressInfoSchema = Yup.object().shape({
@@ -176,8 +174,6 @@ export default function Register() {
           weight: values.weight ? values.weight.toString().trim() : "",
           height: values.height ? values.height.toString().trim() : "",
           bloodType: values.bloodType,
-          // Ensure medical history is a string
-          medicalHistory: values.medicalHistory.trim(),
           // Individual address fields for the AuthService
           city: values.city ? values.city.trim() : "",
           area: values.area ? values.area.trim() : "",
@@ -283,33 +279,36 @@ export default function Register() {
         keywords="register, account, patient, doctor"
         author="Mohab Mohammed"
       />
-      <div className="max-h-screen flex flex-col lg:flex-row items-center justify-center p-10">
-        <div className="hidden lg:block lg:w-full lg:pr-5 rtl:lg:pl-5">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center p-4 sm:p-6 md:p-8">
+        {/* Image Section - Hidden on mobile, shown on lg screens */}
+        <div className="hidden lg:block lg:w-1/2 lg:pr-5 rtl:lg:pl-5">
           <img
             src={Doctor}
             alt="Doctor"
-            className="rounded-xl w-full h-auto max-w-[600px] max-h-[800px] object-cover"
+            className="rounded-xl w-full h-auto max-h-[800px] object-cover"
           />
         </div>
 
-        <div className="w-full lg:w-full max-w-4xl ">
-          <div className="bg-white rounded-2xl shadow mb-6 p-8 mt-14">
+        {/* Form Section */}
+        <div className="w-full lg:w-1/2 max-w-4xl">
+          <div className="bg-white rounded-2xl shadow mb-6 p-4 sm:p-6 md:p-8 mt-4 sm:mt-14">
+            {/* Step Indicators */}
             <div className="flex justify-center mb-6 px-4 sm:px-0">
               <div className="flex items-center flex-wrap sm:flex-nowrap">
                 {steps.map((step, index) => (
                   <div key={step.number} className="flex items-center">
                     <div
-                      className={`w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-colors duration-200 ${
                         currentStep >= step.number
                           ? "bg-blue-600 text-white"
                           : "bg-gray-200 text-gray-400"
                       }`}
                     >
-                      <step.icon size={20} className="sm:w-6 sm:h-6" />
+                      <step.icon size={18} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </div>
                     {index < steps.length - 1 && (
                       <div
-                        className={`w-8 sm:w-16 h-1 transition-colors duration-200 ${
+                        className={`w-6 sm:w-8 md:w-16 h-1 transition-colors duration-200 ${
                           currentStep > step.number
                             ? "bg-blue-600"
                             : "bg-gray-200"
@@ -331,7 +330,7 @@ export default function Register() {
                 : t("RegistrationComplete")}
             </h1>
             {currentStep === 2 && (
-              <p className="text-sm sm:text-base text-gray-600 text-center mb-6 sm:mb-8 px-4">
+              <p className="text-sm sm:text-base text-gray-600 text-center mb-4 sm:mb-6 md:mb-8 px-4">
                 {t("ExtraInfo")}
               </p>
             )}
@@ -346,11 +345,11 @@ export default function Register() {
             )}
 
             {currentStep === 4 && registrationSuccess && (
-              <div className="text-center py-10 animate-fade-in">
-                <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-6">
+              <div className="text-center py-8 md:py-10 animate-fade-in">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-10 w-10 text-green-500"
+                    className="h-8 w-8 sm:h-10 sm:w-10 text-green-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -363,10 +362,10 @@ export default function Register() {
                     />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">
                   {t("RegistrationSuccessful")}
                 </h2>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-4 sm:mb-6">
                   {t("AccountCreatedSuccessfully")}
                 </p>
                 <p className="text-blue-600">{t("RedirectingToLogin")}...</p>
@@ -383,15 +382,16 @@ export default function Register() {
                 validateOnMount
               >
                 {({ errors, touched, isSubmitting, setFieldValue, values }) => (
-                  <Form className="space-y-4 sm:space-y-6 px-4 sm:px-0 max-w-4xl">
+                  <Form className="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
                     {currentStep === 1 && (
                       <div className="animate-fade-in">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="relative mt-5">
+                          {/* First Name */}
+                          <div className="relative mt-4">
                             <Field
                               name="firstName"
                               type="text"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.firstName && touched.firstName
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -411,11 +411,12 @@ export default function Register() {
                             )}
                           </div>
 
-                          <div className="relative mt-5">
+                          {/* Last Name */}
+                          <div className="relative mt-4">
                             <Field
                               name="lastName"
                               type="text"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.lastName && touched.lastName
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -436,11 +437,12 @@ export default function Register() {
                           </div>
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Email */}
+                        <div className="relative mt-4">
                           <Field
                             name="email"
                             type="email"
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.email && touched.email
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -460,15 +462,16 @@ export default function Register() {
                           )}
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Password */}
+                        <div className="relative mt-4">
                           <Field
                             name="password"
                             type={showPassword ? "text" : "password"}
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.password && touched.password
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-16`}
+                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-14`}
                             placeholder={t("Password")}
                           />
                           <label
@@ -480,12 +483,12 @@ export default function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 rtl:right-auto rtl:left-3 top-3.5 sm:top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                           >
                             {showPassword ? (
-                              <EyeOff size={24} />
+                              <EyeOff size={20} />
                             ) : (
-                              <Eye size={24} />
+                              <Eye size={20} />
                             )}
                           </button>
                           {errors.password && touched.password && (
@@ -495,15 +498,16 @@ export default function Register() {
                           )}
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Confirm Password */}
+                        <div className="relative mt-4">
                           <Field
                             name="confirmPassword"
                             type={showPassword ? "text" : "password"}
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.confirmPassword && touched.confirmPassword
                                 ? "border-red-500"
                                 : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-16`}
+                            } focus:outline-none focus:border-blue-500 placeholder-transparent pr-14`}
                             placeholder={t("ConfirmPassword")}
                           />
                           <label
@@ -515,12 +519,12 @@ export default function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 rtl:right-auto rtl:left-3 top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 rtl:right-auto rtl:left-3 top-3.5 sm:top-4 flex items-center justify-center text-gray-400 hover:text-gray-600"
                           >
                             {showPassword ? (
-                              <EyeOff size={24} />
+                              <EyeOff size={20} />
                             ) : (
-                              <Eye size={24} />
+                              <Eye size={20} />
                             )}
                           </button>
                           {errors.confirmPassword &&
@@ -531,11 +535,12 @@ export default function Register() {
                             )}
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Phone */}
+                        <div className="relative mt-4">
                           <Field
                             name="phone"
                             type="tel"
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.phone && touched.phone
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -549,14 +554,15 @@ export default function Register() {
                             {t("Phone")}
                           </label>
                           {errors.phone && touched.phone && (
-                            <div className="text-red-500 text-sm mt-1 rtl:text-right">
-                              {errors.phone}
-                            </div>
-                          )}
+                              <div className="text-red-500 text-sm mt-1 rtl:text-right">
+                                {errors.phone}
+                              </div>
+                            )}
                         </div>
 
+                        {/* Gender */}
                         <div className="space-y-2 pt-3">
-                          <label className="text-lg text-gray-700 mt-3 rtl:text-right">
+                          <label className="text-base md:text-lg text-gray-700 mt-3 rtl:text-right">
                             {t("Gender")}
                           </label>
                           <div className="flex items-center mb-4 mt-4 rtl:flex-row">
@@ -594,11 +600,12 @@ export default function Register() {
 
                     {currentStep === 2 && (
                       <div className="animate-fade-in">
-                        <div className="relative mt-5">
+                        {/* Date of Birth */}
+                        <div className="relative mt-4">
                           <Field
                             name="dateOfBirth"
                             type="date"
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.dateOfBirth && touched.dateOfBirth
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -617,11 +624,12 @@ export default function Register() {
                           )}
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Profile Image */}
+                        <div className="relative mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             {t("ProfileImage")}
                           </label>
-                          <div className="flex items-center space-x-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                             <input
                               type="file"
                               accept="image/*"
@@ -641,14 +649,14 @@ export default function Register() {
                                   reader.readAsDataURL(file);
                                 }
                               }}
-                              className={`w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.profileImage && touched.profileImage
                                   ? "border-red-500"
                                   : "border-gray-300"
                               } focus:outline-none focus:border-blue-500`}
                             />
                             {filePreview && (
-                              <div className="h-16 w-17 rounded-full overflow-hidden">
+                              <div className="h-16 w-16 rounded-full overflow-hidden flex-shrink-0">
                                 <img
                                   src={filePreview}
                                   alt="Preview"
@@ -664,12 +672,13 @@ export default function Register() {
                           )}
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Blood Type */}
+                        <div className="relative mt-4">
                           <Field name="bloodType">
                             {({ field, form }) => (
                               <select
                                 {...field}
-                                className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                                className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                   errors.bloodType && touched.bloodType
                                     ? "border-red-500"
                                     : "border-gray-300"
@@ -709,12 +718,13 @@ export default function Register() {
                           )}
                         </div>
 
+                        {/* Weight and Height */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="relative mt-5">
+                          <div className="relative mt-4">
                             <Field
                               name="weight"
                               type="number"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.weight && touched.weight
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -734,11 +744,11 @@ export default function Register() {
                             )}
                           </div>
 
-                          <div className="relative mt-5">
+                          <div className="relative mt-4">
                             <Field
                               name="height"
                               type="number"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.height && touched.height
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -758,41 +768,18 @@ export default function Register() {
                             )}
                           </div>
                         </div>
-
-                        <div className="relative mt-5">
-                          <Field
-                            name="medicalHistory"
-                            as="textarea"
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
-                              errors.medicalHistory && touched.medicalHistory
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                            placeholder={t("MedicalHistory")}
-                          />
-                          <label
-                            htmlFor="medicalHistory"
-                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
-                          >
-                            {t("MedicalHistory")}
-                          </label>
-                          {errors.medicalHistory && touched.medicalHistory && (
-                            <div className="text-red-500 text-sm mt-1 rtl:text-right">
-                              {errors.medicalHistory}
-                            </div>
-                          )}
-                        </div>
                       </div>
                     )}
 
                     {currentStep === 3 && (
                       <div className="animate-fade-in space-y-4">
+                        {/* City and Area */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="relative mt-5">
+                          <div className="relative mt-4">
                             <Field
                               name="city"
                               type="text"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.city && touched.city
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -812,11 +799,11 @@ export default function Register() {
                             )}
                           </div>
 
-                          <div className="relative mt-5">
+                          <div className="relative mt-4">
                             <Field
                               name="area"
                               type="text"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.area && touched.area
                                   ? "border-red-500"
                                   : "border-gray-300"
@@ -837,11 +824,12 @@ export default function Register() {
                           </div>
                         </div>
 
-                        <div className="relative mt-5">
+                        {/* Street */}
+                        <div className="relative mt-4">
                           <Field
                             name="street"
                             type="text"
-                            className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                            className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                               errors.street && touched.street
                                 ? "border-red-500"
                                 : "border-gray-300"
@@ -861,33 +849,34 @@ export default function Register() {
                           )}
                         </div>
 
-                        <div className="relative mt-5">
-                          <div className="flex gap-2">
+                        {/* Location */}
+                        <div className="relative mt-4">
+                          <label
+                            htmlFor="location"
+                            className="block text-sm font-medium text-gray-700 mb-1 rtl:text-right"
+                          >
+                            {t("Location")}
+                          </label>
+                          <div className="flex flex-col sm:flex-row gap-2">
                             <Field
                               name="location"
                               type="text"
-                              className={`peer w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 rounded-lg border ${
+                              className={`peer w-full px-4 py-3 sm:px-5 sm:py-4 text-base rounded-lg border ${
                                 errors.location && touched.location
                                   ? "border-red-500"
                                   : "border-gray-300"
-                              } focus:outline-none focus:border-blue-500 placeholder-transparent`}
+                              } focus:outline-none focus:border-blue-500`}
                               placeholder={t("Location")}
                               readOnly
                             />
                             <button
                               type="button"
                               onClick={() => getGeolocation(setFieldValue)}
-                              className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                              className="px-4 py-3 text-base bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors whitespace-nowrap"
                             >
                               {t("GetLocation")}
                             </button>
                           </div>
-                          <label
-                            htmlFor="location"
-                            className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
-                          >
-                            {t("Location")}
-                          </label>
                           {errors.location && touched.location && (
                             <div className="text-red-500 text-sm mt-1 rtl:text-right">
                               {errors.location}
@@ -898,12 +887,12 @@ export default function Register() {
                     )}
 
                     {currentStep < 4 && (
-                      <div className="flex justify-between space-x-4 rtl:space-x-reverse mt-8">
+                      <div className="flex justify-between space-x-4 rtl:space-x-reverse mt-6 sm:mt-8">
                         {currentStep > 1 && (
                           <button
                             type="button"
                             onClick={() => setCurrentStep(currentStep - 1)}
-                            className="w-full bg-gray-100 text-gray-800 rounded-lg px-4 py-3 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                            className="w-full bg-gray-100 text-gray-800 rounded-lg px-4 py-3 text-base hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                           >
                             {t("Back")}
                           </button>
@@ -911,7 +900,7 @@ export default function Register() {
                         <button
                           type="submit"
                           disabled={isSubmitting || isLoading}
-                          className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                          className="w-full bg-blue-600 text-white rounded-lg px-4 py-3 text-base hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                         >
                           {isLoading ? (
                             <span className="flex items-center justify-center">

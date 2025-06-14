@@ -16,8 +16,8 @@ export default function FindMedicine() {
                 {t("FindMedicine")}
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold  mb-6 bg-gradient-to-r from-[#00155D] to-[#1972EE] bg-clip-text text-transparent">
-              {t("Find Your Medicine")}
+            <h1 className="text-4xl md:text-5xl font-bold pb-8 mb-8 bg-gradient-to-r from-[#00155D] to-[#1972EE] bg-clip-text text-transparent">
+              {t("FindYourMedicine")}
             </h1>
           </div>
 
@@ -36,7 +36,7 @@ export default function FindMedicine() {
             <div className="text-center md:text-left">
               <p className="text-gray-600 mb-8 text-lg md:text-xl leading-relaxed">
                 {t(
-                  "Need help finding the right medicine? Our experts are here to assist you! Get immediate assistance or schedule a consultation."
+                  "findYourMedicineDetails"
                 )}
               </p>
               <Link
@@ -50,7 +50,7 @@ export default function FindMedicine() {
                 shadow-lg"
               >
                 <Pill className="mr-2" />
-                {t("Find a Medicine")}
+                {t("FindMedicine")}
               </Link>
             </div>
           </div>

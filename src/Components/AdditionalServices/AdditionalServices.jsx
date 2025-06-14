@@ -175,17 +175,17 @@ export default function AdditionalServices() {
     >
       <div
         className={`text-center mx-auto mb-10 max-w-xl ${
-          i18n.language === "ar" ? "text-right" : ""
+          i18n.language === "ar" ? "text-center" : ""
         }`}
       >
         <p
-          className={`inline-block border rounded-full border-blue-600 py-1 px-4 text-blue-600 ${
+          className={`inline-block border text-center rounded-full border-blue-600 py-1 px-4 text-blue-600 ${
             i18n.language === "ar" ? "ml-0 mr-0" : ""
           }`}
         >
           {t("SpecialServices")}
         </p>
-        <h2 className="text-4xl font-bold mt-4">{t("FeaturedOffers")}</h2>
+        <h2 className="text-4xl font-bold mt-4 text-center">{t("FeaturedOffers")}</h2>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 relative">

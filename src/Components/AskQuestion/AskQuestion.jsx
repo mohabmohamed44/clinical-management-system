@@ -14,7 +14,7 @@ export default function AskQuestion() {
               {t("AskAQuestion")}
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold  mb-6 bg-gradient-to-r from-[#00155D] to-[#1972EE] bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold pb-6 mb-6 bg-gradient-to-r from-[#00155D] to-[#1972EE] bg-clip-text text-transparent">
             {t("Ask a Question with an Expert")}
           </h1>
         </div>
@@ -34,7 +34,7 @@ export default function AskQuestion() {
           <div className="text-center md:text-left">
             <p className="text-gray-600 mb-8 text-lg md:text-xl leading-relaxed">
               {t(
-                "Have questions about our labs or services or about Symptoms? Our experts are here to help! Get immediate assistance or schedule a consultation.",
+                "AskQuestionDetails",
               )}
             </p>
 
@@ -62,7 +62,7 @@ export default function AskQuestion() {
                   d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              {t("Ask a Question Now")}
+              {t("AskNow")}
             </Link>
           </div>
         </div>

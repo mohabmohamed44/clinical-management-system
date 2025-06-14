@@ -171,16 +171,6 @@ export default function BookLab() {
     return () => unsubscribe();
   }, [navigate]); // Remove id from dependencies, add navigate
 
-  // Add this helper function to format location
-  const formatLocation = (location) => {
-    if (!location) return "";
-    if (typeof location === "string") return location;
-    if (typeof location === "object") {
-      const { latitude, longitude } = location;
-      return `${latitude}, ${longitude}`;
-    }
-    return "";
-  };
 
   // Update renderLabDetails to handle location object
   const renderLabDetails = () => {
@@ -190,10 +180,6 @@ export default function BookLab() {
       <div className="mt-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">Location:</span>{" "}
-              {formatLocation(lab.location)}
-            </p>
             <p className="text-sm text-gray-600">
               <span className="font-medium">Government:</span> {lab.government}
             </p>
@@ -561,7 +547,7 @@ export default function BookLab() {
       <label className="block text-sm font-medium text-gray-700 mb-2">
         Payment Method
       </label>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           type="button"
           onClick={() =>
@@ -710,7 +696,7 @@ export default function BookLab() {
           </div>
 
           {/* Lab Information */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+          <div className="bg-white rounded-xl shadow overflow-hidden mb-8">
             <div className="p-6">
               <div className="flex flex-col md:flex-row md:items-start">
                 <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
@@ -771,7 +757,7 @@ export default function BookLab() {
           </div>
 
           {/* Booking Form */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-xl shadow overflow-hidden">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 Book Your Test
@@ -898,7 +884,7 @@ export default function BookLab() {
           </div>
 
           {/* Additional Lab Details */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden mt-8">
+          <div className="bg-white rounded-xl shadow overflow-hidden mt-8">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 Lab Details

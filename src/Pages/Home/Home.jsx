@@ -1,24 +1,31 @@
 import React, { lazy, Suspense } from "react";
 import Style from "./Home.module.css";
 import MetaData from "../../Components/MetaData/MetaData";
-import Background from "../../assets/home.webp"; 
+import Background from "../../assets/home.webp";
 import BackgroundFallback from "../../assets/home.webp";
-import Doctor from "../../assets/doctor_home.webp"; 
+import Doctor from "../../assets/doctor_home.webp";
 import DoctorFallback from "../../assets/doctor_home.webp";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import HomeCard from "../../Components/HomeCard/HomeCard";
 import SearchCard from "../../Components/SearchCard/SearchCard";
-import FindMedicine from "../../Components/FindMedicine/FindMedicine";
 
 // Lazy load non-critical components
-const UpcomingVisits = lazy(() => import("../../Components/UpcomingVisits/UpcomingVisits"));
-const AdditionalServices = lazy(() => import("../../Components/AdditionalServices/AdditionalServices"));
-const AskQuestion = lazy(() => import("../../Components/AskQuestion/AskQuestion"));
-
+const UpcomingVisits = lazy(() =>
+  import("../../Components/UpcomingVisits/UpcomingVisits")
+);
+const AdditionalServices = lazy(() =>
+  import("../../Components/AdditionalServices/AdditionalServices")
+);
+const AskQuestion = lazy(() =>
+  import("../../Components/AskQuestion/AskQuestion")
+);
+const FindMedicine = lazy(() =>
+  import("../../Components/FindMedicine/FindMedicine")
+);
 export default function Home() {
   const { t } = useTranslation();
-  
+
   return (
     <div role="region" aria-label="Home page content">
       <MetaData
@@ -27,8 +34,12 @@ export default function Home() {
         keywords="healthcare, medical appointments, doctor booking, medical services"
         author="Mohab Mohammed"
       />
-      
-      <main className="w-full object-cover h-screen" role="main" aria-labelledby="main-heading">
+
+      <main
+        className="w-full object-cover h-screen"
+        role="main"
+        aria-labelledby="main-heading"
+      >
         <header className="absolute top-0 left-0 w-full h-screen" role="banner">
           {/* Optimized background image with responsive sources */}
           <picture aria-hidden="true">
@@ -59,15 +70,15 @@ export default function Home() {
                 >
                   {t("Home")}
                 </h1>
-                <p 
-                  className={`${Style.text}`} 
+                <p
+                  className={`${Style.text}`}
                   tabIndex="0"
                   aria-label={t("HomeDescription")}
                 >
                   {t("HomeDescription")}
                 </p>
                 <div className="flex justify-start">
-                  <Link 
+                  <Link
                     to="/find_doctor"
                     className="px-8 py-4 block bg-white text-[#2342a1] mt-6 rounded-xl font-semibold text-xl hover:bg-blue-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 min-w-[150px] text-center"
                     aria-label={t("Book appointment with a doctor")}
@@ -80,7 +91,7 @@ export default function Home() {
               </div>
 
               {/* Optimized doctor image with responsive sources */}
-              <figure 
+              <figure
                 className="mt-auto lg:mt-auto flex justify-center w-full lg:w-1/2 order-2 lg:order-2"
                 aria-label="Doctor illustration"
               >
@@ -101,7 +112,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div 
+          <div
             className="relative z-30 transform translate-y-[-80%]"
             role="search"
             aria-label="Search for doctors"
@@ -112,14 +123,16 @@ export default function Home() {
       </main>
 
       {/* Lazy loaded components with suspense */}
-      <div 
+      <div
         className="mt-50 pt-10 sm:mt-50 md:mt-10 lg:mt-20 xl:mt-20 px-4 md:px-8 lg:px-12 py-10"
         role="complementary"
         aria-label="Upcoming appointments section"
       >
-        <Suspense 
+        <Suspense
           fallback={
-            <div role="status" aria-live="polite">Loading appointments...</div>
+            <div role="status" aria-live="polite">
+              Loading appointments...
+            </div>
           }
         >
           <UpcomingVisits />
@@ -131,32 +144,42 @@ export default function Home() {
       </section>
 
       <section role="region" aria-label="Additional services">
-        <Suspense 
+        <Suspense
           fallback={
-            <div role="status" aria-live="polite">Loading services...</div>
+            <div role="status" aria-live="polite">
+              Loading services...
+            </div>
           }
         >
           <AdditionalServices />
         </Suspense>
       </section>
 
-      <section 
+      <section
         className="mt-7 px-4 md:px-8 lg:px-12"
-        role="region" 
+        role="region"
         aria-label="Questions and support"
       >
-        <Suspense 
+        <Suspense
           fallback={
-            <div role="status" aria-live="polite">Loading question form...</div>
+            <div role="status" aria-live="polite">
+              Loading question form...
+            </div>
           }
         >
           <AskQuestion />
         </Suspense>
       </section>
       <section className="mt-7 px-4 md:px-8 lg:px-12">
-          <Suspense fallback={<div role="status" aria-live="polite">Loading question form...</div>}>
-          <FindMedicine/>
-          </Suspense>
+        <Suspense
+          fallback={
+            <div role="status" aria-live="polite">
+              Loading question form...
+            </div>
+          }
+        >
+          <FindMedicine />
+        </Suspense>
       </section>
     </div>
   );

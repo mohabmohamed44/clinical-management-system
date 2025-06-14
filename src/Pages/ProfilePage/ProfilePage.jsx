@@ -5,9 +5,11 @@ import MetaData from "../../Components/MetaData/MetaData";
 import { useAuth } from "../../Lib/Context/AuthContext";
 import { FaUser, FaGoogle } from "react-icons/fa6";
 import { getUserDataByFirebaseUID } from "../../services/AuthService";
+import { useTranslation } from "react-i18next";
 
 const ProfilePage = () => {
   const { currentUser } = useAuth();
+  const { i18n } = useTranslation();
   const [profile, setProfile] = useState({
     id: "",
     first_name: "",
@@ -158,7 +160,10 @@ const ProfilePage = () => {
         keywords="profile, user profile, google auth"
         author="Mohab Mohammed"
       />
-      <div className="flex min-h-screen">
+      <div
+        className="flex min-h-screen"
+        dir={i18n.language === "ar" ? "rtl" : "ltr"}
+      >
         <div className="flex-1 p-4 md:p-8 bg-gray-50">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold">Profile</h1>
