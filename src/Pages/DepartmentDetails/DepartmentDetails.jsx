@@ -131,17 +131,17 @@ export default function DepartmentDetails() {
             >
               <div className="flex flex-col lg:flex-row items-center justify-between h-full">
                 <div
-                  className="text-white mt-10 max-w-lg md:mt-40 xl:mt-10 lg:mt-22 order-1 lg:order-1"
+                  className="text-white mt-15 max-w-lg md:mt-40 xl:mt-10 lg:mt-22 order-1 lg:order-1"
                   data-content="department-intro"
                 >
                   <h2
                     id="department-heading"
-                    className="text-2xl sm:text-5xl leading-14 rtl:text-right rtl:leading-13 font-bold mt-6 "
+                    className="text-2xl sm:text-5xl leading-14 rtl:text-right rtl:leading-13 font-bold mt-6"
                     data-heading="department"
                   >
                      {t(specialty)} 
                   </h2>
-                  <p className="text-lg mt-2">
+                  <p className="text-sm mt-2">
                     {t("DepartmentDetailsDescription")}
                   </p>
                 </div>
