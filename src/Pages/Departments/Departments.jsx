@@ -369,10 +369,10 @@ export default function Departments() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               <div className="text-[#ffffff] max-w-lg mt-20 flex flex-col items-center justify-center lg:mt-22 text-center lg:text-left order-1 lg:order-1">
-                <h2 className="text-2xl sm:text-5xl leading-11 rtl:leading-13 items-start font-bold mt-20 justify-center">
+                <h2 className="text-2xl sm:text-5xl rtl:text-right leading-11 rtl:leading-13 items-start font-bold mt-20 justify-center">
                   {t("DepartmentsHeading")}
                 </h2>
-                <p className="text-lg mt-4">{t("DepartmentsDescription")}</p>
+                <p className="text-lg mt-4 rtl:text-right rtl:text-lg">{t("DepartmentsDescription")}</p>
               </div>
               <figure className="mt-auto lg:mt-auto flex justify-center w-full lg:w-1/2 order-2 lg:order-2">
                 <img
@@ -417,9 +417,6 @@ export default function Departments() {
         <h1 className="inline-block border text-xl font-semibold rounded-full border-[#3454c1] py-1 px-4 text-[#3454c1]">
           {t("Departments")}
         </h1>
-        <p className="text-xl font-medium text-black mt-3 tracking-wide">
-          {t("Here is all Departments")}
-        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4">
@@ -452,13 +449,13 @@ export default function Departments() {
             </h4>
 
             <p className="mb-4 text-gray-600">
-              {t("Specialized in")} {t(doctor.specialty)}
+              {t("Specializedin")} {t(doctor.specialty)}
             </p>
 
             <Link to={`/departments/${doctor.specialty}/doctors`} 
               className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-300"
             >
-              {t("View Doctors")}
+              {t("ShowDoctors")}
               <span className="ml-2">
                 <ArrowIcon size={20} />
               </span>

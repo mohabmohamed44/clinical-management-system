@@ -20,10 +20,10 @@ const fetchLabDetails = async (id) => {
   if (infoError) {
     labId = id;
 
-    // Check if this lab_id exists
+    // Get lab details from Laboratories table
     const { data: laboratoryData, error: laboratoryError } = await supabase
       .from("Laboratories")
-      .select("id")
+      .select("id, name, name_ar, description, description_ar, image")
       .eq("id", labId)
       .single();
 
@@ -43,6 +43,14 @@ const fetchLabDetails = async (id) => {
     if (!locationError && firstLocation) {
       return { redirect: firstLocation.id };
     }
+
+    // If no location, return minimal lab data
+    return {
+      lab: {
+        laboratory: laboratoryData,
+      },
+      otherLocations: [],
+    };
   } else {
     labId = infoData.lab_id;
   }
@@ -63,7 +71,9 @@ const fetchLabDetails = async (id) => {
       phones,
       laboratory:lab_id (
         name,
+        name_ar,
         description,
+        description_ar,
         image
       )
     `
@@ -102,6 +112,7 @@ export default function LabDetails() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   const navigate = useNavigate();
+  const currentLang = i18n.language;
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["lab", id],
@@ -129,40 +140,21 @@ export default function LabDetails() {
 
   const { lab, otherLocations } = data;
 
-  // Format location display properly
-  const renderLocation = () => {
-    if (!lab.location) return "N/A";
-
-    // Check if location is an object with coordinates
-    if (typeof lab.location === "object" && lab.location !== null) {
-      // Check for latitude and longitude (with correct spelling)
-      if ("latitude" in lab.location && "longitude" in lab.location) {
-        return `${lab.location.latitude}, ${lab.location.longitude}`;
-      }
-      // Check for latitude and longtude (with typo)
-      if ("latitude" in lab.location && "longtude" in lab.location) {
-        return `${lab.location.latitude}, ${lab.location.longtude}`;
-      }
-      // For any other object structure, return a JSON string
-      return JSON.stringify(lab.location);
-    }
-
-    // If it's just a string, return as is
-    return lab.location;
+  // Get localized content based on current language
+  const getLocalizedContent = (field, fallback = "") => {
+    return currentLang === "ar" 
+      ? lab.laboratory?.[`${field}_ar`] || lab.laboratory?.[field] || fallback
+      : lab.laboratory?.[field] || fallback;
   };
+
+  const labName = getLocalizedContent("name", t("UnknownLab"));
+  const labDescription = getLocalizedContent("description", t("NoDescriptionAvailable"));
 
   return (
     <>
       <MetaData
-        title={t(`${lab.laboratory?.name}`, {
-          name: lab.laboratory?.name || t("Lab Details"),
-          city: t(lab.city, { defaultValue: lab.city }),
-        })}
-        description={t("LabDetailsDescription", {
-          name: lab.laboratory?.name || t("Lab"),
-          city: t(lab.city, { defaultValue: lab.city }),
-          government: t(lab.government, { defaultValue: lab.government }),
-        })}
+        title={labName}
+        description={labDescription.substring(0, 160)}
         keywords={t("labDetailsKeywords")}
         author="Mohab Mohammed"
       />
@@ -191,7 +183,7 @@ export default function LabDetails() {
               className="aspect-w-16 aspect-h-9 relative"
               role="img"
               aria-label={t("LabImageAlt", {
-                name: lab.laboratory?.name || t("Laboratory"),
+                name: labName,
                 city: t(lab.city),
                 government: t(lab.government),
               })}
@@ -212,7 +204,7 @@ export default function LabDetails() {
 
             <div className={`p-6 ${isRTL ? "text-right" : "text-left"}`}>
               <h1 id="lab-details-heading" className="text-3xl font-bold mb-2">
-                {lab.laboratory?.name || t("UnknownLab")}
+                {labName}
               </h1>
 
               <div
@@ -239,7 +231,7 @@ export default function LabDetails() {
                 className="text-gray-600 mb-6"
                 aria-label={t("LabDescription")}
               >
-                {lab.laboratory?.description || t("NoDescriptionAvailable")}
+                {labDescription}
               </div>
 
               {otherLocations.length > 0 && (
@@ -282,29 +274,26 @@ export default function LabDetails() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-lg font-semibold mb-2">
-                    Location Details
+                    {t("LocationDetails")}
                   </h2>
                   <div className="space-y-2">
                     <p>
-                      <span className="font-medium">Lab ID:</span> {lab.lab_id}
+                      <span className="font-medium">{t("Government")}:</span>{" "}
+                      {t(lab.government)}
                     </p>
                     <p>
-                      <span className="font-medium">Government:</span>{" "}
-                      {lab.government}
-                    </p>
-                    <p>
-                      <span className="font-medium">City:</span> {lab.city}
+                      <span className="font-medium">{t("City")}:</span> {t(lab.city)}
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-lg font-semibold mb-2">
-                    Contact Information
+                    {t("ContactInformation")}
                   </h2>
                   <div className="space-y-2">
                     <p className="flex items-center gap-2">
-                      <span className="font-medium">Phone:</span>{" "}
+                      <span className="font-medium">{t("Phone")}:</span>{" "}
                       <span className="text-lg font-medium">{lab.phones}</span>
                     </p>
                     {lab.phones && (
@@ -315,7 +304,7 @@ export default function LabDetails() {
                         className="flex items-center gap-2 text-white cursor-pointer bg-blue-700 px-3 py-3 rounded-md hover:bg-blue-800 transition duration-200"
                       >
                         <Phone size={20} className="text-white" />
-                        Make a call
+                        {t("MakeACall")}
                       </button>
                     )}
                   </div>
@@ -323,7 +312,7 @@ export default function LabDetails() {
 
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h2 className="text-lg font-semibold mb-2">
-                    Address Details
+                    {t("AddressDetails")}
                   </h2>
                   {lab.address && lab.address.length > 0 ? (
                     lab.address.map((addr, index) => (
@@ -332,70 +321,82 @@ export default function LabDetails() {
                         className="mb-2 p-2 bg-white rounded"
                       >
                         <p>
-                          <span className="font-medium">Street:</span>{" "}
-                          {addr.streat}
+                          <span className="font-medium">{t("Street")}:</span>{" "}
+                          {i18n.language === "ar"
+                            ? addr.streat_ar || addr.streat
+                            : addr.streat}
                         </p>
                         <p>
-                          <span className="font-medium">Building:</span>{" "}
-                          {addr.building}
+                          <span className="font-medium">{t("Building")}:</span>{" "}
+                          {i18n.language === "ar"
+                            ? addr.building_ar || addr.building
+                            : addr.building}
                         </p>
                         <p>
-                          <span className="font-medium">Floor:</span>{" "}
-                          {addr.floor}
+                          <span className="font-medium">{t("Floor")}:</span>{" "}
+                          {i18n.language === "ar"
+                            ? addr.floor_ar || addr.floor
+                            : addr.floor}
                         </p>
                         <p>
-                          <span className="font-medium">Sign:</span> {addr.sign}
+                          <span className="font-medium">{t("Sign")}:</span>{" "}
+                          {i18n.language === "ar"
+                            ? addr.sign_ar || addr.sign
+                            : addr.sign}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p>No address information available</p>
+                    <p>{t("NoAddressInfo")}</p>
                   )}
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h2 className="text-lg font-semibold mb-2">Services</h2>
+                  <h2 className="text-lg font-semibold mb-2">{t("Services")}</h2>
                   {lab.services && lab.services.length > 0 ? (
                     lab.services.map((service, index) => (
                       <div
                         key={`service-${index}`}
                         className="mb-2 p-2 bg-white rounded"
                       >
-                        <p className="font-medium">{service.service}</p>
+                        <p className="font-medium">
+                          {i18n.language === "ar"
+                            ? service.service_ar || service.service
+                            : service.service}
+                        </p>
                         <p className="text-sm text-gray-600">{service.price}</p>
                       </div>
                     ))
                   ) : (
-                    <p>No services information available</p>
+                    <p>{t("NoServicesInfo")}</p>
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h2 className="text-lg font-semibold mb-2">Working Hours</h2>
+                  <h2 className="text-lg font-semibold mb-2">{t("WorkingHours")}</h2>
                   {lab.work_times && lab.work_times.length > 0 ? (
                     lab.work_times.map((time, index) => (
                       <div
                         key={`worktime-${index}`}
                         className="mb-2 p-2 bg-white rounded"
                       >
-                        <p className="font-medium">{time.day}</p>
+                        <p className="font-medium">{t(time.day)}</p>
                         <p className="text-sm text-gray-600">
-                          {time.start} am to {time.end} pm
+                          {time.start} {t("AM")} {t("to")} {time.end} {t("PM")}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <p>No working hours information available</p>
+                    <p>{t("NoWorkingHoursInfo")}</p>
                   )}
                 </div>
-                {/* Book A Test  */}
-
+                
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h2 className="text-lg font-semibold mb-2">Book a test</h2>
+                  <h2 className="text-lg font-semibold mb-2">{t("BookATest")}</h2>
                   <button className="flex items-center gap-2 text-white cursor-pointer bg-blue-700 px-4 py-3 rounded-md hover:bg-blue-800 transition duration-200">
                     <Link to={`/lab/${lab.id}`}>
-                        Book Now
+                      {t("BookNow")}
                     </Link>
                   </button>
                 </div>

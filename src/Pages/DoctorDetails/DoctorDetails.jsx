@@ -28,7 +28,7 @@ export default function DoctorDetails() {
   const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(5);
   const { id } = useParams();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["doctor", id],
@@ -39,6 +39,8 @@ export default function DoctorDetails() {
           `
           id,
           first_name,
+          first_name_ar,
+          last_name_ar,
           last_name,
           fee,
           phone,
@@ -50,7 +52,9 @@ export default function DoctorDetails() {
           DoctorsInfo (
             about,
             experience,
-            education
+            about_ar,
+            education,
+            education_ar
           ),
           Clinics (
             id,
@@ -205,16 +209,27 @@ export default function DoctorDetails() {
   return (
     <>
       <MetaData
-        title={`Dr. ${data.first_name} ${data.last_name} | ProHealth Medical HealthCare`}
-        description={data.info?.about || "Experienced medical professional"}
+        title={`Dr. ${
+          i18n.language === "ar"
+            ? `${data.first_name_ar || data.first_name} ${data.last_name_ar || data.last_name}`
+            : `${data.first_name} ${data.last_name}`
+        } | ProHealth Medical HealthCare`}
+        description={
+          i18n.language === "ar"
+            ? data.about_ar || data.info?.about || "Experienced medical professional"
+            : data.info?.about || "Experienced medical professional"
+        }
         keywords={`doctor, ${data.specialty}, healthcare`}
         author="Mohab Mohammed"
       />
 
-      <div className="w-full object-cover min-h-screen p-4 sm:p-6 lg:p-4">
+      <div
+        className="w-full object-cover min-h-screen p-4 sm:p-6 lg:p-4"
+        dir={i18n.dir()}
+      >
         <div className="flex justify-start">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">
-            Doctor Details
+            {t("DoctorDetails")}
           </h2>
         </div>
 
@@ -224,7 +239,10 @@ export default function DoctorDetails() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col md:flex-row md:items-start md:justify-between">
               <div className="max-w-full md:max-w-xl text-left mt-4 py-4 md:py-7">
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-white">
-                  Dr. {data.first_name} {data.last_name}
+                  {t("DR")}{" "}
+                  {i18n.language === "ar"
+                    ? `${data.first_name_ar || data.first_name} ${data.last_name_ar || data.last_name}`
+                    : `${data.first_name} ${data.last_name}`}
                 </h1>
                 <h2 className="text-md sm:text-lg md:text-xl mb-2 text-white">
                   {t(data.specialty)}
@@ -234,11 +252,13 @@ export default function DoctorDetails() {
                     {renderStars(Math.round(data.rate || 0))}
                   </div>
                   <span className="ml-2 text-xs sm:text-sm">
-                    ({data.rate_count?.toLocaleString() || 0} reviews)
+                    ({data.rate_count?.toLocaleString() || 0} {t("reviews")})
                   </span>
                 </div>
                 <p className="text-white text-sm sm:text-base md:text-lg line-clamp-3 md:line-clamp-none">
-                  {data.info?.about || "Experienced medical professional"}
+                  {i18n.language === "ar"
+                    ? data.info?.about_ar || data.about_ar || data.info?.about || "Experienced medical professional"
+                    : data.info?.about || "Experienced medical professional"}
                 </p>
               </div>
             </div>
@@ -274,7 +294,7 @@ export default function DoctorDetails() {
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   {/* Contact Info */}
                   <div>
-                    <h3 className="font-semibold text-lg mb-3">Contact Info</h3>
+                    <h3 className="font-semibold text-lg mb-3">{t("ContactInformation")}</h3>
                     <div className="space-y-2 text-sm sm:text-base">
                       <p>{data.phone || "N/A"}</p>
                       <p>{data.email || "N/A"}</p>
@@ -285,7 +305,7 @@ export default function DoctorDetails() {
                   {data.clinic && (
                     <div className="space-y-4">
                       <h3 className="font-semibold text-lg">
-                        Clinic Information
+                        {t("ClinicInfo")}
                       </h3>
 
                       {/* Location */}
@@ -364,7 +384,7 @@ export default function DoctorDetails() {
                         <div className="flex items-center gap-2">
                           <FaClinicMedical className="text-blue-600" />
                           <div>
-                            <p className="font-medium">Services</p>
+                            <p className="font-medium">{t("Services")}</p>
                             <div className="flex flex-wrap gap-1">
                               {Array.isArray(data.clinic.services) ? (
                                 data.clinic.services.map((service, index) => (
@@ -372,7 +392,7 @@ export default function DoctorDetails() {
                                     key={index}
                                     className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
                                   >
-                                    {service}
+                                    {t(service)}
                                   </span>
                                 ))
                               ) : (
@@ -390,7 +410,7 @@ export default function DoctorDetails() {
                         <div className="flex items-center gap-2">
                           <FaClock className="text-blue-600" />
                           <div>
-                            <p className="font-medium">Working Hours</p>
+                            <p className="font-medium">{t("WorkingHours")}</p>
                             <div className="mt-1 space-y-1">
                               {Array.isArray(data.clinic.work_times) ? (
                                 data.clinic.work_times.map((slot, index) => (
@@ -438,33 +458,52 @@ export default function DoctorDetails() {
                 <div>
                   <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
                     <PiGraduationCapBold size={24} className="text-blue-800" />{" "}
-                    Education
+                    {t("Education")}
                   </h3>
-                  {data.info.education?.length > 0 ? (
-                    <div className="space-y-4">
-                      {data.info.education.map((edu, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-blue-800 text-xl">
-                            {edu.degree || "Medical Degree"}
-                          </h4>
-                          <p className="text-lg">
-                            {edu.university || "University of Medicine"}
-                          </p>
+                  {i18n.language === "ar"
+                    ? (data.info.education_ar?.length > 0 ? (
+                        <div className="space-y-4">
+                          {data.info.education_ar.map((edu, index) => (
+                            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                              <h4 className="font-semibold text-blue-800 text-xl">
+                                {edu.degree || "درجة طبية"}
+                              </h4>
+                              <p className="text-lg">
+                                {edu.university || "كلية الطب"}
+                              </p>
+                            </div>
+                          ))}
                         </div>
+                      ) : (
+                        <p className="text-gray-500">
+                          لا توجد معلومات تعليمية متاحة
+                        </p>
+                      ))
+                    : (data.info.education?.length > 0 ? (
+                        <div className="space-y-4">
+                          {data.info.education.map((edu, index) => (
+                            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                              <h4 className="font-semibold text-blue-800 text-xl">
+                                {edu.degree || "Medical Degree"}
+                              </h4>
+                              <p className="text-lg">
+                                {edu.university || "University of Medicine"}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500">
+                          No education information available
+                        </p>
                       ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">
-                      No education information available
-                    </p>
-                  )}
                 </div>
 
                 {/* Experience Section */}
                 <div>
                   <h3 className="text-lg sm:text-3xl font-semibold mb-4 flex items-center gap-2">
                     <FaBriefcaseMedical size={24} className="text-blue-800" />{" "}
-                    Experience
+                    {t("Experience")}
                   </h3>
                   {data.info.experience?.length > 0 ? (
                     <div className="space-y-4">
@@ -493,7 +532,7 @@ export default function DoctorDetails() {
                   to={`/find_doctor/${data.id}/book`}
                   className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl font-semibold text-white bg-[#11319E] hover:bg-[#0d2a8a] rounded-xl shadow transition-all duration-200"
                 >
-                  Book Appointment
+                  {t("BookAppointment")}
                 </Link>
                 {/* Reviews Section */}
               </div>

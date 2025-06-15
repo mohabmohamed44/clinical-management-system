@@ -17,7 +17,7 @@ export default function HospitalsDetails() {
   const [hospital, setHospital] = useState(null);
   const [hospitalDetails, setHospitalDetails] = useState(null);
   const [doctors, setDoctors] = useState([]);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -32,6 +32,7 @@ export default function HospitalsDetails() {
             id, 
             name, 
             image,
+            name_ar,
             HospitalsInfo!hos_id(
               id,
               government,
@@ -121,15 +122,15 @@ export default function HospitalsDetails() {
   return (
     <>
       <MetaData
-        title={`${hospital.name} - Hospital Details`}
-        description={`Details about ${hospital.name}, including contact information, facilities, and doctors.`}
+        title={`${i18n.language === "ar" ? hospital.name_ar || hospital.name : hospital.name} - Hospital Details`}
+        description={`Details about ${i18n.language === "ar" ? hospital.name_ar || hospital.name : hospital.name}, including contact information, facilities, and doctors.`}
         keywords="hospital, details, contact, facilities, doctors"
         author={"Mohab Mohammed"}
       />
       <div className="container mx-auto px-4 py-4">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            {hospital.name}
+            {i18n.language === "ar" ? hospital.name_ar || hospital.name : hospital.name}
           </h1>
 
           <div className="flex flex-col md:flex-row gap-6">
@@ -148,7 +149,7 @@ export default function HospitalsDetails() {
                 {/* Location Details */}
                 <div className="space-y-3">
                   <h2 className="text-xl font-semibold text-gray-700">
-                    Location Details
+                    {t("LocationDetails")}
                   </h2>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-600">
@@ -187,7 +188,7 @@ export default function HospitalsDetails() {
                 {/* Contact Details */}
                 <div className="space-y-3">
                   <h2 className="text-xl font-semibold text-gray-700">
-                    Contact Details
+                    {t("ContactInformation")}
                   </h2>
                   {hospitalDetails.phones &&
                     hospitalDetails.phones.length > 0 && (
@@ -221,7 +222,7 @@ export default function HospitalsDetails() {
 
                 <div className="space-y-3">
                   <h2 className="text-xl font-semibold text-gray-700">
-                    Hospital Information
+                    {t("HospitalInformation")}
                   </h2>
 
                   {hospitalDetails.rate && (
@@ -235,7 +236,7 @@ export default function HospitalsDetails() {
                   )}
 
                   <div className="mt-4">
-                    <h3 className="font-medium mb-2">Services:</h3>
+                    <h3 className="font-medium mb-2">{t("Services")}:</h3>
                     <div className="flex flex-wrap gap-2">
                       {hospitalDetails.services &&
                       hospitalDetails.services.length > 0 ? (
@@ -244,7 +245,7 @@ export default function HospitalsDetails() {
                             key={index}
                             className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
                           >
-                            {service}
+                            {t(service)}
                           </span>
                         ))
                       ) : (
@@ -263,7 +264,7 @@ export default function HospitalsDetails() {
           <div className="mt-8">
             <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center">
               <FaUserMd className="text-blue-600 mr-2" />
-              Hospital Doctors ({doctors.length})
+              {t("HospitalDoctors")} ({doctors.length})
             </h2>
 
             {doctors && doctors.length > 0 ? (

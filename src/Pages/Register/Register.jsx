@@ -322,7 +322,7 @@ export default function Register() {
 
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4 sm:mb-6 px-4">
               {currentStep === 1
-                ? t("PersonalInfo")
+                ? t("personalInfo")
                 : currentStep === 2
                 ? t("PatientInfo")
                 : currentStep === 3
@@ -396,13 +396,13 @@ export default function Register() {
                                   ? "border-red-500"
                                   : "border-gray-300"
                               } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                              placeholder={t("FirstName")}
+                              placeholder={t("firstName")}
                             />
                             <label
                               htmlFor="firstName"
                               className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                             >
-                              {t("FirstName")}
+                              {t("firstName")}
                             </label>
                             {errors.firstName && touched.firstName && (
                               <div className="text-red-500 text-sm mt-1 rtl:text-right">
@@ -421,13 +421,13 @@ export default function Register() {
                                   ? "border-red-500"
                                   : "border-gray-300"
                               } focus:outline-none focus:border-blue-500 placeholder-transparent`}
-                              placeholder={t("LastName")}
+                              placeholder={t("lastName")}
                             />
                             <label
                               htmlFor="lastName"
                               className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                             >
-                              {t("LastName")}
+                              {t("lastName")}
                             </label>
                             {errors.lastName && touched.lastName && (
                               <div className="text-red-500 text-sm mt-1 rtl:text-right">
@@ -508,13 +508,13 @@ export default function Register() {
                                 ? "border-red-500"
                                 : "border-gray-300"
                             } focus:outline-none focus:border-blue-500 placeholder-transparent pr-14`}
-                            placeholder={t("ConfirmPassword")}
+                            placeholder={t("confirmPassword")}
                           />
                           <label
                             htmlFor="confirmPassword"
                             className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-500 rtl:text-right"
                           >
-                            {t("ConfirmPassword")}
+                            {t("confirmPassword")}
                           </label>
                           <button
                             type="button"
@@ -938,7 +938,7 @@ export default function Register() {
                     {currentStep === 1 && (
                       <div className="mt-6 text-center">
                         <span className="text-gray-600">
-                          {t("AlreadyHaveAccount")}{" "}
+                          {t("Already have an account?")}{" "}
                         </span>
                         <Link
                           to="/login"

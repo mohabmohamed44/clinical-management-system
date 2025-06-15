@@ -21,21 +21,26 @@ export default function LabFilters({ onFilterChange }) {
       setIsLoading(true);
       const { data, error } = await supabase
         .from('Laboratories')
-        .select('specialty')
+        .select('specialty, description_ar')
         .not('specialty', 'is', null);
 
       if (error) throw error;
 
-      // Get unique specialties and count
-      const specialtyCounts = data.reduce((acc, item) => {
-        acc[item.specialty] = (acc[item.specialty] || 0) + 1;
-        return acc;
-      }, {});
+      // Get unique specialties and count, and map description_ar
+      const specialtyMap = {};
+      data.forEach(item => {
+        if (!specialtyMap[item.specialty]) {
+          specialtyMap[item.specialty] = {
+            name: item.specialty,
+            count: 1,
+            description_ar: item.description_ar
+          };
+        } else {
+          specialtyMap[item.specialty].count += 1;
+        }
+      });
 
-      const uniqueSpecialties = Object.keys(specialtyCounts).map(specialty => ({
-        name: specialty,
-        count: specialtyCounts[specialty]
-      }));
+      const uniqueSpecialties = Object.values(specialtyMap);
 
       setSpecialties(uniqueSpecialties);
     } catch (err) {
@@ -101,7 +106,7 @@ export default function LabFilters({ onFilterChange }) {
             </div>
           ) : (
             <ul className={`space-y-1.5 text-sm max-h-60 overflow-y-auto ${isRTL ? 'pl-2 text-right' : 'pr-2 text-left'}`}>
-              {specialties.map(({ name, count }) => (
+              {specialties.map(({ name, count, description_ar }) => (
                 <li 
                   key={name} 
                   className={`relative flex items-center hover:bg-blue-50 p-2 rounded-md transition-colors duration-150 cursor-pointer group ${
@@ -142,7 +147,7 @@ export default function LabFilters({ onFilterChange }) {
                     <span className={`font-medium text-gray-700 group-hover:text-blue-600 transition-colors ${
                       isRTL ? 'text-right' : 'text-left'
                     }`}>
-                      {t(name)}
+                      {i18n.language === 'ar' && description_ar ? description_ar : t(name)}
                     </span>
                     <span className="text-gray-500 bg-gray-100 px-2 rounded-full text-xs font-medium py-0.5 group-hover:bg-blue-100">
                       {count}

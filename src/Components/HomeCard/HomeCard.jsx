@@ -61,7 +61,7 @@ export default function HomeCard() {
       />
     ),
     title: specialty.specialty, // Store the raw key, not the translated string
-    description: ` Doctors Specialized In ${t(specialty.specialty)}` 
+    description: ` ${t("DoctorsSpecializedIn")} ${t(specialty.specialty)}` 
   }));
 
   return (

@@ -12,7 +12,7 @@ import FilterDoctors from "../../Components/filterDoctors/filterDoctors";
 import { useSearchParams } from "react-router-dom";
 
 export default function FindDoctor() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedDepartment, setSelectedDepartment] = useState(
     searchParams.get("specialty") || "all"
@@ -26,7 +26,7 @@ export default function FindDoctor() {
       const location = searchParams.get("location");
 
       let query = supabase.from("Doctors").select(`
-        id, first_name, last_name, phone, rate_count, rate, 
+        id, first_name, first_name_ar, last_name_ar, last_name, phone, rate_count, rate, 
         gender, image, specialty, address
       `);
 
@@ -222,7 +222,11 @@ export default function FindDoctor() {
                 <DoctorCard
                   key={doctor.id}
                   id={doctor.id}
-                  name={`${doctor.first_name} ${doctor.last_name}`}
+                  name={
+                    i18n.language === "ar"
+                      ? `${doctor.first_name_ar || doctor.first_name} ${doctor.last_name_ar || doctor.last_name}`
+                      : `${doctor.first_name} ${doctor.last_name}`
+                  }
                   specialty={t(doctor.specialty)}
                   description={doctor.description}
                   image={doctor.image}

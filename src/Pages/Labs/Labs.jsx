@@ -29,6 +29,8 @@ export default function Labs() {
             image,
             specialty,
             rate,
+            name_ar,
+            description_ar,
             services
           `)
           .order('id')
@@ -134,7 +136,11 @@ export default function Labs() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredLabs.map((lab) => {
           const locations = labLocations[lab.id] || [];
-          
+          // Use Arabic fields if current language is Arabic
+          const isArabic = i18n.language === "ar";
+          const labName = isArabic ? lab.name_ar || lab.name : lab.name;
+          const labDescription = isArabic ? lab.description_ar || lab.description : lab.description;
+
           return (
             <div
               key={`lab-${lab.id}`}
@@ -142,7 +148,7 @@ export default function Labs() {
             >
               <img
                 src={lab.image || '/placeholder-lab.jpg'}
-                alt={lab.name}
+                alt={labName}
                 className="w-full h-60 object-cover"
                 onError={(e) => {
                   e.target.onerror = null
@@ -150,12 +156,12 @@ export default function Labs() {
                 }}
               />
               <div className={`p-6 ${isRTL ? 'text-right' : 'text-left'}`}>
-                <h2 className="text-xl font-semibold mb-2">{lab.name}</h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{lab.description}</p>
+                <h2 className="text-xl font-semibold mb-2">{labName}</h2>
+                <p className="text-gray-600 mb-4 line-clamp-3">{labDescription}</p>
                 
                 {locations.length > 0 && (
                   <div className="mt-2 mb-4">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-1">{t("Available Locations")}:</h3>
+                    <h3 className="text-sm font-semibold text-gray-700 mb-1">{t("AvailableLocations")}:</h3>
                     <div className="space-y-1 max-h-28 overflow-hidden">
                       {locations.map((location, index) => (
                         <div key={`location-${lab.id}-${index}`} 

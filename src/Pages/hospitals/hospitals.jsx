@@ -9,6 +9,7 @@ import { DNA } from "react-loader-spinner";
 import MetaData from "../../Components/MetaData/MetaData";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const fetchHospitals = async () => {
   const { data, error } = await supabase
@@ -16,6 +17,7 @@ const fetchHospitals = async () => {
     .select(`
       id,
       name,
+      name_ar,
       image,
       HospitalsInfo(
         id,
@@ -67,6 +69,7 @@ const fetchHospitals = async () => {
 };
 
 export default function Hospitals() {
+  const { t, i18n } = useTranslation();
   const { 
     data: hospitals,
     isLoading,
@@ -103,7 +106,7 @@ export default function Hospitals() {
           <header className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2" id="main-heading">
               <FaHospital className="text-blue-600" aria-hidden="true" />
-              <span>Our Hospitals</span>
+              <span>{t("OurHospitals")}</span>
             </h1>
           </header>
 
@@ -113,6 +116,10 @@ export default function Hospitals() {
           >
             {hospitals.map((hospital) => {
               const hospitalInfo = hospital.HospitalsInfo?.[0] || {};
+              const hospitalName =
+                i18n.language === "ar"
+                  ? hospital.name_ar || hospital.name
+                  : hospital.name;
               
               return (
                 <article
@@ -126,7 +133,7 @@ export default function Hospitals() {
                   >
                     <img
                       src={hospital.image || "/default-hospital.jpg"}
-                      alt={`${hospital.name} building`}
+                      alt={`${hospitalName} building`}
                       className="w-full h-70 object-cover"
                       loading="lazy"
                     />
@@ -135,7 +142,7 @@ export default function Hospitals() {
                         id={`hospital-name-${hospital.id}`}
                         className="text-xl font-semibold text-gray-800 mb-2"
                       >
-                        {hospital.name}
+                        {hospitalName}
                       </h2>
 
                       <div className="space-y-3 text-gray-600">
@@ -165,7 +172,7 @@ export default function Hospitals() {
                       </div>
 
                       <div className="mt-4">
-                        <h3 className="font-medium mb-2">Available Services:</h3>
+                        <h3 className="font-medium mb-2">{t("AvailableServices")}:</h3>
                         <div 
                           className="flex flex-wrap gap-2"
                           role="list"
@@ -178,7 +185,7 @@ export default function Hospitals() {
                                 className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
                                 role="listitem"
                               >
-                                {service}
+                                {t(service)}
                               </span>
                             )) : (
                               <span className="text-gray-400" role="listitem">No services listed</span>

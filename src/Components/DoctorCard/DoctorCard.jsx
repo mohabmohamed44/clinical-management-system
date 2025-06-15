@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import { Star } from "lucide-react";
-
+import {useTranslation} from 'react-i18next';
 export default function DoctorCard({
   id,
   name,
@@ -19,7 +19,7 @@ export default function DoctorCard({
       "Phone not available"
     );
   };
-
+  const {t} = useTranslation();
   const location = address?.[0]
     ? `${address[0].city}, ${address[0].street}`
     : "Location not available";
@@ -70,7 +70,7 @@ export default function DoctorCard({
           <div className="pb-6 pt-4">
             <div className="flex justify-center w-full">
               <button className="bg-gradient-to-r from-[#11319E] to-[#061138] text-white px-8 py-4 rounded-full font-medium text-lg hover:from-[#0a216e] hover:to-[#040a2d] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap w-full max-w-[280px]">
-                <Link to={`/find_doctor/${id}`}>Book Consultation</Link>
+                <Link to={`/find_doctor/${id}`}>{t("BookConsultation")}</Link>
               </button>
             </div>
           </div>

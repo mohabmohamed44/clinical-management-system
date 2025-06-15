@@ -7,10 +7,15 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import MetaData from "../../Components/MetaData/MetaData";
 import { DNA } from "react-loader-spinner";
-import { FaUser, FaStethoscope, FaVenusMars, FaBirthdayCake } from "react-icons/fa";
+import {
+  FaUser,
+  FaStethoscope,
+  FaVenusMars,
+  FaBirthdayCake,
+} from "react-icons/fa";
 import toast from "react-hot-toast";
-import {Menu, MenuButton, MenuItems, MenuItem} from '@headlessui/react';
-import { ChevronDown } from "lucide-react";  
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 import { getUserDataByFirebaseUID } from "../../services/AuthService";
 
 const QuestionSchema = Yup.object().shape({
@@ -47,36 +52,35 @@ export default function AskQuestionForm() {
     },
   });
 
-  
-// In AskQuestionForm component
-const mutation = useMutation({
-  mutationFn: async (formData) => {
-    const currentUser = auth.currentUser;
-    if (!currentUser) throw new Error("User not authenticated");
+  // In AskQuestionForm component
+  const mutation = useMutation({
+    mutationFn: async (formData) => {
+      const currentUser = auth.currentUser;
+      if (!currentUser) throw new Error("User not authenticated");
 
-    // Get Supabase user data using Firebase UID
-    const { userData } = await getUserDataByFirebaseUID(currentUser.uid);
-    if (!userData) throw new Error("User not found in database");
+      // Get Supabase user data using Firebase UID
+      const { userData } = await getUserDataByFirebaseUID(currentUser.uid);
+      if (!userData) throw new Error("User not found in database");
 
-    const questionData = {
-      id: generateQuestionId(),
-      user_id: userData.id, // Use Supabase user ID (PAT-...)
-      speciality: formData.speciality,
-      gender: formData.gender,
-      age: formData.age,
-      question: formData.question,
-      question_details: formData.question_details,
-      answered: false,
-      created_at: new Date().toISOString(),
-    };
+      const questionData = {
+        id: generateQuestionId(),
+        user_id: userData.id, // Use Supabase user ID (PAT-...)
+        speciality: formData.speciality,
+        gender: formData.gender,
+        age: formData.age,
+        question: formData.question,
+        question_details: formData.question_details,
+        answered: false,
+        created_at: new Date().toISOString(),
+      };
 
-    const { data, error } = await supabase
-      .from("Questions")
-      .insert([questionData]);
+      const { data, error } = await supabase
+        .from("Questions")
+        .insert([questionData]);
 
-    if (error) throw error;
-    return data;
-  },
+      if (error) throw error;
+      return data;
+    },
     onSuccess: () => {
       toast.success("Question submitted successfully!");
       navigate("/questions");
@@ -87,17 +91,18 @@ const mutation = useMutation({
   const generateQuestionId = () => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     // Convert the string format to a number for INT8 compatibility
     return parseInt(`${year}${month}${randomNum}`, 10);
   };
 
-  if (specialtiesLoading) return (
-    <div className="flex items-center justify-center h-screen">
-      <DNA width={90} height={90} ariaLabel="loading" />
-    </div>
-  );
+  if (specialtiesLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <DNA width={90} height={90} ariaLabel="loading" />
+      </div>
+    );
 
   return (
     <>
@@ -144,24 +149,39 @@ const mutation = useMutation({
                             : "border-[#1972EE]"
                         } rounded-md focus:ring-2 focus:ring-[#1972EE] bg-white`}
                       >
-                        <span className={`block truncate ${!values.speciality && "text-gray-400"}`}>
-                          {values.speciality || "Select Specialty"}
+                        <span
+                          className={`block truncate ${
+                            !values.speciality && "text-gray-400"
+                          }`}
+                        >
+                          {values.speciality ||  t("SelectSpecialty")}
                         </span>
-                        <ChevronDown className="h-5 w-5 text-[#1972EE]" aria-hidden="true" />
+                        <ChevronDown
+                          className="h-5 w-5 text-[#1972EE]"
+                          aria-hidden="true"
+                        />
                       </MenuButton>
-                      <MenuItems
-                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                      >
+                      <MenuItems className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         <div className="py-1">
                           {specialties?.map((spec) => (
-                            <MenuItem key={spec.specialty} value={spec.specialty}>
+                            <MenuItem
+                              key={spec.specialty}
+                              value={spec.specialty}
+                            >
                               {({ active }) => (
                                 <button
                                   type="button"
                                   className={`${
-                                    active ? 'bg-[#1972EE] text-white' : 'text-gray-900'
+                                    active
+                                      ? "bg-[#1972EE] text-white"
+                                      : "text-gray-900"
                                   } group flex w-full items-center px-4 py-2 text-sm`}
-                                  onClick={() => setFieldValue('speciality', t(spec.specialty))}
+                                  onClick={() =>
+                                    setFieldValue(
+                                      "speciality",
+                                      t(spec.specialty)
+                                    )
+                                  }
                                 >
                                   {t(spec.specialty)}
                                 </button>
@@ -195,10 +215,12 @@ const mutation = useMutation({
                             : "border-[#1972EE]"
                         } rounded-md focus:ring-2 focus:ring-[#1972EE]`}
                       >
-                        <option value="Choose" disabled>Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Not prefer to say</option>
+                        <option value="Choose" disabled>
+                          {t("SelectGender")}
+                        </option>
+                        <option value="male">{t("Male")}</option>
+                        <option value="female">{t("Female")}</option>
+                        <option value="other">{t("Notprefertosay")}</option>
                       </Field>
                       <ErrorMessage
                         name="gender"
@@ -281,16 +303,28 @@ const mutation = useMutation({
                   <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="px-6 py-2 border-2 border-[#00155D] text-[#00155D] rounded-md hover:bg-gray-50 w-full sm:w-auto"
+                    className="px-6 py-2 border-2 cursor-pointer border-[#00155D] text-[#00155D] rounded-md hover:bg-gray-50 w-full sm:w-auto"
                   >
-                    Cancel
+                    {t("Cancel")}
                   </button>
                   <button
                     type="submit"
                     disabled={mutation.isPending}
                     className="px-6 py-2 bg-[#1972EE] text-white rounded-md hover:bg-[#00155D] disabled:bg-gray-400 w-full sm:w-auto"
                   >
-                    {mutation.isPending ? "Submitting..." : "Submit Question"}
+                    {mutation.isPending ? (
+                      <div className="flex justify-center items-center">
+                        <TailSpin
+                          color="#fff"
+                          width="24"
+                          height="24"
+                          aria-label={t("Loading")}
+                          role="status"
+                        />
+                      </div>
+                    ) : (
+                      t("SubmitRequest")
+                    )}
                   </button>
                 </div>
               </Form>
