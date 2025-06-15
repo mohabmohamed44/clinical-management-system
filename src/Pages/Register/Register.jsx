@@ -563,7 +563,7 @@ export default function Register() {
                         {/* Gender */}
                         <div className="space-y-2 pt-3">
                           <label className="text-base md:text-lg text-gray-700 mt-3 rtl:text-right">
-                            {t("Gender")}
+                            {t("GenderType")}
                           </label>
                           <div className="flex items-center mb-4 mt-4 rtl:flex-row">
                             <label className="flex items-center gap-2 ltr:mr-4 rtl:ml-4">
@@ -573,9 +573,7 @@ export default function Register() {
                                 value="male"
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
-                              <span className="rtl:text-right">
-                                {t("Male")}
-                              </span>
+                              <span>{t("GenderMale")}</span>
                             </label>
                             <label className="flex items-center gap-2">
                               <Field
@@ -584,9 +582,7 @@ export default function Register() {
                                 value="female"
                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                               />
-                              <span className="rtl:text-right">
-                                {t("Female")}
-                              </span>
+                              <span>{t("GenderFemale")}</span>
                             </label>
                           </div>
                           {errors.gender && touched.gender && (
