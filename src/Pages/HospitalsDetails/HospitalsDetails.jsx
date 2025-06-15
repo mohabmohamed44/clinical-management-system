@@ -63,6 +63,8 @@ export default function HospitalsDetails() {
               id,
               first_name,
               last_name,
+              last_name_ar,
+              first_name_ar,
               image,
               specialty
             )
@@ -229,8 +231,8 @@ export default function HospitalsDetails() {
                     <div className="flex items-center gap-2 text-gray-600">
                       <FaStar className="text-yellow-500" />
                       <p>
-                        Rating: {hospitalDetails.rate} (
-                        {hospitalDetails.rate_count || 0} reviews)
+                        {t("Rating")}: {hospitalDetails.rate} (
+                        {hospitalDetails.rate_count || 0} {t("reviews")})
                       </p>
                     </div>
                   )}
@@ -284,7 +286,11 @@ export default function HospitalsDetails() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-medium text-lg">
-                          {doctor.first_name} {doctor.last_name}
+                          {
+                          i18n.language === "ar"
+                            ? `د. ${doctor.first_name_ar || doctor.first_name} ${doctor.last_name_ar || doctor.last_name}`
+                            : `Dr. ${doctor.first_name} ${doctor.last_name}`
+                        }
                         </h3>
                         <p className=""></p>
                         <p className="text-blue-600 text-sm">
@@ -303,7 +309,7 @@ export default function HospitalsDetails() {
               </div>
             ) : (
               <div className="bg-gray-50 p-4 rounded-lg text-center text-gray-500">
-                No doctors currently listed for this hospital.
+                {t("No doctors currently listed for this hospital.")}
               </div>
             )}
           </div>

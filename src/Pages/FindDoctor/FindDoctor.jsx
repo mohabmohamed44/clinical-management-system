@@ -175,17 +175,17 @@ export default function FindDoctor() {
           >
             <div className="flex flex-col lg:flex-row items-center justify-between h-full">
               <div className="text-white max-w-lg mt-12 text-3xl text-center lg:text-left">
-                <h1 id="main-heading" className="text-3xl sm:text-5xl font-bold mt-15">
+                <h1 id="main-heading" className="text-3xl rtl:text-right sm:text-5xl font-bold mt-15">
                   {t("Experts")}
                 </h1>
-                <p className="text-2xl md:text-4xl font-medium mt-4">
+                <p className="text-2xl md:text-4xl rtl:text-right font-medium mt-4">
                   {t("ExpertsDescription")}
                 </p>
               </div>
               <figure className="mt-auto flex justify-center items-center w-full lg:w-1/2">
                 <img
                   src={Doctor}
-                  className="w-full h-auto max-w-[320px] md:max-h-[400px] object-contain"
+                  className="w-full h-[360px] max-w-[320px] md:max-h-[360px] object-contain"
                   alt="Healthcare professional"
                   loading="lazy"
                   width="320"
@@ -209,7 +209,7 @@ export default function FindDoctor() {
           <h2 className="text-3xl font-bold text-center mb-8 text-[#274760] contrast-check">
             {selectedDepartment === "all"
               ? t("MedicalSpecialist")
-              : `${t(selectedDepartment)} ${t("Specialists")}`}
+              : `${t(selectedDepartment)}`}
           </h2>
 
           <div className="mb-8">
@@ -233,7 +233,7 @@ export default function FindDoctor() {
                   phone={doctor.phone}
                   rate={doctor.rate}
                   rate_count={doctor.rate_count}
-                  gender={doctor.gender}
+                  gender={t(doctor.gender)}
                   address={doctor.address}
                 />
               ))}

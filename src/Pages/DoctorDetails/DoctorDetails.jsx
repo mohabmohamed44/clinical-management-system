@@ -238,13 +238,13 @@ export default function DoctorDetails() {
           <div className="h-[250px] sm:h-[300px] md:h-[400px] bg-gradient-to-b from-[#11319E] to-[#061138] w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col md:flex-row md:items-start md:justify-between">
               <div className="max-w-full md:max-w-xl text-left mt-4 py-4 md:py-7">
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 text-white">
+                <h1 className="text-xl sm:text-2xl rtl:text-right md:text-3xl lg:text-4xl font-bold mb-2 text-white">
                   {t("DR")}{" "}
                   {i18n.language === "ar"
                     ? `${data.first_name_ar || data.first_name} ${data.last_name_ar || data.last_name}`
                     : `${data.first_name} ${data.last_name}`}
                 </h1>
-                <h2 className="text-md sm:text-lg md:text-xl mb-2 text-white">
+                <h2 className="text-md sm:text-lg rtl:text-right md:text-xl mb-2 text-white">
                   {t(data.specialty)}
                 </h2>
                 <div className="flex items-center text-white mb-2">
@@ -255,11 +255,11 @@ export default function DoctorDetails() {
                     ({data.rate_count?.toLocaleString() || 0} {t("reviews")})
                   </span>
                 </div>
-                <p className="text-white text-sm sm:text-base md:text-lg line-clamp-3 md:line-clamp-none">
+                {/* <p className="text-white text-sm  sm:text-base md:text-lg line-clamp-3 md:line-clamp-none">
                   {i18n.language === "ar"
                     ? data.info?.about_ar || data.about_ar || data.info?.about || "Experienced medical professional"
                     : data.info?.about || "Experienced medical professional"}
-                </p>
+                </p> */}
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function DoctorDetails() {
                 {/* Specialty Section */}
                 <div className="bg-[#11319E] p-4">
                   <h3 className="text-white text-xl font-semibold text-center">
-                    {t(data.specialty)} Department
+                    {t(data.specialty)} 
                   </h3>
                 </div>
 
@@ -312,7 +312,7 @@ export default function DoctorDetails() {
                       <div className="flex items-center gap-2">
                         <FaMapMarkerAlt className="text-blue-600" />
                         <div>
-                          <p className="font-medium">Location</p>
+                          <p className="font-medium">{t("Location")}</p>
                           <div className="text-sm text-gray-600">
                             {data.clinic.government && (
                               <p>{data.clinic.government}</p>
@@ -331,7 +331,7 @@ export default function DoctorDetails() {
                       <div className="flex items-center gap-2">
                         <FaPhone className="text-blue-600" />
                         <div>
-                          <p className="font-medium">Contact Numbers</p>
+                          <p className="font-medium">{t("Contact Numbers")}</p>
                           <div className="flex flex-wrap gap-2">
                             {data.clinic.phones &&
                             Array.isArray(data.clinic.phones) &&
@@ -358,10 +358,10 @@ export default function DoctorDetails() {
                       <div className="flex items-center gap-2">
                         <FaStar className="text-yellow-400" />
                         <div>
-                          <p className="font-medium">Rating</p>
+                          <p className="font-medium">{t("Rating")}</p>
                           <p className="text-sm text-gray-600">
                             {data.clinic.rate?.toFixed(1) || "N/A"} (
-                            {data.clinic.rate_count || 0} reviews)
+                            {data.clinic.rate_count || 0} {t("reviews")})
                           </p>
                         </div>
                       </div>
@@ -370,7 +370,7 @@ export default function DoctorDetails() {
                       <div className="flex items-center gap-2">
                         <FaMoneyBillWave className="text-blue-600" />
                         <div>
-                          <p className="font-medium">Consultation Fee</p>
+                          <p className="font-medium">{t("Consultation Fee")}</p>
                           <p className="text-sm text-gray-600">
                             {data.fee
                               ? `${data.fee} EGP`
@@ -522,7 +522,7 @@ export default function DoctorDetails() {
                     </div>
                   ) : (
                     <p className="text-gray-500">
-                      No experience information available
+                      {t("No experience information available")}
                     </p>
                   )}
                 </div>
@@ -538,7 +538,7 @@ export default function DoctorDetails() {
               </div>
               <div className="mt-6 sm:m shadow rounded-lg p-4 sm:p-6">
                 <h3 className="text-lg sm:text-xl font-semibold mb-4">
-                  Patient Reviews
+                  {t("Patient Reviews")}
                 </h3>
 
                 {/* Review Form */}
@@ -546,15 +546,15 @@ export default function DoctorDetails() {
                   onSubmit={handleSubmitReview}
                   className="mb-6 bg-gray-50 p-4 rounded-lg"
                 >
-                  <h4 className="font-medium mb-2">Share Your Experience</h4>
+                  <h4 className="font-medium mb-2">{t("Share Your Experience")}</h4>
                   <div className="flex flex-wrap items-center mb-4 gap-2">
-                    <span className="text-sm sm:text-base">Rating:</span>
+                    <span className="text-sm sm:text-base">{t("Rating")}:</span>
                     <div className="flex">{renderStars(rating, true)}</div>
                   </div>
                   <textarea
                     value={newReview}
                     onChange={(e) => setNewReview(e.target.value)}
-                    placeholder="How was your experience with this doctor?"
+                    placeholder={t("How was your experience with this doctor?")}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-0 text-sm sm:text-base"
                     rows="3"
                     required
@@ -563,7 +563,7 @@ export default function DoctorDetails() {
                     type="submit"
                     className="mt-4 w-full sm:w-auto px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
                   >
-                    Submit Review
+                    {t("Submit Review")}
                   </button>
                 </form>
 
@@ -614,7 +614,7 @@ export default function DoctorDetails() {
                       ))
                     ) : (
                       <p className="text-gray-500">
-                        No reviews yet. Be the first to share your experience!
+                        {t("No reviews yet. Be the first to share your experience!")}
                       </p>
                     )}
                   </div>

@@ -62,6 +62,8 @@ export default function AdditionalServices() {
           start_date,
           end_date,
           description,
+          title_ar,
+          description_ar,
           provider,
           title,
           price,
@@ -76,21 +78,30 @@ export default function AdditionalServices() {
 
       if (error) throw error;
 
-      const formattedOffers = data.map((offer) => ({
-        ...offer,
-        mainImage: offer.images[0], // Use first image from array
-        doctor: {
-          name: `${offer.Doctors.first_name} ${offer.Doctors.last_name}`,
-          image: offer.Doctors.image,
-          rate: offer.Doctors.rate_count,
-        },
-        finalPrice: offer.discount_percentage
-          ? calculateDiscountedPrice(
-              offer.original_price,
-              offer.discount_percentage
-            )
-          : offer.price,
-      }));
+      const formattedOffers = data.map((offer) => {
+        // Use Arabic fields if language is ar
+        const isArabic = i18n.language === "ar";
+        const offerTitle = isArabic ? offer.title_ar || offer.title : offer.title;
+        const offerDescription = isArabic ? offer.description_ar || offer.description : offer.description;
+
+        return {
+          ...offer,
+          mainImage: offer.images[0], // Use first image from array
+          doctor: {
+            name: `${offer.Doctors.first_name} ${offer.Doctors.last_name}`,
+            image: offer.Doctors.image,
+            rate: offer.Doctors.rate_count,
+          },
+          finalPrice: offer.discount_percentage
+            ? calculateDiscountedPrice(
+                offer.original_price,
+                offer.discount_percentage
+              )
+            : offer.price,
+          title: offerTitle,
+          description: offerDescription,
+        };
+      });
 
       setOffers(formattedOffers);
       setLoading(false);

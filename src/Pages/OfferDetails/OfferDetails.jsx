@@ -6,6 +6,7 @@ import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import Doctor from "../../assets/doctor_home.webp";
+import i18next from "i18next";
 
 export default function OfferDetails() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function OfferDetails() {
   const [doctor, setDoctor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const fetchOfferDetails = async () => {
     try {
@@ -28,6 +29,8 @@ export default function OfferDetails() {
           start_date,
           end_date,
           description,
+          title_ar,
+          description_ar,
           provider,
           title,
           price,
@@ -35,7 +38,7 @@ export default function OfferDetails() {
           discount_percentage,
           usage_limit,
           provider_id,
-          Doctors (id, first_name, last_name, image, rate_count, specialty)
+          Doctors (id, first_name, last_name, image, rate_count, specialty, first_name_ar, last_name_ar)
         `)
         .eq('id', id)
         .single();
@@ -56,6 +59,19 @@ export default function OfferDetails() {
   useEffect(() => {
     fetchOfferDetails();
   }, [id]);
+
+  // Use Arabic fields if language is ar
+  const isArabic = i18next.language === "ar";
+  const offerTitle = offer
+    ? isArabic
+      ? offer.title_ar || offer.title
+      : offer.title
+    : "";
+  const offerDescription = offer
+    ? isArabic
+      ? offer.description_ar || offer.description
+      : offer.description
+    : "";
 
   if (loading) {
     return (
@@ -118,13 +134,19 @@ export default function OfferDetails() {
 
             {/* Offer Details */}
             <div className="p-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{offer.title || t("Offer")}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">{offerTitle || t("Offer")}</h1>
               
               <div className="flex items-center gap-4 mb-4">
                 {offer.start_date && offer.end_date && (
-                  <div className="flex items-center">
+                  <div
+                    className={`flex items-center ${
+                      isArabic ? "flex-row-reverse text-right" : ""
+                    }`}
+                  >
                     <Calendar className="w-5 h-5 text-gray-500 mr-2" />
-                    <span>{formatDate(offer.start_date)} - {formatDate(offer.end_date)}</span>
+                    <span>
+                      {formatDate(offer.start_date)} - {formatDate(offer.end_date)}
+                    </span>
                   </div>
                 )}
                 {usageLimit > 0 && (
@@ -135,9 +157,9 @@ export default function OfferDetails() {
                 )}
               </div>
 
-              {offer.description && (
+              {offerDescription && (
                 <div className="mb-6">
-                  <p className="text-gray-600">{offer.description}</p>
+                  <p className="text-gray-600">{offerDescription}</p>
                 </div>
               )}
 
@@ -152,18 +174,23 @@ export default function OfferDetails() {
 
               {doctor && (
                 <div className="border-t pt-6">
-                  <h2 className="text-xl font-semibold mb-4">{t("AboutDoctor")}</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t("DoctorDetails")}</h2>
                   <div className="flex items-start gap-4">
                     <img
                       src={doctor.profile_image || doctor.image || Doctor}
-                      alt={`Dr. ${doctor.first_name} ${doctor.last_name}`}
+                      alt={
+                        isArabic
+                          ? `د. ${doctor.first_name_ar || doctor.first_name} ${doctor.last_name_ar || doctor.last_name}`
+                          : `Dr. ${doctor.first_name} ${doctor.last_name}`
+                      }
                       className="w-24 h-24 rounded-full object-cover border-2 border-blue-100"
                     />
                     <div>
                       <h3 className="text-lg font-semibold">
-                        Dr. {doctor.first_name || ""} {doctor.last_name || ""}
+                        {isArabic
+                          ? `د. ${doctor.first_name_ar || doctor.first_name} ${doctor.last_name_ar || doctor.last_name}`
+                          : `Dr. ${doctor.first_name || ""} ${doctor.last_name || ""}`}
                       </h3>
-                      {doctor.specialty && <p className="text-gray-600">{doctor.specialty}</p>}
                       <div className="flex items-center mt-1">
                         <Star className="w-4 h-4 text-yellow-400" />
                         <span className="ml-1">

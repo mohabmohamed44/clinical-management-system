@@ -63,7 +63,7 @@ export default function DoctorCard({
           <div className="flex items-center justify-center gap-2 mb-4">
             <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
             <span className="text-[#274760] text-sm">
-              {rate}/5 ({rate_count} reviews)
+              {rate}/5 ({rate_count} {t("reviews")})
             </span>
           </div>
 

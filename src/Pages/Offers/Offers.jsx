@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { supabase } from "../../Config/Supabase";
 import { DNA } from "react-loader-spinner";
+import i18next from "i18next";
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -46,6 +47,8 @@ export default function Offers() {
           description,
           provider,
           title,
+          title_ar,
+          description_ar,
           price,
           original_price,
           discount_percentage,
@@ -201,6 +204,13 @@ export default function Offers() {
                 offer.original_price &&
                 offer.price &&
                 offer.original_price > offer.price;
+
+              // Use Arabic fields if language is ar
+              const isArabic = i18next.language === "ar";
+              const offerTitle = isArabic ? offer.title_ar || offer.title : offer.title;
+              const offerDescription = isArabic ? offer.description_ar || offer.description : offer.description;
+
+              // Calculate discount percentage safely
               const discountPercentage = hasDiscount
                 ? offer.discount_percentage ||
                   calculateDiscountPercentage(offer.original_price, offer.price)
@@ -219,7 +229,7 @@ export default function Offers() {
                     />
                     {hasDiscount && (
                       <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-                        {offer.discount_percentage}% OFF
+                        {discountPercentage}% OFF
                       </div>
                     )}
                     <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
@@ -230,7 +240,7 @@ export default function Offers() {
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-xl font-semibold text-[#00155D]">
-                        {offer.title}
+                        {offerTitle}
                       </h3>
                       {offer.start_date && offer.end_date && (
                         <div className="flex items-center text-gray-700">
@@ -244,7 +254,7 @@ export default function Offers() {
                     </div>
 
                     <p className="text-gray-600 text-sm mb-4">
-                      {offer.description}
+                      {offerDescription}
                     </p>
 
                     {/* Doctor info */}

@@ -12,7 +12,7 @@ import Doc from "../../assets/doctor_home.webp";
 export default function DepartmentDetails() {
   const { specialty: rawSpecialty } = useParams();
   const specialty = decodeURIComponent(rawSpecialty);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,6 +30,8 @@ export default function DepartmentDetails() {
             id, 
             first_name, 
             last_name, 
+            first_name_ar,
+            last_name_ar,
             specialty, 
             image, 
             phone, 
@@ -141,7 +143,7 @@ export default function DepartmentDetails() {
                   >
                      {t(specialty)} 
                   </h2>
-                  <p className="text-sm mt-2">
+                  <p className="text-sm md:text-lg mt-6">
                     {t("DepartmentDetailsDescription")}
                   </p>
                 </div>
@@ -212,7 +214,7 @@ export default function DepartmentDetails() {
                 data-empty-state="doctors"
               >
                 <p className="text-gray-600 text-lg">
-                  {t("NoDoctorsFound")} in {t(specialty)} {t("Department")}
+                  {t("NoDoctorsFound")} {t(specialty)}
                 </p>
               </div>
             ) : (
@@ -227,7 +229,7 @@ export default function DepartmentDetails() {
                     className="bg-white rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg"
                     role="listitem"
                     data-doctor-id={doctor.id}
-                    data-doctor-specialty={doctor.specialty}
+                    data-doctor-specialty={t(doctor.specialty)}
                   >
                     <div
                       className="relative h-75 md:h-72 lg:h-80 xl:h-96"
@@ -251,7 +253,11 @@ export default function DepartmentDetails() {
                         className="text-xl font-semibold text-gray-800"
                         data-heading="doctor-name"
                       >
-                        Dr. {doctor.first_name} {doctor.last_name}
+                        {
+                          i18n.language === "ar"
+                            ? `د. ${doctor.first_name_ar || doctor.first_name} ${doctor.last_name_ar || doctor.last_name}`
+                            : `Dr. ${doctor.first_name} ${doctor.last_name}`
+                        }
                       </h3>
 
                       <p className="text-blue-600 mt-1">
@@ -280,7 +286,7 @@ export default function DepartmentDetails() {
                           ))}
                         </div>
                         <span className="text-sm text-gray-600 ml-2">
-                          ({doctor.rate_count} {t("Reviews")})
+                          ({doctor.rate_count} {t("reviews")})
                         </span>
                       </div>
 

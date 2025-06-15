@@ -871,7 +871,7 @@ export default function UpcomingVisits() {
           {visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
         </h3>
         <p className="text-blue-600 text-sm">
-          {visit.isLabAppointment ? t("Laboratory Test") : visit.doctor?.specialty}
+          {visit.isLabAppointment ? t("Laboratory Test") : t(visit.doctor?.specialty)}
         </p>
         {visit.isLabAppointment &&
           visit.lab?.services &&
@@ -1070,7 +1070,7 @@ export default function UpcomingVisits() {
                     {/* Buttons */}
                     <div className="mt-4 pt-3 border-t flex flex-col space-y-2">
                       <Link to={`/appointments/${visit.id}`} className="w-full">
-                        <button className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors">
+                        <button className="w-full px-3 py-1.5 bg-[#005d] text-white text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors">
                           {t("View Details")}
                         </button>
                       </Link>

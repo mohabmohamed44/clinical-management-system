@@ -9,9 +9,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import useChatBot from "@hooks/useChatbot";
+import {useTranslation} from 'react-i18next';
 import { supabase } from "../../Config/Supabase";
 
 export default function Chatbot() {
+  const {t} = useTranslation();
   const {
     isOpen,
     toggleModal,
@@ -213,7 +215,7 @@ export default function Chatbot() {
             {doctors.length > 0 && (
               <div className="mt-4">
                 <h3 className="text-lg font-medium text-gray-900 mb-3">
-                  Recommended Doctors:
+                  {t("Recommended Doctors")}:
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {doctors.map((doc, idx) => (

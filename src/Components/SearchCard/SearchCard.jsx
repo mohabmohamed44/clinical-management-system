@@ -62,9 +62,20 @@ export default function SearchCard() {
       setError(null);
 
       try {
+        // Translate Arabic city names to English for search
+        let locationTerm = values.location.trim();
+        // Add more mappings as needed
+        const cityTranslations = {
+          "القاهرة": "Cairo",
+          "الجيزة": "Giza",
+          "الإسكندرية": "Alexandria",
+        };
+        if (cityTranslations[locationTerm]) {
+          locationTerm = cityTranslations[locationTerm];
+        }
         const specialtyTerm = encodeURIComponent(values.specialty.name);
-        const locationTerm = encodeURIComponent(values.location.trim());
-        
+        locationTerm = encodeURIComponent(locationTerm);
+
         navigate(`/find_doctor?specialty=${specialtyTerm}&location=${locationTerm}`);
       } catch (err) {
         console.error("Search error:", err);
