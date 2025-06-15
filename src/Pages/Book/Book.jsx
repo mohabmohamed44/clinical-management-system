@@ -7,7 +7,8 @@ import { toast } from "react-hot-toast";
 import { getAuth } from "firebase/auth";
 import { format, parseISO, isBefore, startOfDay, isToday } from "date-fns";
 import { useTranslation } from "react-i18next";
-import axios from "axios"; // Make sure axios is installed in your project
+import axios from "axios";
+import i18next from "i18next";
 
 // Paymob Configuration
 const PAYMOB_CONFIG = {
@@ -28,35 +29,42 @@ const Book = () => {
   const [appointmentId, setAppointmentId] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === 'rtl';
   const auth = getAuth();
   const [currentUser, setCurrentUser] = useState(null);
+  const isArabic = i18next.language === "ar";
 
-  const steps = ["Patient Info", "Time Selection", "Payment"];
+  const steps = [
+    t("PatientInfo"),
+    t("TimeSelection"),
+    t("Payment")
+  ];
 
+  // Create validation schemas with translated messages
   const validationSchema = [
     Yup.object().shape({
       patient: Yup.object().shape({
-        name: Yup.string().required("Full name required"),
+        name: Yup.string().required(t("NameRequired")),
         age: Yup.number()
-          .required("Age required")
+          .required(t("AgeRequired"))
           .positive()
           .max(120),
         phone: Yup.string()
-          .required("Phone number required")
-          .matches(/^01[0125][0-9]{8}$/, "Egyptian number required"),
-        gender: Yup.string().required("Gender required"),
-        problem: Yup.string().required("Reason required"),
+          .required(t("PhoneRequired"))
+          .matches(/^01[0125][0-9]{8}$/, t("PhoneNumbersOnly")),
+        gender: Yup.string().required(t("GenderRequired")),
+        problem: Yup.string().required(t("ProblemRequired")),
       }),
     }),
     Yup.object().shape({
       date: Yup.date()
-        .required("Date required")
-        .min(startOfDay(new Date()), "Invalid date"),
-      time: Yup.string().required("Time is required"),
+        .required(t("DateRequired"))
+        .min(startOfDay(new Date()), t("InvalidDate")),
+      time: Yup.string().required(t("TimeRequired")),
     }),
     Yup.object().shape({
-      payment_method: Yup.string().required("Payment method required"),
+      payment_method: Yup.string().required(t("PaymentMethodRequired")),
     }),
   ];
 
@@ -93,7 +101,7 @@ const Book = () => {
         .single();
 
       if (doctorError || !doctorData) {
-        throw new Error(doctorError?.message || "Doctor not found");
+        throw new Error(doctorError?.message || t("DoctorNotFound"));
       }
 
       const primaryHospital = doctorData.hospitals?.length > 0 ? 
@@ -141,7 +149,7 @@ const Book = () => {
         .insert([{
           firebase_uid: firebaseUser.uid,
           email: firebaseUser.email,
-          name: firebaseUser.displayName || "Patient",
+          name: firebaseUser.displayName || t("Patient"),
           phone: firebaseUser.phoneNumber || "",
           role: "patient"
         }])
@@ -153,7 +161,7 @@ const Book = () => {
 
     } catch (error) {
       console.error("User error:", error);
-      toast.error("Failed to verify user account");
+      toast.error(t("UserAccountError"));
       throw error;
     }
   };
@@ -223,19 +231,16 @@ const Book = () => {
 
     } catch (error) {
       console.error("Slot generation error:", error);
-      toast.error("Failed to generate time slots");
+      toast.error(t("TimeSlotGenerationError"));
       return [];
     }
   };
 
   // Paymob Payment Integration Steps
-  
-  // Step 1: Authenticate with Paymob
   const authenticatePaymob = async () => {
     try {
-      // Log to verify API key is loaded
       if (!PAYMOB_CONFIG.API_KEY) {
-        throw new Error("Paymob API key is not configured");
+        throw new Error(t("PaymobConfigError"));
       }
 
       const { data } = await axios.post(
@@ -252,7 +257,7 @@ const Book = () => {
       );
 
       if (!data || !data.token) {
-        throw new Error("Invalid response from payment gateway");
+        throw new Error(t("InvalidPaymentResponse"));
       }
 
       return data.token;
@@ -261,28 +266,26 @@ const Book = () => {
         message: error.message,
         response: error.response?.data
       });
-      throw new Error(error.response?.data?.message || "Failed to authenticate with payment gateway");
+      throw new Error(error.response?.data?.message || t("PaymentAuthError"));
     }
   };
   
-  // Step 2: Register order with Paymob
   const registerOrder = async (authToken, amount) => {
     try {
       const { data } = await axios.post(`${PAYMOB_CONFIG.BASE_URL}/ecommerce/orders`, {
         auth_token: authToken,
         delivery_needed: false,
-        amount_cents: amount * 100, // Convert to cents
+        amount_cents: amount * 100,
         currency: "EGP",
-        items: []  // Empty for simple payment
+        items: [] 
       });
       return data.id;
     } catch (error) {
       console.error("Paymob order registration error:", error);
-      throw new Error("Failed to register payment order");
+      throw new Error(t("OrderRegistrationError"));
     }
   };
   
-  // Step 3: Get payment key
   const getPaymentKey = async (authToken, orderId, amount, billingData) => {
     try {
       const { data } = await axios.post(`${PAYMOB_CONFIG.BASE_URL}/acceptance/payment_keys`, {
@@ -296,42 +299,26 @@ const Book = () => {
       return data.token;
     } catch (error) {
       console.error("Paymob payment key error:", error);
-      throw new Error("Failed to initiate payment");
+      throw new Error(t("PaymentInitiationError"));
     }
   };
   
-  // Process the payment for card
   const processCardPayment = async (values, appointmentId) => {
     try {
       setLoading(true);
       
       if (!PAYMOB_CONFIG.API_KEY || !PAYMOB_CONFIG.INTEGRATION_ID) {
-        throw new Error("Payment gateway configuration is incomplete");
+        throw new Error(t("PaymobConfigError"));
       }
 
       const authToken = await authenticatePaymob();
-      if (!authToken) throw new Error("Failed to get authentication token");
-
-      // Register order with appointment details
-      const orderData = {
-        auth_token: authToken,
-        delivery_needed: false,
-        amount_cents: provider.fee * 100,
-        currency: "EGP",
-        items: [{
-          name: `Appointment with Dr. ${provider.first_name} ${provider.last_name}`,
-          amount_cents: provider.fee * 100,
-          description: "Medical Consultation",
-          quantity: 1
-        }]
-      };
+      if (!authToken) throw new Error(t("PaymentAuthTokenError"));
 
       const orderId = await registerOrder(authToken, provider.fee);
       
-      // Prepare billing data
       const billingData = {
-        first_name: values.patient.name.split(' ')[0] || "Patient",
-        last_name: values.patient.name.split(' ').slice(1).join(' ') || "User",
+        first_name: values.patient.name.split(' ')[0] || t("Patient"),
+        last_name: values.patient.name.split(' ').slice(1).join(' ') || t("User"),
         email: currentUser.email,
         phone_number: values.patient.phone,
         apartment: "NA",
@@ -347,7 +334,6 @@ const Book = () => {
       
       const paymentToken = await getPaymentKey(authToken, orderId, provider.fee * 100, billingData);
 
-      // Update appointment with payment details
       await supabase
         .from("Appointments")
         .update({
@@ -356,23 +342,19 @@ const Book = () => {
         })
         .eq("id", appointmentId);
       
-      // Open payment page in new tab and redirect to appointments
       const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_CONFIG.IFRAME_ID}?payment_token=${paymentToken}`;
       const paymentWindow = window.open(iframeUrl);
       
-      // Check if window was blocked by popup blocker
       if (paymentWindow) {
-        // Redirect main window to appointments after short delay
         setTimeout(() => {
           navigate('/appointments');
         }, 1000);
       } else {
-        toast.error("Please allow popups to complete payment");
+        toast.error(t("PopupBlockedError"));
       }
       
     } catch (error) {
       console.error("Payment error:", error);
-      // Update appointment status to failed (remove payment_status field)
       await supabase
         .from("Appointments")
         .update({ 
@@ -380,7 +362,7 @@ const Book = () => {
         })
         .eq("id", appointmentId);
       
-      toast.error("Payment processing failed. Please try again.");
+      toast.error(t("PaymentProcessingError"));
     } finally {
       setLoading(false);
     }
@@ -388,7 +370,7 @@ const Book = () => {
 
   const handleSubmit = async (values) => {
     if (!provider || !currentUser) {
-      toast.error("Session expired, please login again");
+      toast.error(t("SessionExpired"));
       navigate("/login");
       return;
     }
@@ -397,10 +379,9 @@ const Book = () => {
     try {
       const supabaseUserId = await getSupabaseUserId(currentUser);
       
-      // Create appointment with correct structure matching the database
       const appointmentData = {
         type: "Upcoming",
-        status: "pending", // Always set to pending initially
+        status: "pending",
         doctor_id: id,
         clinic_id: provider.clinic_id || null,
         hos_id: provider.hos_id || null,
@@ -410,8 +391,8 @@ const Book = () => {
         fee: provider.fee,
         lab_id: null,
         lab_services: null,
-        payment_method: values.payment_method, // Regular field, not JSONB
-        patient: {  // Patient info as JSONB
+        payment_method: values.payment_method,
+        patient: {
           name: values.patient.name,
           age: values.patient.age,
           gender: values.patient.gender,
@@ -428,7 +409,6 @@ const Book = () => {
 
       if (appointmentError) throw appointmentError;
 
-      // Handle payment method
       if (values.payment_method === "cash") {
         handlePaymentSuccess("cash");
       } else {
@@ -437,7 +417,7 @@ const Book = () => {
 
     } catch (error) {
       console.error("Booking error:", error);
-      toast.error(error.message || "Failed to complete booking");
+      toast.error(error.message || t("BookingFailed"));
     } finally {
       setLoading(false);
     }
@@ -445,22 +425,23 @@ const Book = () => {
 
   const handlePaymentSuccess = (method) => {
     toast.success(method === "cash" ? 
-      "Appointment booked!" : 
-      "Payment completed!");
+      t("AppointmentBooked") : 
+      t("PaymentCompleted"));
     navigate("/appointments");
   };
 
   if (criticalError) {
     return (
-      <div className="p-4 bg-red-50 min-h-screen flex items-center justify-center">
+      <div className={`p-4 bg-red-50 min-h-screen flex items-center justify-center ${isRTL ? 'rtl' : 'ltr'}`}
+           dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="text-center">
-          <h2 className="text-xl font-bold text-red-600 mb-2">System Error</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-2">{t("SystemError")}</h2>
           <p className="text-red-500 mb-4">{criticalError.message}</p>
           <button
             onClick={() => window.location.reload()}
             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
           >
-            Reload Application
+            {t("ReloadApplication")}
           </button>
         </div>
       </div>
@@ -469,17 +450,19 @@ const Book = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen bg-gray-50 flex items-center justify-center ${isRTL ? 'rtl' : 'ltr'}`}
+           dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Loading doctor information...</p>
+          <p className="mt-4 text-gray-600">{t("LoadingDoctorInfo")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className={`min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 ${isRTL ? 'rtl' : 'ltr'}`}
+         dir={isRTL ? 'rtl' : 'ltr'}>
       <Formik
         initialValues={{
           patient: { name: "", age: "", phone: "", gender: "", problem: "" },
@@ -517,13 +500,16 @@ const Book = () => {
             {provider && (
               <div className="px-6 py-4 bg-blue-50 border-b border-blue-100">
                 <h2 className="text-lg font-medium text-blue-800">
-                  Booking appointment with Dr. {provider.first_name} {provider.last_name}
-                </h2>
+                {t("BookingAppointmentWith")}{" "}
+                {isArabic
+                  ? `د. ${provider.first_name_ar || provider.first_name} ${provider.last_name_ar || provider.last_name}`
+                  : `Dr. ${provider.first_name} ${provider.last_name}`}
+              </h2>
                 {provider.specialty && (
                   <p className="text-md text-blue-900 mt-2">{t(provider.specialty)}</p>
                 )}
                 <p className="text-md font-medium text-blue-900 mt-2">
-                  Consultation Fee: EGP {provider.fee}
+                  {t("ConsultationFee")}: EGP {provider.fee}
                 </p>
               </div>
             )}
@@ -531,7 +517,7 @@ const Book = () => {
             {/* Form Steps */}
             <div className="px-4 sm:px-6 py-8">
               {step === 0 && (
-                <PatientInfoStep />
+                <PatientInfoStep t={t} isRTL={isRTL} />
               )}
 
               {step === 1 && (
@@ -542,6 +528,8 @@ const Book = () => {
                   generateTimeSlots={generateTimeSlots}
                   timeSlots={timeSlots}
                   setTimeSlots={setTimeSlots}
+                  t={t}
+                  isRTL={isRTL}
                 />
               )}
 
@@ -549,6 +537,8 @@ const Book = () => {
                 <PaymentStep 
                   provider={provider}
                   values={values}
+                  t={t}
+                  isRTL={isRTL}
                 />
               )}
 
@@ -560,7 +550,7 @@ const Book = () => {
                     onClick={() => setStep(s => s - 1)}
                     className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50"
                   >
-                    Back
+                    {t("Back")}
                   </button>
                 )}
                 
@@ -572,6 +562,7 @@ const Book = () => {
                   isSubmitting={isSubmitting}
                   timeSlots={timeSlots}
                   values={values}
+                  t={t}
                 />
               </div>
             </div>
@@ -582,13 +573,13 @@ const Book = () => {
   );
 };
 
-// Sub-components for better readability
-const PatientInfoStep = () => (
+// Sub-components
+const PatientInfoStep = ({ t, isRTL }) => (
   <div className="space-y-6">
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Full Name
-        <Field name="patient.name" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 focus:border-blue-900 focus:border-2 shadow-sm p-3" />
+        {t("FullName")}
+        <Field name="patient.name" className={`mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 focus:border-blue-900 focus:border-2 shadow-sm p-3 ${isRTL ? 'rtl' : ''}`} />
         <ErrorMessage name="patient.name" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
@@ -596,19 +587,19 @@ const PatientInfoStep = () => (
     <div className="grid gap-6 sm:grid-cols-2">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Age
-          <Field name="patient.age" type="number" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2" />
+          {t("Age")}
+          <Field name="patient.age" type="number" className={`mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 ${isRTL ? 'rtl' : ''}`} />
           <ErrorMessage name="patient.age" component="div" className="text-red-500 text-xs mt-1" />
         </label>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Gender
-          <Field as="select" name="patient.gender" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2">
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+          {t("Gender")}
+          <Field as="select" name="patient.gender" className={`mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 ${isRTL ? 'rtl' : ''}`}>
+            <option value="">{t("SelectGender")}</option>
+            <option value="Male">{t("Male")}</option>
+            <option value="Female">{t("Female")}</option>
           </Field>
           <ErrorMessage name="patient.gender" component="div" className="text-red-500 text-xs mt-1" />
         </label>
@@ -617,32 +608,32 @@ const PatientInfoStep = () => (
 
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Phone Number
-        <Field name="patient.phone" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2" />
+        {t("PhoneNumber")}
+        <Field name="patient.phone" className={`mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 ${isRTL ? 'rtl' : ''}`} />
         <ErrorMessage name="patient.phone" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
 
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Reason for Appointment
-        <Field as="textarea" name="patient.problem" className="mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 h-32" />
+        {t("ReasonForAppointment")}
+        <Field as="textarea" name="patient.problem" className={`mt-1 block w-full rounded-md border-1 border-blue-700 outline-0 shadow-sm p-3 focus:border-blue-900 focus:border-2 h-32 ${isRTL ? 'rtl' : ''}`} />
         <ErrorMessage name="patient.problem" component="div" className="text-red-500 text-xs mt-1" />
       </label>
     </div>
   </div>
 );
 
-const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots, timeSlots, setTimeSlots }) => (
+const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots, timeSlots, setTimeSlots, t, isRTL }) => (
   <div className="space-y-6 p-6">
     {provider?.work_times?.length > 0 ? (
       <>
         <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200 mb-4">
-          <h3 className="text-sm font-medium text-yellow-800">Available Days</h3>
+          <h3 className="text-sm font-medium text-yellow-800">{t("AvailableDays")}</h3>
           <div className="mt-2 flex flex-wrap gap-2">
             {provider.work_times.map((workTime) => (
               <span key={workTime.day} className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                {workTime.day}
+                {t(workTime.day)}
               </span>
             ))}
           </div>
@@ -650,7 +641,7 @@ const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots,
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Date
+            {t("SelectDate")}
             <Field name="date">
               {({ field, meta }) => (
                 <div>
@@ -680,7 +671,7 @@ const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots,
         {values.date && (
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-2">
-              Available Time Slots
+              {t("AvailableTimeSlots")}
             </h3>
             {timeSlots.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -704,7 +695,7 @@ const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots,
               </div>
             ) : (
               <div className="text-yellow-600 bg-yellow-50 p-3 rounded-lg mt-4">
-                No available slots for this date
+                {t("NoAvailableSlots")}
               </div>
             )}
             <ErrorMessage name="time" component="div" className="text-red-500 text-sm mt-1" />
@@ -713,59 +704,59 @@ const TimeSelectionStep = ({ provider, values, setFieldValue, generateTimeSlots,
       </>
     ) : (
       <div className="text-red-600 bg-red-50 p-4 rounded-lg">
-        Doctor schedule unavailable
+        {t("DoctorScheduleUnavailable")}
       </div>
     )}
   </div>
 );
 
-const PaymentStep = ({ provider, values }) => (
+const PaymentStep = ({ provider, values, t, isRTL }) => (
   <div className="space-y-6 p-6">
     <div className="bg-gray-50 p-6 rounded-xl">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Appointment Summary</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("AppointmentSummary")}</h3>
       <dl className="space-y-3">
         <div className="flex justify-between">
-          <dt className="text-sm text-gray-600">Doctor</dt>
+          <dt className="text-sm text-gray-600">{t("Doctor")}</dt>
           <dd className="text-sm text-gray-900">{provider?.first_name} {provider?.last_name}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-sm text-gray-600">Patient</dt>
+          <dt className="text-sm text-gray-600">{t("Patient")}</dt>
           <dd className="text-sm text-gray-900">{values.patient.name}</dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-sm text-gray-600">Date</dt>
+          <dt className="text-sm text-gray-600">{t("Date")}</dt>
           <dd className="text-sm text-gray-900">
             {values.date && format(parseISO(values.date), "MMM dd, yyyy")}
           </dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-sm text-gray-600">Time</dt>
+          <dt className="text-sm text-gray-600">{t("Time")}</dt>
           <dd className="text-sm text-gray-900">
             {values.time && format(parseISO(`2000-01-01T${values.time}`), "hh:mm a")}
           </dd>
         </div>
         <div className="flex justify-between border-t pt-3">
-          <dt className="text-base font-semibold text-gray-900">Total</dt>
+          <dt className="text-base font-semibold text-gray-900">{t("Total")}</dt>
           <dd className="text-base font-semibold text-gray-900">EGP {provider?.fee}</dd>
         </div>
       </dl>
     </div>
 
     <div className="space-y-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{t("PaymentMethod")}</label>
       <div className="space-y-2">
         <label className="flex items-center p-4 border rounded-lg hover:border-blue-500 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 transition-colors">
           <Field type="radio" name="payment_method" value="cash" className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
-          <span className="ml-3 block text-sm font-medium text-gray-700">
-            Cash Payment
-            <span className="text-gray-500 text-sm block mt-1">Pay at the location</span>
+          <span className={`ml-3 block text-sm font-medium text-gray-700 ${isRTL ? 'rtl' : ''}`}>
+            {t("CashPayment")}
+            <span className="text-gray-500 text-sm block mt-1">{t("PayAtLocation")}</span>
           </span>
         </label>
         <label className="flex items-center p-4 border rounded-lg hover:border-blue-500 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 transition-colors">
           <Field type="radio" name="payment_method" value="visa" className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
-          <span className="ml-3 block text-sm font-medium text-gray-700">
-            Credit/Debit Card
-            <span className="text-gray-500 text-sm block mt-1">Secure online payment via Paymob</span>
+          <span className={`ml-3 block text-sm font-medium text-gray-700 ${isRTL ? 'rtl' : ''}`}>
+            {t("CardPayment")}
+            <span className="text-gray-500 text-sm block mt-1">{t("SecureOnlinePayment")}</span>
           </span>
         </label>
       </div>
@@ -774,7 +765,7 @@ const PaymentStep = ({ provider, values }) => (
   </div>
 );
 
-const SubmitButton = ({ step, setStep, isValid, loading, isSubmitting, timeSlots, values }) => (
+const SubmitButton = ({ step, setStep, isValid, loading, isSubmitting, timeSlots, values, t }) => (
   <button
     type={step === 2 ? "submit" : "button"}
     onClick={() => step < 2 && setStep(s => s + 1)}
@@ -792,9 +783,9 @@ const SubmitButton = ({ step, setStep, isValid, loading, isSubmitting, timeSlots
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
         </svg>
-        Processing...
+        {t("Processing")}...
       </span>
-    ) : step === 2 ? "Confirm Booking" : "Next Step"}
+    ) : step === 2 ? t("ConfirmBooking") : t("NextStep")}
   </button>
 );
 

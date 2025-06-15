@@ -8,12 +8,17 @@ import {
   getSupabaseUserId,
 } from "../../services/PaymentService";
 import MetaData from "../../Components/MetaData/MetaData";
+import { useTranslation } from "react-i18next";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { auth } from "../../Config/FirebaseConfig"; // Add this import at the top with other imports
+import { auth } from "../../Config/FirebaseConfig";
 
 export default function BookLab() {
+  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
+  const currentLang = i18n.language;
   const { lab_id } = useParams();
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,9 +26,17 @@ export default function BookLab() {
   const [bookingDetails, setBookingDetails] = useState({
     date: format(new Date(), "yyyy-MM-dd"),
     time: "",
-    payment_method: "cash", // Add payment method with default value
+    payment_method: "cash",
   });
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+
+  // Helper function to get localized content
+  const getLocalizedContent = (item, field) => {
+    if (!item) return "";
+    return currentLang === "ar" && item[`${field}_ar`]
+      ? item[`${field}_ar`]
+      : item[field];
+  };
 
   // Fetch lab details using TanStack Query
   const {
@@ -33,9 +46,8 @@ export default function BookLab() {
   } = useQuery({
     queryKey: ["lab", lab_id],
     queryFn: async () => {
-      if (!lab_id) throw new Error("Lab ID is required");
+      if (!lab_id) throw new Error(t("PhoneNumberRequired"));
 
-      // Fetch lab details from Laboratories table
       const { data: labData, error: labError } = await supabase
         .from("Laboratories")
         .select(
@@ -55,26 +67,24 @@ export default function BookLab() {
         .single();
 
       if (labError) throw labError;
-      if (!labData) throw new Error("Lab not found");
+      if (!labData) throw new Error(t("LabNotFound"));
 
-      // Fetch lab info from LaboratoriesInfo table
       const { data: infoData, error: infoError } = await supabase
         .from("LaboratoriesInfo")
         .select("*")
-        .eq("id", lab_id) // Change from lab_id to id
+        .eq("id", lab_id)
         .maybeSingle();
 
       if (infoError) throw infoError;
 
-      // Combine the data
       return {
         ...labData,
         ...infoData,
         services: infoData?.services || [],
       };
     },
-    enabled: !!lab_id, // Only run query when lab_id is available
-    retry: false, // Don't retry on failure
+    enabled: !!lab_id,
+    retry: false,
   });
 
   // Booking mutation
@@ -91,7 +101,7 @@ export default function BookLab() {
       navigate("/appointments");
     },
     onError: (error) => {
-      toast.error(`Booking failed: ${error.message}`);
+      toast.error(`${t("BookingFailed")}: ${error.message}`);
     },
   });
 
@@ -118,7 +128,7 @@ export default function BookLab() {
     try {
       const startTime = parseISO(`2000-01-01T${workTime.start}`);
       const endTime = parseISO(`2000-01-01T${workTime.end}`);
-      const duration = parseInt(workTime.duration) || 30; // Default to 30 minutes
+      const duration = parseInt(workTime.duration) || 30;
       const slots = [];
       let currentTime = startTime;
 
@@ -129,7 +139,7 @@ export default function BookLab() {
 
       return slots;
     } catch (error) {
-      console.error("Error generating time slots:", error);
+      console.error(t("TimeSlotGenerationError"), error);
       return [];
     }
   };
@@ -148,7 +158,6 @@ export default function BookLab() {
         const slots = generateTimeSlots(workTime);
         setAvailableTimeSlots(slots);
 
-        // Set default time to first available slot if not set
         if (slots.length > 0 && !bookingDetails.time) {
           setBookingDetails((prev) => ({ ...prev, time: slots[0] }));
         }
@@ -159,7 +168,6 @@ export default function BookLab() {
     }
   }, [bookingDetails.date, lab]);
 
-  // Replace the problematic useEffect with this corrected version
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) {
@@ -169,10 +177,9 @@ export default function BookLab() {
       setCurrentUser(user);
     });
     return () => unsubscribe();
-  }, [navigate]); // Remove id from dependencies, add navigate
+  }, [navigate]);
 
-
-  // Update renderLabDetails to handle location object
+  // Render lab details
   const renderLabDetails = () => {
     if (!lab) return null;
 
@@ -181,30 +188,35 @@ export default function BookLab() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <p className="text-sm text-gray-600">
-              <span className="font-medium">Government:</span> {lab.government}
+              <span className="font-medium">{t("Government")}:</span>{" "}
+              {lab.government}
             </p>
             <p className="text-sm text-gray-600">
-              <span className="font-medium">City:</span> {lab.city}
+              <span className="font-medium">{t("City")}:</span> {lab.city}
             </p>
           </div>
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-600">Working Hours:</p>
+            <p className="text-sm font-medium text-gray-600">
+              {t("WorkingHours")}:
+            </p>
             {lab.work_times?.map((time, index) => (
               <p key={index} className="text-sm text-gray-600">
-                {time.day}: {time.start} - {time.end} (Duration: {time.duration}{" "}
-                min)
+                {time.day}: {time.start} - {time.end} ({t("Duration")}:{" "}
+                {time.duration} {t("Minutes")})
               </p>
             ))}
           </div>
         </div>
         <div className="mt-4">
-          <p className="text-sm font-medium text-gray-600 mb-2">Gallery:</p>
+          <p className="text-sm font-medium text-gray-600 mb-2">
+            {t("Gallery")}:
+          </p>
           <div className="grid grid-cols-4 gap-2">
             {lab.images?.map((img, index) => (
               <img
                 key={index}
                 src={img}
-                alt={`Lab ${index + 1}`}
+                alt={t("LabImageAlt", { index: index + 1 })}
                 className="w-full h-24 object-cover rounded-lg"
                 onError={(e) => {
                   e.target.src = "https://via.placeholder.com/150?text=Lab";
@@ -217,26 +229,26 @@ export default function BookLab() {
     );
   };
 
-  // Add validation schema
+  // Validation schema
   const PatientSchema = Yup.object().shape({
     name: Yup.string()
-      .min(2, "Name is too short")
-      .max(50, "Name is too long")
-      .required("Name is required"),
+      .min(2, t("NameMin"))
+      .max(50, t("NameMax"))
+      .required(t("NameRequired")),
     age: Yup.number()
-      .min(1, "Age must be greater than 0")
-      .max(120, "Invalid age")
-      .required("Age is required"),
+      .min(1, t("AgeMin"))
+      .max(120, t("AgeMax"))
+      .required(t("AgeRequired")),
     phone: Yup.string()
-      .matches(/^[0-9]+$/, "Phone must be numbers only")
-      .min(11, "Phone must be at least 11 digits")
-      .required("Phone is required"),
+      .matches(/^[0-9]+$/, t("PhoneNumbersOnly"))
+      .min(11, t("PhoneMin"))
+      .required(t("PhoneRequired")),
     gender: Yup.string()
-      .oneOf(["Male", "Female"], "Invalid gender")
-      .required("Gender is required"),
+      .oneOf(["Male", "Female"], t("GenderInvalid"))
+      .required(t("GenderRequired")),
     problem: Yup.string()
-      .min(3, "Problem description is too short")
-      .required("Problem description is required"),
+      .min(3, t("ProblemMin"))
+      .required(t("ProblemRequired")),
   });
 
   const initialPatientForm = {
@@ -247,23 +259,22 @@ export default function BookLab() {
     problem: "",
   };
 
-  // Update booking mutation with new data structure
+  // Update booking mutation
   const handleBookAppointment = async (patientData, { resetForm }) => {
     try {
       if (!lab || selectedServices.length === 0) {
-        toast.error("Please select at least one service");
+        toast.error(t("SelectService"));
         return;
       }
 
       if (!bookingDetails.time) {
-        toast.error("Please select a time slot");
+        toast.error(t("SelectTime"));
         return;
       }
 
       const totalFee = calculateTotalFee();
       const supabaseUserId = await getSupabaseUserId(currentUser);
 
-      // FIXED: Map services correctly from the lab services array
       const labServices = selectedServices.map((serviceId) => {
         const service = lab.services.find((s) => s.service === serviceId);
         return {
@@ -295,11 +306,7 @@ export default function BookLab() {
         },
       };
 
-      console.log("Appointment data to be inserted:", appointmentData);
-
-      // For card payments
       if (bookingDetails.payment_method === "visa") {
-        // First create the appointment record
         const { data: appointment, error: insertError } = await supabase
           .from("Appointments")
           .insert(appointmentData)
@@ -307,55 +314,52 @@ export default function BookLab() {
           .single();
 
         if (insertError) {
-          console.error("Insert error:", insertError);
+          console.error(t("InsertError"), insertError);
           throw insertError;
         }
 
-        // Process payment
         const paymentResult = await processAppointmentPayment({
           fee: totalFee,
           patientInfo: {
             name: patientData.name,
             email: currentUser.email,
             phone: patientData.phone,
-            providerName: lab.name,
+            providerName: getLocalizedContent(lab, "name"),
           },
           appointmentId: appointment.id,
         });
 
         if (paymentResult.success) {
-          // Update appointment status only since we don't have payment reference columns
           const { error: updateError } = await supabase
             .from("Appointments")
             .update({
-              status: "pending", // Update status to indicate payment is being processed
+              status: "pending",
             })
             .eq("id", appointment.id);
 
           if (updateError) throw updateError;
 
-          // Redirect to payment
           window.location.href = paymentResult.iframeUrl;
         } else {
           throw new Error(paymentResult.error);
         }
-      }
-      // For cash payments
-      else {
-        const { error } = await supabase.from("Appointments").insert(appointmentData);
+      } else {
+        const { error } = await supabase
+          .from("Appointments")
+          .insert(appointmentData);
 
         if (error) throw error;
 
         resetForm();
-        toast.success("Booking successful!");
+        toast.success(t("BookingSuccess"));
       }
     } catch (error) {
-      console.error("Booking error:", error);
-      toast.error(error.message || "Booking failed. Please try again.");
+      console.error(t("BookingError"), error);
+      toast.error(error.message || t("BookingFailedTryAgain"));
     }
   };
 
-  // Update renderPatientForm to include form ID and handleSubmit
+  // Render patient form
   const renderPatientForm = () => (
     <Formik
       initialValues={initialPatientForm}
@@ -363,15 +367,20 @@ export default function BookLab() {
       onSubmit={handleBookAppointment}
     >
       {({ errors, touched, handleSubmit }) => (
-        <Form id="patient-form" onSubmit={handleSubmit} className="space-y-4">
+        <Form
+          id="patient-form"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+          dir={isRTL ? "rtl" : "ltr"}
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              {t("FullName")}
             </label>
             <Field
               name="name"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter your full name"
+              placeholder={t("FullNamePlaceholder")}
             />
             {errors.name && touched.name && (
               <div className="text-red-500 text-sm mt-1">{errors.name}</div>
@@ -381,7 +390,7 @@ export default function BookLab() {
           <div className="grid grid-cols-1 md:grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Age
+                {t("Age")}
               </label>
               <Field
                 name="age"
@@ -395,16 +404,16 @@ export default function BookLab() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Gender
+                {t("Gender")}
               </label>
               <Field
                 as="select"
                 name="gender"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="">{t("SelectGender")}</option>
+                <option value="Male">{t("Male")}</option>
+                <option value="Female">{t("Female")}</option>
               </Field>
               {errors.gender && touched.gender && (
                 <div className="text-red-500 text-sm mt-1">{errors.gender}</div>
@@ -414,12 +423,12 @@ export default function BookLab() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone Number
+              {t("PhoneNumber")}
             </label>
             <Field
               name="phone"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter your phone number"
+              placeholder={t("PhonePlaceholder")}
             />
             {errors.phone && touched.phone && (
               <div className="text-red-500 text-sm mt-1">{errors.phone}</div>
@@ -428,14 +437,14 @@ export default function BookLab() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Problem Description
+              {t("ProblemDescription")}
             </label>
             <Field
               as="textarea"
               name="problem"
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Describe your health problem..."
+              placeholder={t("ProblemPlaceholder")}
             />
             {errors.problem && touched.problem && (
               <div className="text-red-500 text-sm mt-1">{errors.problem}</div>
@@ -449,15 +458,11 @@ export default function BookLab() {
   // Render time slots as buttons
   const renderTimeSlots = () => {
     if (availableTimeSlots.length === 0) {
-      return (
-        <p className="text-red-500 text-sm py-4">
-          No available time slots for selected date
-        </p>
-      );
+      return <p className="text-red-500 text-sm py-4">{t("NoTimeSlots")}</p>;
     }
 
     return (
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[200px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full p-2">
+      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[200px] overflow-y-auto p-2">
         {availableTimeSlots.map((time) => (
           <button
             key={time}
@@ -514,9 +519,8 @@ export default function BookLab() {
           </div>
           <div className="flex-1">
             <div className="font-medium text-gray-800">
-              {service.service_ar}
+              {getLocalizedContent(service, "service")}
             </div>
-            <div className="text-sm text-gray-600">{service.service}</div>
           </div>
           <div className="font-semibold text-indigo-600">${service.price}</div>
         </div>
@@ -532,7 +536,9 @@ export default function BookLab() {
           const service = lab.services.find((s) => s.service === serviceId);
           return (
             <li key={index} className="flex justify-between">
-              <span className="text-gray-700">{service?.service_ar}</span>
+              <span className="text-gray-700">
+                {getLocalizedContent(service, "service")}
+              </span>
               <span className="font-medium">${service?.price}</span>
             </li>
           );
@@ -541,11 +547,11 @@ export default function BookLab() {
     </div>
   );
 
-  // Add this before the return statement, where you render the form
+  // Payment section
   const renderPaymentSection = () => (
     <div className="mb-6">
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        Payment Method
+        {t("PaymentMethod")}
       </label>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
@@ -560,7 +566,7 @@ export default function BookLab() {
           }`}
         >
           <svg
-            className="w-6 h-6 mr-2"
+            className={`w-6 h-6 ${isRTL ? "ml-2" : "mr-2"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -572,7 +578,7 @@ export default function BookLab() {
               d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-          Cash Payment
+          {t("CashPayment")}
         </button>
         <button
           type="button"
@@ -586,7 +592,7 @@ export default function BookLab() {
           }`}
         >
           <svg
-            className="w-6 h-6 mr-2"
+            className={`w-6 h-6 ${isRTL ? "ml-2" : "mr-2"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -598,13 +604,12 @@ export default function BookLab() {
               d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
             />
           </svg>
-          Visa Payment
+          {t("VisaPayment")}
         </button>
       </div>
     </div>
   );
 
-  // Add this function after other handler functions
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingDetails((prev) => ({
@@ -623,7 +628,10 @@ export default function BookLab() {
 
   if (isError || !lab) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div
+        className="min-h-screen flex flex-col items-center justify-center p-4"
+        dir={isRTL ? "rtl" : "ltr"}
+      >
         <svg
           className="w-16 h-16 text-red-500"
           fill="none"
@@ -637,31 +645,33 @@ export default function BookLab() {
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
           />
         </svg>
-        <h2 className="text-xl font-semibold mt-4">Lab not found</h2>
-        <p className="text-gray-600 mt-2">
-          The lab you're looking for doesn't exist or has been removed.
-        </p>
+        <h2 className="text-xl font-semibold mt-4">{t("LabNotFound")}</h2>
+        <p className="text-gray-600 mt-2 text-center">{t("LabNotFoundDesc")}</p>
         <button
           onClick={() => navigate("/labs")}
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
-          Browse Labs
+          {t("BrowseLabs")}
         </button>
       </div>
     );
   }
 
+  const localizedLabName = getLocalizedContent(lab, "name");
+  const localizedLabDescription = getLocalizedContent(lab, "description");
+
   return (
     <>
       <MetaData
-        title={`Book test in ${lab.name}`}
-        description={"Book your test in best laps in Egypt"}
-        keywords={
-          "lab, book test, medical lab, CBC, complete blood capture, delma"
-        }
+        title={t("BookLabMetaTitle", { labName: localizedLabName })}
+        description={t("BookLabMetaDescription")}
+        keywords={t("BookLabMetaKeywords")}
         author="Mohab Mohammed"
       />
-      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div
+        className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gray-50"
+        dir={isRTL ? "rtl" : "ltr"}
+      >
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
             <button
@@ -669,7 +679,7 @@ export default function BookLab() {
               className="flex items-center text-indigo-600 hover:text-indigo-800"
             >
               <svg
-                className="w-5 h-5 mr-1"
+                className={`w-5 h-5 ${isRTL ? "ml-1" : "mr-1"}`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -678,20 +688,23 @@ export default function BookLab() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  d={
+                    isRTL
+                      ? "M14 5l7 7m0 0l-7 7m7-7H3"
+                      : "M10 19l-7-7m0 0l7-7m-7 7h18"
+                  }
                 />
               </svg>
-              Back to Labs
+              {t("BackToLabs")}
             </button>
           </div>
 
           <div className="text-center mb-10">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-              Book Your Test at {lab.name}
+              {t("BookYourTestAt", { labName: localizedLabName })}
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Schedule your lab tests with this trusted laboratory. Choose from
-              a wide range of services and get accurate results.
+              {t("BookLabDescription")}
             </p>
           </div>
 
@@ -703,7 +716,7 @@ export default function BookLab() {
                   <div className="relative w-50 h-50">
                     <img
                       src={lab.image}
-                      alt={lab.name_ar}
+                      alt={localizedLabName}
                       className="absolute inset-0 w-full h-full rounded-xl object-cover shadow-lg"
                       onError={(e) => {
                         e.target.src =
@@ -714,7 +727,7 @@ export default function BookLab() {
                 </div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-gray-900">
-                    {lab.name_ar}
+                    {localizedLabName}
                   </h2>
                   <div className="flex items-center mt-2">
                     <div className="flex text-yellow-400">
@@ -733,22 +746,26 @@ export default function BookLab() {
                       ))}
                     </div>
                     <span className="text-gray-600 ml-2">
-                      ({lab.rate_count} reviews)
+                      ({lab.rate_count} {t("Reviews")})
                     </span>
                   </div>
                   <div className="mt-4">
-                    <h3 className="font-semibold text-gray-700">About</h3>
-                    <p className="text-gray-600 mt-1">{lab.description}</p>
+                    <h3 className="font-semibold text-gray-700">
+                      {t("About")}
+                    </h3>
+                    <p className="text-gray-600 mt-1">
+                      {localizedLabDescription}
+                    </p>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-4">
                     <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      {lab.patients}+ Patients
+                      {lab.patients}+ {t("Patients")}
                     </div>
                     <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                      Accredited Lab
+                      {t("AccreditedLab")}
                     </div>
                     <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
-                      Fast Results
+                      {t("FastResults")}
                     </div>
                   </div>
                 </div>
@@ -760,29 +777,34 @@ export default function BookLab() {
           <div className="bg-white rounded-xl shadow overflow-hidden">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Book Your Test
+                {t("BookYourTest")}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
                 <div className="bg-yellow-50 p-4 rounded-md border border-yellow-200 mb-4">
                   <h3 className="text-sm font-medium text-yellow-800">
-                    Available Days
+                    {t("AvailableDays")}
                   </h3>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {lab?.work_times?.length > 0 ? (
-                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                        {lab.work_times[0].day}
-                      </span>
+                      lab.work_times.map((time, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs"
+                        >
+                          {time.day}
+                        </span>
+                      ))
                     ) : (
                       <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                        No available days
+                        {t("NoAvailableDays")}
                       </span>
                     )}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Appointment Date
+                    {t("AppointmentDate")}
                   </label>
                   <input
                     type="date"
@@ -796,7 +818,7 @@ export default function BookLab() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Appointment Time
+                    {t("AppointmentTime")}
                   </label>
                   {renderTimeSlots()}
                 </div>
@@ -804,20 +826,20 @@ export default function BookLab() {
 
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Patient Information
+                  {t("PatientInformation")}
                 </h3>
                 {renderPatientForm()}
               </div>
 
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Select Services
+                  {t("SelectServices")}
                 </h3>
                 {lab?.services?.length > 0 ? (
                   renderServices()
                 ) : (
                   <p className="text-gray-500 text-center py-8">
-                    No services available for this lab
+                    {t("NoServicesAvailable")}
                   </p>
                 )}
               </div>
@@ -825,7 +847,7 @@ export default function BookLab() {
               <div className="border-t border-gray-200 pt-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <h4 className="font-medium text-gray-700">
-                    Selected Services
+                    {t("SelectedServices")}
                   </h4>
                 </div>
 
@@ -833,17 +855,17 @@ export default function BookLab() {
                   renderSelectedServices()
                 ) : (
                   <p className="text-gray-500 text-center py-4">
-                    No services selected
+                    {t("NoServicesSelected")}
                   </p>
                 )}
               </div>
 
-              {/* Add Payment Method section here */}
+              {/* Payment Method section */}
               {renderPaymentSection()}
 
               <div className="flex justify-between items-center border-t border-gray-200 pt-6">
                 <div>
-                  <p className="text-sm text-gray-600">Total Fee</p>
+                  <p className="text-sm text-gray-600">{t("TotalFee")}</p>
                   <p className="text-2xl font-bold text-indigo-600">
                     ${calculateTotalFee()}
                   </p>
@@ -861,11 +883,11 @@ export default function BookLab() {
                   }
                   onClick={() => {
                     if (selectedServices.length === 0) {
-                      toast.error("Please select at least one service");
+                      toast.error(t("SelectService"));
                       return;
                     }
                     if (!bookingDetails.time) {
-                      toast.error("Please select a time slot");
+                      toast.error(t("SelectTime"));
                       return;
                     }
                     document
@@ -875,9 +897,19 @@ export default function BookLab() {
                       );
                   }}
                 >
-                  {bookingMutation.isPending
-                    ? "Processing..."
-                    : "Confirm Booking"}
+                  {bookingMutation.isPending ? (
+                    <div className="flex justify-center items-center">
+                      <TailSpin
+                        color="#fff"
+                        width="24"
+                        height="24"
+                        aria-label={t("Loading")}
+                        role="status"
+                      />
+                    </div>
+                  ) : (
+                    t("ConfirmBooking")
+                  )}
                 </button>
               </div>
             </div>
@@ -887,7 +919,7 @@ export default function BookLab() {
           <div className="bg-white rounded-xl shadow overflow-hidden mt-8">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Lab Details
+                {t("LabDetails")}
               </h2>
               {renderLabDetails()}
             </div>
