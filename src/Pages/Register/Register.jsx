@@ -90,7 +90,7 @@ export default function Register() {
 
   const steps = [
     { number: 1, icon: UserCircle, label: t("PersonalInfo") },
-    { number: 2, icon: FaHeartbeat, label: t("PatientInfo") },
+    { number: 2, icon: FaHeartbeat, label: t("PatientInformation") },
     { number: 3, icon: MapPin, label: t("AddressInfo") },
   ];
 
@@ -324,7 +324,7 @@ export default function Register() {
               {currentStep === 1
                 ? t("personalInfo")
                 : currentStep === 2
-                ? t("PatientInfo")
+                ? t("PatientInformation")
                 : currentStep === 3
                 ? t("AddressInfo")
                 : t("RegistrationComplete")}
@@ -611,7 +611,7 @@ export default function Register() {
                             htmlFor="dateOfBirth"
                             className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 rtl:text-right"
                           >
-                            {t("DateOfBirth")}
+                            {t("dateOfBirth")}
                           </label>
                           {errors.dateOfBirth && touched.dateOfBirth && (
                             <div className="text-red-500 text-sm mt-1 rtl:text-right">
@@ -705,7 +705,7 @@ export default function Register() {
                             htmlFor="bloodType"
                             className="absolute left-4 rtl:left-auto rtl:right-4 -top-2.5 bg-white px-1 text-sm text-gray-600 rtl:text-right"
                           >
-                            {t("BloodType")}
+                            {t("bloodType")}
                           </label>
                           {errors.bloodType && touched.bloodType && (
                             <div className="text-red-500 text-sm mt-1 rtl:text-right">
