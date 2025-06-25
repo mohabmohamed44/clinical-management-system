@@ -25,7 +25,6 @@ export default function UpcomingVisits() {
   const [cardsPerView, setCardsPerView] = useState(3);
   const { isOpen, modalData, openModal, closeModal } = useModal();
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === "ar";
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -50,15 +49,18 @@ export default function UpcomingVisits() {
   const formatAddress = (address) => {
     if (!address) return t("Address not available");
 
+    // Handle both string and object address formats
     if (typeof address === "string") {
       return address;
     }
 
+    // Extract relevant parts from the address object if they exist
     const building = address.building || "";
     const floor = address.floor ? `${address.floor} ${t("Floor")}` : "";
-    const street = address.street || address.streat || "";
+    const street = address.street || address.streat || ""; // Fixed typo: streat -> street
     const sign = address.sign || "";
 
+    // Filter out empty parts and join with commas
     return [building, floor, street, sign].filter((part) => part).join(", ");
   };
 
@@ -66,45 +68,21 @@ export default function UpcomingVisits() {
     try {
       const user = await getCurrentUser();
       if (!user) {
-        setError(t("No authenticated user found"));
+        setError("No authenticated user found");
         return;
       }
 
       setLoading(true);
-      setError(null);
 
-      // Check if user exists in database
-      let { data: userData, error: userError } = await supabase
+      const { data: userData, error: userError } = await supabase
         .from("Users")
         .select("id")
         .eq("uid", user.uid)
-        .maybeSingle();
+        .single();
 
-      // Create user if doesn't exist
-      if (!userData) {
-        const nameParts = user.displayName?.split(' ') || [];
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
-        
-        const { data: newUser, error: createError } = await supabase
-          .from("Users")
-          .insert([{
-            uid: user.uid,
-            email: user.email,
-            first_name: firstName,
-            last_name: lastName,
-            role: 'patient'
-          }])
-          .select('id')
-          .single();
+      if (userError) throw userError;
 
-        if (createError) throw createError;
-        userData = newUser;
-      } else if (userError) {
-        throw userError;
-      }
-
-      // Fetch appointments
+      // Fixed query: Join with Laboratories table through LaboratoriesInfo using lab_id
       const { data: appointments, error: appointmentsError } = await supabase
         .from("Appointments")
         .select(
@@ -155,8 +133,8 @@ export default function UpcomingVisits() {
 
       setVisits(formatAppointments(appointments));
     } catch (err) {
+      setError("Failed to fetch upcoming visits");
       console.error("Fetch error:", err);
-      setError(t("Failed to fetch upcoming visits"));
     } finally {
       setLoading(false);
     }
@@ -166,7 +144,7 @@ export default function UpcomingVisits() {
     return appointments.map((appointment) => {
       const isLabAppointment = !!appointment.lab_id;
       const labInfo = appointment.LaboratoriesInfo;
-      const lab = labInfo?.Laboratories;
+      const lab = labInfo?.Laboratories; // Get the actual lab data from the nested relation
       const doctor = appointment.Doctors;
       const clinic = appointment.Clinics;
 
@@ -189,9 +167,8 @@ export default function UpcomingVisits() {
           : null,
         lab: lab
           ? {
-              name: isRTL ? (lab.name_ar || lab.name) : (lab.name || lab.name_ar),
+              name: lab.name_ar || "Laboratory", // Use name_ar from Laboratories table
               name_ar: lab.name_ar,
-              name_en: lab.name,
               photo_url: lab.image,
               services: labInfo?.services || lab.services || [],
               location: labInfo?.location,
@@ -202,7 +179,7 @@ export default function UpcomingVisits() {
         clinic: clinic
           ? {
               ...clinic,
-              name: clinic.address?.name || t("Clinic"),
+              name: clinic.address?.name || "Clinic",
               formattedAddress: formatAddress(clinic.address),
             }
           : null,
@@ -212,7 +189,7 @@ export default function UpcomingVisits() {
 
   useEffect(() => {
     fetchUpcomingVisits();
-  }, [i18n.language]);
+  }, []);
 
   const formatDate = (date) => {
     const options = {
@@ -221,26 +198,27 @@ export default function UpcomingVisits() {
       month: "long",
       day: "numeric",
     };
-    return date.toLocaleDateString(isRTL ? "ar-EG" : undefined, options);
+    return date.toLocaleDateString(i18n.language === "ar" ? "ar-EG" : undefined, options);
   };
 
   const formatTime = (date) => {
     const options = { hour: "numeric", minute: "numeric", hour12: true };
-    return date.toLocaleTimeString(isRTL ? "ar-EG" : undefined, options);
+    return date.toLocaleTimeString(i18n.language === "ar" ? "ar-EG" : undefined, options);
   };
 
   const getDaysRemaining = (date) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
     const diffTime = date - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) return t("Today");
     if (diffDays === 1) return t("Tomorrow");
-    return t("in {{count}} days", { count: diffDays });
+    return i18n.language === "ar"
+      ? t("in {{count}} days", { count: diffDays })
+      : `in ${diffDays} days`;
   };
 
+  // Carousel navigation
   const nextSlide = () => {
     const maxIndex = visits.length - cardsPerView;
     if (currentIndex < maxIndex) {
@@ -255,6 +233,7 @@ export default function UpcomingVisits() {
   };
 
   const goToSlide = (index) => {
+    // Make sure we don't scroll beyond available cards
     const maxStartIndex = Math.max(0, visits.length - cardsPerView);
     const newIndex = Math.min(index, maxStartIndex);
     setCurrentIndex(newIndex);
@@ -266,13 +245,14 @@ export default function UpcomingVisits() {
         visit.id === updatedVisit.id ? updatedVisit : visit
       )
     );
+    // Here you would typically make an API call to update the visit
   };
 
   if (loading) {
     return (
       <div className="w-full p-6 flex justify-center items-center">
         <div className="animate-pulse text-gray-600">
-          {t("Loading upcoming visits...")}
+          Loading upcoming visits...
         </div>
       </div>
     );
@@ -286,14 +266,15 @@ export default function UpcomingVisits() {
           className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           onClick={fetchUpcomingVisits}
         >
-          {t("Try Again")}
+          Try Again
         </button>
       </div>
     );
   }
 
+  // Updated visit card rendering with better lab appointment display
   const renderVisitCard = (visit) => (
-    <div className={`flex ${isRTL ? 'flex-row-reverse' : ''} items-start space-x-3 mb-3`}>
+    <div className="flex items-start space-x-3 mb-3">
       <img
         src={
           visit.isLabAppointment
@@ -303,12 +284,12 @@ export default function UpcomingVisits() {
         alt={visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
         className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-blue-100"
       />
-      <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
+      <div className="flex-1 min-w-0">
         <h3 className="font-bold text-base md:text-lg line-clamp-1">
           {visit.isLabAppointment ? visit.lab?.name : visit.doctor?.name}
         </h3>
         <p className="text-blue-600 text-sm">
-          {visit.isLabAppointment ? t("Laboratory Test") : t(visit.doctor?.specialty)}
+          {visit.isLabAppointment ? t("Laboratory Test") : visit.doctor?.specialty}
         </p>
         {visit.isLabAppointment &&
           visit.lab?.services &&
@@ -330,13 +311,13 @@ export default function UpcomingVisits() {
   return (
     <div
       className="w-full bg-white rounded-lg shadowP mt-20 overflow-hidden"
-      dir={isRTL ? "rtl" : "ltr"}
-      style={isRTL ? { textAlign: "right" } : {}}
+      dir={i18n.language === "ar" ? "rtl" : "ltr"}
+      style={i18n.language === "ar" ? { textAlign: "right" } : {}}
     >
       {/* Header */}
       <div className="bg-[#11319E] text-white p-4 rounded-t-lg flex items-center justify-between">
         <h2 className="text-lg md:text-xl font-bold flex items-center">
-          <Calendar className={`${isRTL ? 'ml-2' : 'mr-2'} w-5 h-5`} />
+          <Calendar className="mr-2 w-5 h-5" />
           {t("UpcomingVisits")}
         </h2>
         <span className="text-xs md:text-sm bg-[#2147c5] px-2 py-1 md:px-3 rounded-full">
@@ -360,7 +341,7 @@ export default function UpcomingVisits() {
             {/* Navigation buttons for larger screens */}
             {screenSize !== "mobile" && (
               <>
-                <div className={`absolute inset-y-0 ${isRTL ? 'right-0' : 'left-0'} flex items-center z-10`}>
+                <div className="absolute inset-y-0 left-0 flex items-center z-10">
                   <button
                     onClick={prevSlide}
                     disabled={currentIndex === 0}
@@ -370,15 +351,11 @@ export default function UpcomingVisits() {
                         : "hover:bg-gray-100"
                     }`}
                   >
-                    {isRTL ? (
-                      <ChevronRight className="text-blue-600 w-5 h-5" />
-                    ) : (
-                      <ChevronLeft className="text-blue-600 w-5 h-5" />
-                    )}
+                    <ChevronLeft className="text-blue-600 w-5 h-5" />
                   </button>
                 </div>
 
-                <div className={`absolute inset-y-0 ${isRTL ? 'left-0' : 'right-0'} flex items-center z-10`}>
+                <div className="absolute inset-y-0 right-0 flex items-center z-10">
                   <button
                     onClick={nextSlide}
                     disabled={currentIndex >= visits.length - cardsPerView}
@@ -388,11 +365,7 @@ export default function UpcomingVisits() {
                         : "hover:bg-gray-100"
                     }`}
                   >
-                    {isRTL ? (
-                      <ChevronLeft className="text-blue-600 w-5 h-5" />
-                    ) : (
-                      <ChevronRight className="text-blue-600 w-5 h-5" />
-                    )}
+                    <ChevronRight className="text-blue-600 w-5 h-5" />
                   </button>
                 </div>
               </>
@@ -403,9 +376,9 @@ export default function UpcomingVisits() {
               <div
                 className="flex gap-4 transition-transform duration-300 ease-in-out px-2 md:px-8"
                 style={{
-                  transform: isRTL 
-                    ? `translateX(${currentIndex * (100 / cardsPerView)}%)`
-                    : `translateX(-${currentIndex * (100 / cardsPerView)}%)`,
+                  transform: `translateX(-${
+                    currentIndex * (100 / cardsPerView)
+                  }%)`,
                 }}
               >
                 {visits.map((visit) => (
@@ -423,8 +396,8 @@ export default function UpcomingVisits() {
 
                     <div className="space-y-2">
                       <div className="flex items-start">
-                        <Clock className={`flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                        <div className={isRTL ? 'text-right' : ''}>
+                        <Clock className="flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500" />
+                        <div className="ml-2">
                           <p className="text-sm font-medium">
                             {formatDate(visit.date)}
                           </p>
@@ -434,14 +407,15 @@ export default function UpcomingVisits() {
                         </div>
                       </div>
 
+                      {/* Show location info for both doctor and lab appointments */}
                       {(visit.clinic || visit.lab) && (
                         <div className="flex items-start">
-                          <MapPin className={`flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                          <div className={isRTL ? 'text-right' : ''}>
+                          <MapPin className="flex-shrink-0 w-4 h-4 mt-0.5 text-gray-500" />
+                          <div className="ml-2">
                             <p className="text-sm text-gray-700 line-clamp-2">
                               {visit.isLabAppointment
-                                ? visit.lab?.name || t("Laboratory")
-                                : visit.clinic?.name || t("Clinic")}
+                                ? visit.lab?.name || "Laboratory"
+                                : visit.clinic?.name || "Clinic"}
                             </p>
                             {visit.isLabAppointment &&
                               visit.lab?.government &&
@@ -459,27 +433,30 @@ export default function UpcomingVisits() {
                         </div>
                       )}
 
+                      {/* Show phone number if available */}
                       {(visit.doctor?.phone || visit.clinic?.phone) && (
                         <div className="flex items-center">
-                          <Phone className={`w-4 h-4 text-gray-500 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                          <p className="text-sm text-gray-700">
+                          <Phone className="w-4 h-4 text-gray-500" />
+                          <p className="text-sm text-gray-700 ml-2">
                             {visit.doctor?.phone || visit.clinic?.phone}
                           </p>
                         </div>
                       )}
 
+                      {/* Show appointment reason if available */}
                       {visit.reason && (
-                        <div className={`mt-2 bg-yellow-50 p-2 rounded text-sm ${isRTL ? 'text-right' : ''}`}>
+                        <div className="mt-2 bg-yellow-50 p-2 rounded text-sm">
                           <p className="font-medium">{t("Appointment Reason")}:</p>
                           <p className="text-gray-700">{visit.reason}</p>
                         </div>
                       )}
 
+                      {/* Show lab services if it's a lab appointment */}
                       {visit.isLabAppointment &&
                         visit.lab?.services &&
                         Array.isArray(visit.lab.services) &&
                         visit.lab.services.length > 0 && (
-                          <div className={`mt-2 bg-green-50 p-2 rounded text-sm ${isRTL ? 'text-right' : ''}`}>
+                          <div className="mt-2 bg-green-50 p-2 rounded text-sm">
                             <p className="font-medium">{t("Lab Services")}:</p>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {visit.lab.services
@@ -491,7 +468,7 @@ export default function UpcomingVisits() {
                                   >
                                     {typeof service === "string"
                                       ? service
-                                      : service.name || t("Service")}
+                                      : service.name || "Service"}
                                   </span>
                                 ))}
                               {visit.lab.services.length > 3 && (
@@ -507,7 +484,7 @@ export default function UpcomingVisits() {
                     {/* Buttons */}
                     <div className="mt-4 pt-3 border-t flex flex-col space-y-2">
                       <Link to={`/appointments/${visit.id}`} className="w-full">
-                        <button className="w-full px-3 py-1.5 bg-[#005d] text-white text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors">
+                        <button className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded hover:bg-gray-100 transition-colors">
                           {t("View Details")}
                         </button>
                       </Link>
@@ -521,28 +498,58 @@ export default function UpcomingVisits() {
           {/* Mobile navigation buttons */}
           {screenSize === "mobile" && visits.length > 1 && (
             <div className="flex justify-between mt-4 px-2">
-              <button
-                onClick={prevSlide}
-                disabled={currentIndex === 0}
-                className={`px-4 py-2 rounded-lg ${
-                  currentIndex === 0
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
-              >
-                {isRTL ? t("Next") : t("Previous")}
-              </button>
-              <button
-                onClick={nextSlide}
-                disabled={currentIndex >= visits.length - cardsPerView}
-                className={`px-4 py-2 rounded-lg ${
-                  currentIndex >= visits.length - cardsPerView
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-blue-100 text-blue-600 hover:bg-blue-200"
-                }`}
-              >
-                {isRTL ? t("Previous") : t("Next")}
-              </button>
+              {i18n.language === "ar" ? (
+                // Swap button order for RTL
+                <>
+                  <button
+                    onClick={nextSlide}
+                    disabled={currentIndex >= visits.length - cardsPerView}
+                    className={`px-4 py-2 rounded-lg ${
+                      currentIndex >= visits.length - cardsPerView
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                    }`}
+                  >
+                    {t("Next")}
+                  </button>
+                  <button
+                    onClick={prevSlide}
+                    disabled={currentIndex === 0}
+                    className={`px-4 py-2 rounded-lg ${
+                      currentIndex === 0
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                    }`}
+                  >
+                    {t("Previous")}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    disabled={currentIndex === 0}
+                    className={`px-4 py-2 rounded-lg ${
+                      currentIndex === 0
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                    }`}
+                  >
+                    {t("Previous")}
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    disabled={currentIndex >= visits.length - cardsPerView}
+                    className={`px-4 py-2 rounded-lg ${
+                      currentIndex >= visits.length - cardsPerView
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                    }`}
+                  >
+                    {t("Next")}
+                  </button>
+                </>
+              )}
             </div>
           )}
 
@@ -550,6 +557,7 @@ export default function UpcomingVisits() {
           <div className="flex justify-center mt-4 space-x-1">
             {visits
               .map((_, index) => {
+                // Only show indicators that can be starting points
                 if (index <= visits.length - cardsPerView) {
                   return (
                     <button
@@ -561,7 +569,7 @@ export default function UpcomingVisits() {
                           ? "bg-blue-600"
                           : "bg-gray-300 hover:bg-gray-400"
                       } ${screenSize === "mobile" ? "w-3 h-3" : "w-2 h-2"}`}
-                      aria-label={`${t("Go to slide")} ${index + 1}`}
+                      aria-label={`Go to slide ${index + 1}`}
                     />
                   );
                 }

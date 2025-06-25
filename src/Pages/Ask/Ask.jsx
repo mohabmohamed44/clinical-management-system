@@ -154,7 +154,7 @@ export default function AskQuestionForm() {
                             !values.speciality && "text-gray-400"
                           }`}
                         >
-                          {values.speciality ||  t("SelectSpecialty")}
+                          {values.speciality || t("SelectSpecialty")}
                         </span>
                         <ChevronDown
                           className="h-5 w-5 text-[#1972EE]"
@@ -179,7 +179,7 @@ export default function AskQuestionForm() {
                                   onClick={() =>
                                     setFieldValue(
                                       "speciality",
-                                      t(spec.specialty)
+                                      t(spec.specialty),
                                     )
                                   }
                                 >
